@@ -21,6 +21,7 @@ final class Central {
     typealias CharacteristicSubscribedByCentralHandler = (Central, QualifiedCharacteristic, Data?, Error?) -> Void//(Central, CBCentral, CBCharacteristic) -> Void
     typealias SubChangeHandler = (Central, CBCentral, CBCharacteristic) -> Void
     typealias CharRequestHandler = (Central, CBPeripheralManager, QualifiedCharacteristic, Data?) -> Void
+    typealias ServiceChangedByCentralHandler = (Central, /*[CBService]*/CBService) -> Void
 
     private var mConnectedCentral : CBCentral!
     
@@ -50,7 +51,8 @@ final class Central {
         onServicesWithCharacteristicsInitialDiscovery: @escaping ServicesWithCharacteristicsDiscoveryHandler,
         onCharacteristicValueUpdate: @escaping CharacteristicValueUpdateHandler,
         onCharacteristicSubscribedByCentral: @escaping CharacteristicSubscribedByCentralHandler,
-        onCharRequest: @escaping CharRequestHandler
+        onCharRequest: @escaping CharRequestHandler,
+        onServiceChangedByCentral: @escaping ServiceChangedByCentralHandler
     ) {
         self.onServicesWithCharacteristicsInitialDiscovery = onServicesWithCharacteristicsInitialDiscovery
         self.peripheralManagerDelegate = PeripheralManagerDelegate(
@@ -120,6 +122,9 @@ final class Central {
                     key: QualifiedCharacteristic(characteristic),
                     action: { $0.handleWrite(error: error) }
                 )
+            },
+            onServiceChangedByCentral: papply(weak: self) { central, CBService in
+                onServiceChangedByCentral(central, CBService)
             }
         )
         self.peripheralManager = CBPeripheralManager(
