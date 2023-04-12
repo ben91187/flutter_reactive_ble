@@ -9,10 +9,13 @@ import 'package:flutter_reactive_ble/src/discovered_devices_registry.dart';
 import 'package:flutter_reactive_ble/src/rx_ext/repeater.dart';
 import 'package:meta/meta.dart';
 import 'package:reactive_ble_mobile/reactive_ble_mobile.dart';
-import 'package:reactive_ble_platform_interface/reactive_ble_platform_interface.dart';
+// import 'package:reactive_ble_platform_interface/reactive_ble_platform_interface.dart';
+
+
 //import 'package:flutter_reactive_ble/src/device_advertiser.dart';
 import 'package:flutter_reactive_ble/src/central_connector.dart';
 
+import '../flutter_reactive_ble.dart';
 import 'central_connector.dart';
 
 /// [FlutterReactiveBle] is the facade of the library. Its interface allows to
@@ -219,7 +222,8 @@ class FlutterReactiveBle {
     await _blePlatform.addGattCharacteristic();
   }
 
-  Future<void> writeLocalCharacteristic(QualifiedCharacteristic characteristic,List<int> value) async {
+  Future<void> writeLocalCharacteristic(
+      QualifiedCharacteristic characteristic, List<int> value) async {
     await initialize();
     return _blePlatform.writeLocalCharacteristic(characteristic, value);
   }
@@ -409,7 +413,9 @@ class FlutterReactiveBle {
         .where((update) =>
             update.deviceId == characteristic.deviceId &&
             (update.connectionState == DeviceConnectionState.disconnecting ||
-                update.connectionState == DeviceConnectionState.disconnected))
+                update.connectionState == DeviceConnectionState.disconnected ||
+                update.connectionState ==
+                    DeviceConnectionState.forceDisconnected))
         .cast<void>()
         .firstWhere((_) => true, orElse: () {});
 
