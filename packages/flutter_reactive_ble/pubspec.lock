@@ -408,7 +408,7 @@ packages:
     description:
       path: "packages/reactive_ble_mobile"
       ref: package_added_connection_state
-      resolved-ref: "9d0c18e87d3f7bd47eeb1b074bae5ed20ee63396"
+      resolved-ref: "5c2ba973cff971e2d88ed117fdb4482ccca026b4"
       url: "https://github.com/ben91187/flutter_reactive_ble.git"
     source: git
     version: "5.0.2"
@@ -417,7 +417,7 @@ packages:
     description:
       path: "packages/reactive_ble_platform_interface"
       ref: package_added_connection_state
-      resolved-ref: "9d0c18e87d3f7bd47eeb1b074bae5ed20ee63396"
+      resolved-ref: "5c2ba973cff971e2d88ed117fdb4482ccca026b4"
       url: "https://github.com/ben91187/flutter_reactive_ble.git"
     source: git
     version: "5.0.2"
