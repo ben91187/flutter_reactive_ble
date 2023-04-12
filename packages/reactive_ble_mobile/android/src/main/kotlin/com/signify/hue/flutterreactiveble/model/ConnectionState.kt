@@ -8,7 +8,7 @@ enum class ConnectionState(val code: Int) {
     CONNECTED(1),
     DISCONNECTING(2),
     DISCONNECTED(3),
-    UNKNOWN(4)
+    UNKNOWN(4),
     FORCEDISCONNECTED(5)
 }
 
