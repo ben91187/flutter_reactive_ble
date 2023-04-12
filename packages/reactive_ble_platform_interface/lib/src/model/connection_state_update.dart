@@ -37,6 +37,9 @@ enum DeviceConnectionState {
   /// Device is disconnected.
   disconnected,
 
+  /// Device is unknown.
+  unknown,
+
   /// Device bonding was deleted.
   forceDisconnected
 }
