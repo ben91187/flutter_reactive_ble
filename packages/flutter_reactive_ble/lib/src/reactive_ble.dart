@@ -9,10 +9,13 @@ import 'package:flutter_reactive_ble/src/discovered_devices_registry.dart';
 import 'package:flutter_reactive_ble/src/rx_ext/repeater.dart';
 import 'package:meta/meta.dart';
 import 'package:reactive_ble_mobile/reactive_ble_mobile.dart';
-import 'package:reactive_ble_platform_interface/reactive_ble_platform_interface.dart';
+// import 'package:reactive_ble_platform_interface/reactive_ble_platform_interface.dart';
+
+
 //import 'package:flutter_reactive_ble/src/device_advertiser.dart';
 import 'package:flutter_reactive_ble/src/central_connector.dart';
 
+import '../flutter_reactive_ble.dart';
 import 'central_connector.dart';
 
 /// [FlutterReactiveBle] is the facade of the library. Its interface allows to
@@ -43,14 +46,12 @@ class FlutterReactiveBle {
     _trackStatus();
     _trackCentralConnected();
     _trackCentralDataChanged();
-    _trackCentralServiceChanged();
   }
 
   FlutterReactiveBle._() {
     _trackStatus();
     _trackCentralConnected();
     _trackCentralDataChanged();
-    _trackCentralServiceChanged();
   }
 
   /// Registry that keeps track of all BLE devices found during a BLE scan.
@@ -92,12 +93,6 @@ class FlutterReactiveBle {
         yield* _centralDataChangedStream;
       }).stream;
 
-  Stream<CharacteristicValue> get centralServiceChangedStream =>
-      Repeater(onListenEmitFrom: () async* {
-        await initialize();
-        yield* _centralServiceChangedStream;
-      }).stream;
-
   /// A stream providing value updates for all the connected BLE devices.
   ///
   /// The updates include read responses as well as notifications.
@@ -124,15 +119,6 @@ class FlutterReactiveBle {
     result: const Result.success([0]),
   );
 
-  CharacteristicValue _serviceData = CharacteristicValue(
-    characteristic: QualifiedCharacteristic(
-      characteristicId: Uuid.parse('0000'),
-      serviceId: Uuid.parse('0000'),
-      deviceId: '',
-    ),
-    result: const Result.success([0]),
-  );
-
   Stream<BleStatus> get _statusStream => _blePlatform.bleStatusStream;
 
   Future<void> _trackStatus() async {
@@ -145,14 +131,6 @@ class FlutterReactiveBle {
 
   Stream<CharacteristicValue> get _centralDataChangedStream =>
       _centralConnector.centralDataChangedStream;
-
-  Stream<CharacteristicValue> get _centralServiceChangedStream =>
-      _centralConnector.centralServiceChangedStream;
-
-  Future<void> _trackCentralServiceChanged() async {
-    await initialize();
-    _centralServiceChangedStream.listen((serviceData) => _serviceData = serviceData);
-  }
 
   Future<void> _trackCentralConnected() async {
     await initialize();
@@ -244,7 +222,8 @@ class FlutterReactiveBle {
     await _blePlatform.addGattCharacteristic();
   }
 
-  Future<void> writeLocalCharacteristic(QualifiedCharacteristic characteristic,List<int> value) async {
+  Future<void> writeLocalCharacteristic(
+      QualifiedCharacteristic characteristic, List<int> value) async {
     await initialize();
     return _blePlatform.writeLocalCharacteristic(characteristic, value);
   }
@@ -434,7 +413,9 @@ class FlutterReactiveBle {
         .where((update) =>
             update.deviceId == characteristic.deviceId &&
             (update.connectionState == DeviceConnectionState.disconnecting ||
-                update.connectionState == DeviceConnectionState.disconnected))
+                update.connectionState == DeviceConnectionState.disconnected ||
+                update.connectionState ==
+                    DeviceConnectionState.forceDisconnected))
         .cast<void>()
         .firstWhere((_) => true, orElse: () {});
 
