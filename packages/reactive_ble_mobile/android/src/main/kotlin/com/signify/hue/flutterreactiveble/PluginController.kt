@@ -46,6 +46,7 @@ class PluginController {
             "startGattServer" to this::startGattServer,
             "stopGattServer" to this::stopGattServer,
             "writeLocalCharacteristic" to this::writeLocalCharacteristic,
+            "checkIfOldInetBoxBondingExists" to this::checkIfOldInetBoxBondingExists,
             "removeInetBoxBonding" to this::removeInetBoxBonding,
     )
 

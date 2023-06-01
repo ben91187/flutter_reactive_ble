@@ -347,6 +347,10 @@ class ReactiveBleMobilePlatform extends ReactiveBlePlatform {
 
   @override
   Future<void> removeInetBoxBonding() =>
+      _bleMethodChannel.invokeMethod<void>("checkIfOldInetBoxBondingExists");
+
+  @override
+  Future<void> removeInetBoxBonding() =>
       _bleMethodChannel.invokeMethod<void>("removeInetBoxBonding");
 }
 

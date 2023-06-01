@@ -855,6 +855,32 @@ open class ReactiveBleClient(private val context: Context) : BleClient {
         // TODO Move from addExampleGattService to addGattCharacteristic
     }
 
+    /**
+     * Checks if old bonding exists, and if, allows showing the delete iNetBox Bondings pop up.
+     * */
+    override fun checkIfOldInetBoxBondingExists() : bool {
+        val bluetoothManager: BluetoothManager =
+            ctx.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
+        val bluetoothAdapter: BluetoothAdapter = bluetoothManager.adapter
+
+        val bondedDevices: Set<BluetoothDevice> = bluetoothAdapter.getBondedDevices()
+
+        for (device in bondedDevices) {
+            var deviceName: String = device.getName()
+            if (deviceName.contains("iNet Box") && (device.getType() == 0x00000003 )) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * If the bonded iNetBox is from type 0x00000003 - DEVICE_TYPE_DUAL this iNetBox was
+     * bonded via the old app built with cordova.
+     * If the bonded iNetBox is from type 0x00000002 - DEVICE_TYPE_LE this iNetBox was
+     * bonded via the new flutter app.
+     * https://developer.android.com/reference/android/bluetooth/BluetoothDevice#DEVICE_TYPE_DUAL
+     * */
     override fun removeInetBoxBonding() {
         val bluetoothManager: BluetoothManager =
             ctx.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
@@ -864,7 +890,7 @@ open class ReactiveBleClient(private val context: Context) : BleClient {
 
         for (device in bondedDevices) {
             var deviceName: String = device.getName()
-            if (deviceName.contains("iNet Box")) {
+            if (deviceName.contains("iNet Box") && && (device.getType() == 0x00000003 )) {
                 try {
                     val pair = device.javaClass.getMethod("removeBond")
                     pair.invoke(device)
@@ -958,6 +984,7 @@ open class ReactiveBleClient(private val context: Context) : BleClient {
         deviceId: String,
         service: UUID,
         characteristic: UUID,
+        value: ByteArray,
         value: ByteArray,
         bleOperation: RxBleConnection.(service: UUID, characteristic: UUID, value: ByteArray) -> Single<ByteArray>
     ): Single<CharOperationResult> {
