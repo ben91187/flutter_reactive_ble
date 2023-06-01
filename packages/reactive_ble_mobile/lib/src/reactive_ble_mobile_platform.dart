@@ -209,95 +209,95 @@ class ReactiveBleMobilePlatform extends ReactiveBlePlatform {
 
   @override
   Future<void> startAdvertising() => _bleMethodChannel
-          .invokeMethod<void>(
-        "startAdvertising"/*,
+      .invokeMethod<void>(
+          "startAdvertising" /*,
         _argsToProtobufConverter
             .createNotifyNoMoreCharacteristicRequest(characteristic)
             .writeToBuffer(),*/
-      )
-          .catchError(
+          )
+      .catchError(
         // ignore: avoid_print
-            (Object e) => print("Error starting advertising: $e"),
+        (Object e) => print("Error starting advertising: $e"),
       );
 
   @override
   Future<void> stopAdvertising() => _bleMethodChannel
-          .invokeMethod<void>(
-          "stopAdvertising"/*,
+      .invokeMethod<void>(
+          "stopAdvertising" /*,
         _argsToProtobufConverter
             .createNotifyNoMoreCharacteristicRequest(characteristic)
             .writeToBuffer(),*/
-      )
-          .catchError(
+          )
+      .catchError(
         // ignore: avoid_print
-            (Object e) => print("Error stopping advertising: $e"),
+        (Object e) => print("Error stopping advertising: $e"),
       );
 
   @override
   Future<void> startGattServer() => _bleMethodChannel
-          .invokeMethod<void>(
-          "startGattServer"/*,
+      .invokeMethod<void>(
+          "startGattServer" /*,
         _argsToProtobufConverter
             .createNotifyNoMoreCharacteristicRequest(characteristic)
             .writeToBuffer(),*/
-      )
-          .catchError(
+          )
+      .catchError(
         // ignore: avoid_print
-            (Object e) => print("Error starting gattserver: $e"),
+        (Object e) => print("Error starting gattserver: $e"),
       );
 
   @override
   Future<void> stopGattServer() => _bleMethodChannel
-          .invokeMethod<void>(
-          "stopGattServer"/*,
+      .invokeMethod<void>(
+          "stopGattServer" /*,
         _argsToProtobufConverter
             .createNotifyNoMoreCharacteristicRequest(characteristic)
             .writeToBuffer(),*/
-      )
-          .catchError(
+          )
+      .catchError(
         // ignore: avoid_print
-            (Object e) => print("Error stopping gattserver: $e"),
+        (Object e) => print("Error stopping gattserver: $e"),
       );
 
   @override
   Future<void> addGattService() => _bleMethodChannel
-          .invokeMethod<void>(
-          "addGattService"/*,
+      .invokeMethod<void>(
+          "addGattService" /*,
         _argsToProtobufConverter
             .createNotifyNoMoreCharacteristicRequest(characteristic)
             .writeToBuffer(),*/
-      )
-          .catchError(
+          )
+      .catchError(
         // ignore: avoid_print
-            (Object e) => print("Error adding gattservice: $e"),
+        (Object e) => print("Error adding gattservice: $e"),
       );
 
   @override
   Future<void> addGattCharacteristic() => _bleMethodChannel
-          .invokeMethod<void>(
-          "addGattCharacteristic"/*,
+      .invokeMethod<void>(
+          "addGattCharacteristic" /*,
         _argsToProtobufConverter
             .createNotifyNoMoreCharacteristicRequest(characteristic)
             .writeToBuffer(),*/
-      )
-          .catchError(
+          )
+      .catchError(
         // ignore: avoid_print
-            (Object e) => print("Error adding gattcharacteristic: $e"),
+        (Object e) => print("Error adding gattcharacteristic: $e"),
       );
 
   @override
-  Future<void/*WriteCharacteristicInfo*/> writeLocalCharacteristic(
+  Future<void /*WriteCharacteristicInfo*/ > writeLocalCharacteristic(
     QualifiedCharacteristic characteristic,
     List<int> value,
   ) async =>
-      _bleMethodChannel
-          .invokeMethod<List<int>>(
-            "writeLocalCharacteristic",
-            _argsToProtobufConverter
-                .createWriteCharacteristicRequest(characteristic, value)
-                .writeToBuffer(),
-          );
-          //.then((data) => _protobufConverter.writeCharacteristicInfoFrom(data!));
+      _bleMethodChannel.invokeMethod<List<int>>(
+        "writeLocalCharacteristic",
+        _argsToProtobufConverter
+            .createWriteCharacteristicRequest(characteristic, value)
+            .writeToBuffer(),
+      );
+
+  //.then((data) => _protobufConverter.writeCharacteristicInfoFrom(data!));
 
   @override
   Future<int> requestMtuSize(String deviceId, int? mtu) async =>
@@ -344,6 +344,10 @@ class ReactiveBleMobilePlatform extends ReactiveBlePlatform {
                 .writeToBuffer(),
           )
           .then((data) => _protobufConverter.discoveredServicesFrom(data!));
+
+  @override
+  Future<void> removeInetBoxBonding() =>
+      _bleMethodChannel.invokeMethod<List<int>>("removeInetBoxBonding");
 }
 
 class ReactiveBleMobilePlatformFactory {
