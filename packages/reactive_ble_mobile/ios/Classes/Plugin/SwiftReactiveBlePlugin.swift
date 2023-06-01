@@ -198,10 +198,10 @@ public class SwiftReactiveBlePlugin: NSObject, FlutterPlugin {
         AnyPlatformMethod(UnaryPlatformMethod(name: "writeLocalCharacteristic") { (name, context, args: WriteCharacteristicRequest, completion) in
             context.writeLocalCharacteristic(name: name, args: args, completion: completion)
         }),
-        AnyPlatformMethod(UnaryPlatformMethod(name: "checkIfOldInetBoxBondingExists") { (name, context, completion) in
+        AnyPlatformMethod(NullaryPlatformMethod(name: "checkIfOldInetBoxBondingExists") { (name, context, completion) in
             context.removeInetBoxBonding(name: name, completion: completion)
         }),
-        AnyPlatformMethod(UnaryPlatformMethod(name: "removeInetBoxBonding") { (name, context, completion) in
+        AnyPlatformMethod(NullaryPlatformMethod(name: "removeInetBoxBonding") { (name, context, completion) in
             context.removeInetBoxBonding(name: name, completion: completion)
         }),
     ])
