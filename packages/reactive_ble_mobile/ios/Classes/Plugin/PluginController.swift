@@ -283,12 +283,12 @@ final class PluginController {
         completion(.success(nil))
     }
 
-    func checkIfOldInetBoxBondingExists(name: String, args: nil, completion: @escaping PlatformMethodCompletionHandler)
+    func checkIfOldInetBoxBondingExists(name: String, completion: @escaping PlatformMethodCompletionHandler)
     {
         // not implemented / not needed for iOS
         completion(.success(nil))
     }
-    func removeInetBoxBonding(name: String, args: nil, completion: @escaping PlatformMethodCompletionHandler)
+    func removeInetBoxBonding(name: String, completion: @escaping PlatformMethodCompletionHandler)
     {
         // not implemented / not needed for iOS
         completion(.success(nil))
