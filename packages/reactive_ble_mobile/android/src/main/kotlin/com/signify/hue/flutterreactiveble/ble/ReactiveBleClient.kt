@@ -858,7 +858,7 @@ open class ReactiveBleClient(private val context: Context) : BleClient {
     /**
      * Checks if old bonding exists, and if, allows showing the delete iNetBox Bondings pop up.
      * */
-    override fun checkIfOldInetBoxBondingExists() : bool {
+    override fun checkIfOldInetBoxBondingExists() : Boolean {
         val bluetoothManager: BluetoothManager =
             ctx.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
         val bluetoothAdapter: BluetoothAdapter = bluetoothManager.adapter

@@ -11,7 +11,6 @@ import 'package:meta/meta.dart';
 import 'package:reactive_ble_mobile/reactive_ble_mobile.dart';
 // import 'package:reactive_ble_platform_interface/reactive_ble_platform_interface.dart';
 
-
 //import 'package:flutter_reactive_ble/src/device_advertiser.dart';
 import 'package:flutter_reactive_ble/src/central_connector.dart';
 
@@ -222,9 +221,9 @@ class FlutterReactiveBle {
     await _blePlatform.addGattCharacteristic();
   }
 
-  Future<bool?> checkIfOldInetBoxBondingExists() {
-    return _blePlatform.checkIfOldInetBoxBondingExists();
-  }
+  Future<bool?> checkIfOldInetBoxBondingExists() =>
+      _blePlatform.checkIfOldInetBoxBondingExists();
+
   Future<void> removeInetBoxBonding() async {
     await _blePlatform.removeInetBoxBonding();
   }
@@ -421,7 +420,8 @@ class FlutterReactiveBle {
             update.deviceId == characteristic.deviceId &&
             (update.connectionState == DeviceConnectionState.disconnecting ||
                 update.connectionState == DeviceConnectionState.disconnected ||
-                update.connectionState == DeviceConnectionState.forceDisconnected))
+                update.connectionState ==
+                    DeviceConnectionState.forceDisconnected))
         .cast<void>()
         .firstWhere((_) => true, orElse: () {});
 
