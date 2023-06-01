@@ -346,7 +346,7 @@ class ReactiveBleMobilePlatform extends ReactiveBlePlatform {
           .then((data) => _protobufConverter.discoveredServicesFrom(data!));
 
   @override
-  Future<bool> checkIfOldInetBoxBondingExists() =>
+  Future<bool?> checkIfOldInetBoxBondingExists() =>
       _bleMethodChannel.invokeMethod<bool>("checkIfOldInetBoxBondingExists");
 
   @override
