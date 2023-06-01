@@ -816,7 +816,7 @@ open class ReactiveBleClient(private val context: Context) : BleClient {
             Log.d(tag, deviceName.toString());
             Log.d(tag, device.getType().toString());
             Log.d(tag,device.toString());
-            if ((deviceName.contains("iNet Box")) && (device.getType() == 0x00000001 /*DEVICE_TYPE_CLASSIC*/)) {
+            if (deviceName.contains("iNet Box")) {
                 try {
                     val pair = device.javaClass.getMethod("removeBond")
                     pair.invoke(device)
