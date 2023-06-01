@@ -282,6 +282,12 @@ final class PluginController {
         
         completion(.success(nil))
     }
+
+    func removeInetBoxBonding(name: String, completion: @escaping PlatformMethodCompletionHandler)
+    {
+        // not implemented / not needed for iOS
+        completion(.success(nil))
+    }
     
     func addGattCharacteristic(name: String, completion: @escaping PlatformMethodCompletionHandler){
         guard let central = central

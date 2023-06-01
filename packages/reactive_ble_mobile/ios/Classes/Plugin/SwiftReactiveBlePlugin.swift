@@ -198,6 +198,9 @@ public class SwiftReactiveBlePlugin: NSObject, FlutterPlugin {
         AnyPlatformMethod(UnaryPlatformMethod(name: "writeLocalCharacteristic") { (name, context, args: WriteCharacteristicRequest, completion) in
             context.writeLocalCharacteristic(name: name, args: args, completion: completion)
         }),
+        AnyPlatformMethod(UnaryPlatformMethod(name: "removeInetBoxBonding") { (name, context, completion) in
+            context.removeInetBoxBonding(name: name, args: args, completion: completion)
+        }),
     ])
 
     public func handle(_ call: FlutterMethodCall, result completion: @escaping FlutterResult) {

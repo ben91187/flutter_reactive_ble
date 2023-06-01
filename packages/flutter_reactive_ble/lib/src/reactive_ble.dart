@@ -219,6 +219,10 @@ class FlutterReactiveBle {
     await _blePlatform.addGattCharacteristic();
   }
 
+  Future<void> removeInetBoxBonding() async {
+    await _blePlatform.removeInetBoxBonding();
+  }
+
   Future<void> writeLocalCharacteristic(QualifiedCharacteristic characteristic,List<int> value) async {
     await initialize();
     return _blePlatform.writeLocalCharacteristic(characteristic, value);
