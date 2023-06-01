@@ -303,11 +303,8 @@ class PluginController {
         result.success(null)
     }
 
-    private fun checkIfOldInetBoxBondingExists(call: MethodCall, result: Result) -> Boolean
-    {
-        result.success(
-            bleClient.checkIfOldInetBoxBondingExists()
-        )
+    private fun checkIfOldInetBoxBondingExists(call: MethodCall, result: Result) {
+        result.success(bleClient.checkIfOldInetBoxBondingExists())
     }
 
     private fun removeInetBoxBonding(call: MethodCall, result: Result) {
