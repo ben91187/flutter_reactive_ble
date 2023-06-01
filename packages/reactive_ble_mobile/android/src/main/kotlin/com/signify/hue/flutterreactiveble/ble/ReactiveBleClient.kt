@@ -807,12 +807,17 @@ open class ReactiveBleClient(private val context: Context) : BleClient {
         val bluetoothAdapter: BluetoothAdapter = bluetoothManager.adapter
 
         val bondedDevices: Set<BluetoothDevice> = bluetoothAdapter.getBondedDevices()
+
+        Log.d("start remove bonding");
+
         for (device in bondedDevices) {
             var deviceName : String = device.getName()
+            Log.d("found device");
+            Log.d(device);
             if ((deviceName.contains("iNet Box")) && (device.getType() == 0x00000001 /*DEVICE_TYPE_CLASSIC*/)) {
                 try {
-                    val pair = device.javaClass.getMethod("removeBond")
-                    pair.invoke(device)
+                    val method = this.javaClass.getMethod("removeBond")
+                    method.invoke(this) as Any
                     Log.i(tag, "Removing iNet Box bonding succeeded");
                 } catch (e: Exception) {
                     Log.d(tag, "Error removing bonding: " + e);
