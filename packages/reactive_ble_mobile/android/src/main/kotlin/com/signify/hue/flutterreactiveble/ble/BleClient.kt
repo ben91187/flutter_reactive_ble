@@ -66,6 +66,7 @@ interface BleClient {
     fun addGattCharacteristic()
     fun startGattServer()
     fun stopGattServer()
+    fun removeInetBoxBonding()
     fun writeLocalCharacteristic(
         deviceId: String,
         characteristic: UUID,

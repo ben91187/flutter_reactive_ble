@@ -46,6 +46,7 @@ class PluginController {
             "startGattServer" to this::startGattServer,
             "stopGattServer" to this::stopGattServer,
             "writeLocalCharacteristic" to this::writeLocalCharacteristic,
+            "removeInetBoxBonding" to this::removeInetBoxBonding,
     )
 
     lateinit var bleClient: com.signify.hue.flutterreactiveble.ble.BleClient
@@ -268,6 +269,11 @@ class PluginController {
 
     private fun addGattService(call: MethodCall, result: Result) {
         bleClient.addGattService()
+        result.success(null)
+    }
+
+    private fun removeInetBoxBonding(call: MethodCall, result: Result){
+        bleClient.removeInetBoxBonding()
         result.success(null)
     }
 

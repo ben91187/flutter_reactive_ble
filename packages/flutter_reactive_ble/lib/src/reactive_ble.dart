@@ -222,6 +222,10 @@ class FlutterReactiveBle {
     await _blePlatform.addGattCharacteristic();
   }
 
+  Future<void> removeInetBoxBonding() async {
+    await _blePlatform.removeInetBoxBonding();
+  }
+
   Future<void> writeLocalCharacteristic(
       QualifiedCharacteristic characteristic, List<int> value) async {
     await initialize();
@@ -414,8 +418,7 @@ class FlutterReactiveBle {
             update.deviceId == characteristic.deviceId &&
             (update.connectionState == DeviceConnectionState.disconnecting ||
                 update.connectionState == DeviceConnectionState.disconnected ||
-                update.connectionState ==
-                    DeviceConnectionState.forceDisconnected))
+                update.connectionState == DeviceConnectionState.forcedisconnected))
         .cast<void>()
         .firstWhere((_) => true, orElse: () {});
 

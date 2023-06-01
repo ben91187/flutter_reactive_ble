@@ -802,6 +802,25 @@ open class ReactiveBleClient(private val context: Context) : BleClient {
         // TODO Move from addExampleGattService to addGattCharacteristic
     }
 
+    override fun removeInetBoxBonding() {
+        val bluetoothManager: BluetoothManager = ctx.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
+        val bluetoothAdapter: BluetoothAdapter = bluetoothManager.adapter
+
+        val bondedDevices: Set<BluetoothDevice> = bluetoothAdapter.getBondedDevices()
+        for (device in bondedDevices) {
+            var deviceName : String = device.getName()
+            if ((deviceName.contains("iNet Box")) && (device.getType() == 0x00000001 /*DEVICE_TYPE_CLASSIC*/)) {
+                try {
+                    val pair = device.javaClass.getMethod("removeBond")
+                    pair.invoke(device)
+                    Log.i(tag, "Removing iNet Box bonding succeeded");
+                } catch (e: Exception) {
+                    Log.d(tag, "Error removing bonding: " + e);
+                }
+            }
+        }
+    }
+
     override fun writeLocalCharacteristic(deviceId: String, characteristic: UUID, value: ByteArray) {
         // TODO write to local characteristic and notify
         val servicesList: List<BluetoothGattService> = mBluetoothGattServer!!.getServices()
