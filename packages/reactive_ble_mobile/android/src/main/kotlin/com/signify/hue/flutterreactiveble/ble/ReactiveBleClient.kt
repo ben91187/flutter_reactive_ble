@@ -985,7 +985,6 @@ open class ReactiveBleClient(private val context: Context) : BleClient {
         service: UUID,
         characteristic: UUID,
         value: ByteArray,
-        value: ByteArray,
         bleOperation: RxBleConnection.(service: UUID, characteristic: UUID, value: ByteArray) -> Single<ByteArray>
     ): Single<CharOperationResult> {
         return getConnection(deviceId)
