@@ -303,7 +303,7 @@ class PluginController {
         result.success(null)
     }
 
-    private fun checkIfOldInetBoxBondingExists(call: MethodCall, result: Result): Boolean {
+    private fun checkIfOldInetBoxBondingExists(call: MethodCall, result: Result) {
         result.success(
             bleClient.checkIfOldInetBoxBondingExists()
         )
