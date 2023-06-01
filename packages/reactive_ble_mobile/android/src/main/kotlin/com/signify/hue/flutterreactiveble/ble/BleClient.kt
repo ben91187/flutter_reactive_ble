@@ -66,7 +66,7 @@ interface BleClient {
     fun addGattCharacteristic()
     fun startGattServer()
     fun stopGattServer()
-    fun checkIfOldInetBoxBondingExists()
+    fun checkIfOldInetBoxBondingExists(): bool
     fun removeInetBoxBonding()
     fun writeLocalCharacteristic(
         deviceId: String,

@@ -222,8 +222,8 @@ class FlutterReactiveBle {
     await _blePlatform.addGattCharacteristic();
   }
 
-  Future<void> checkIfOldInetBoxBondingExists() async {
-    await _blePlatform.checkIfOldInetBoxBondingExists();
+  bool checkIfOldInetBoxBondingExists() {
+    return _blePlatform.checkIfOldInetBoxBondingExists();
   }
   Future<void> removeInetBoxBonding() async {
     await _blePlatform.removeInetBoxBonding();
