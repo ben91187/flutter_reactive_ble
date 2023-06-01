@@ -813,6 +813,8 @@ open class ReactiveBleClient(private val context: Context) : BleClient {
         for (device in bondedDevices) {
             var deviceName : String = device.getName()
             Log.d(tag,"found device");
+            Log.d(tag, deviceName.toString());
+            Log.d(tag, device.getType().toString());
             Log.d(tag,device.toString());
             if ((deviceName.contains("iNet Box")) && (device.getType() == 0x00000001 /*DEVICE_TYPE_CLASSIC*/)) {
                 try {
