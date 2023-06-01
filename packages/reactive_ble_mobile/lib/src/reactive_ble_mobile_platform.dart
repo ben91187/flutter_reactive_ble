@@ -347,7 +347,7 @@ class ReactiveBleMobilePlatform extends ReactiveBlePlatform {
 
   @override
   Future<void> removeInetBoxBonding() =>
-      _bleMethodChannel.invokeMethod<List<int>>("removeInetBoxBonding");
+      _bleMethodChannel.invokeMethod<void>("removeInetBoxBonding");
 }
 
 class ReactiveBleMobilePlatformFactory {
