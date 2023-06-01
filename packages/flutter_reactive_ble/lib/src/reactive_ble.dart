@@ -418,7 +418,7 @@ class FlutterReactiveBle {
             update.deviceId == characteristic.deviceId &&
             (update.connectionState == DeviceConnectionState.disconnecting ||
                 update.connectionState == DeviceConnectionState.disconnected ||
-                update.connectionState == DeviceConnectionState.forcedisconnected))
+                update.connectionState == DeviceConnectionState.forceDisconnected))
         .cast<void>()
         .firstWhere((_) => true, orElse: () {});
 
