@@ -816,8 +816,8 @@ open class ReactiveBleClient(private val context: Context) : BleClient {
             Log.d(device);
             if ((deviceName.contains("iNet Box")) && (device.getType() == 0x00000001 /*DEVICE_TYPE_CLASSIC*/)) {
                 try {
-                    val method = this.javaClass.getMethod("removeBond")
-                    method.invoke(this) as Any
+                    val pair = device.javaClass.getMethod("removeBond")
+                    pair.invoke(device)
                     Log.i(tag, "Removing iNet Box bonding succeeded");
                 } catch (e: Exception) {
                     Log.d(tag, "Error removing bonding: " + e);
