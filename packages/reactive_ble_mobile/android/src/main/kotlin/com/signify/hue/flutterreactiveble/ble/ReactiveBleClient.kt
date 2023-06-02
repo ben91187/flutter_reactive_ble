@@ -858,15 +858,21 @@ open class ReactiveBleClient(private val context: Context) : BleClient {
     /**
      * Checks if old bonding exists, and if, allows showing the delete iNetBox Bondings pop up.
      * */
-    override fun checkIfOldInetBoxBondingExists() : Boolean {
+    override fun checkIfOldInetBoxBondingExists(): Boolean {
         val bluetoothManager: BluetoothManager =
             ctx.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
         val bluetoothAdapter: BluetoothAdapter = bluetoothManager.adapter
+
+        Log.d(tag, "check bonding");
 
         val bondedDevices: Set<BluetoothDevice> = bluetoothAdapter.getBondedDevices()
 
         for (device in bondedDevices) {
             var deviceName: String = device.getName()
+            Log.d(tag, "found device");
+            Log.d(tag, deviceName.toString());
+            Log.d(tag, device.getType().toString());
+            Log.d(tag, device.toString());
             if (deviceName.contains("iNet Box") && ((device.getType() == 0x00000001) || (device.getType() == 0x00000003))) {
                 return true;
             }
@@ -888,8 +894,14 @@ open class ReactiveBleClient(private val context: Context) : BleClient {
 
         val bondedDevices: Set<BluetoothDevice> = bluetoothAdapter.getBondedDevices()
 
+        Log.d(tag, "start remove bonding");
+
         for (device in bondedDevices) {
             var deviceName: String = device.getName()
+            Log.d(tag, "found device");
+            Log.d(tag, deviceName.toString());
+            Log.d(tag, device.getType().toString());
+            Log.d(tag, device.toString());
             if (deviceName.contains("iNet Box") && ((device.getType() == 0x00000001) || (device.getType() == 0x00000003))) {
                 try {
                     val pair = device.javaClass.getMethod("removeBond")
