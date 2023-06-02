@@ -199,7 +199,7 @@ public class SwiftReactiveBlePlugin: NSObject, FlutterPlugin {
             context.writeLocalCharacteristic(name: name, args: args, completion: completion)
         }),
         AnyPlatformMethod(NullaryPlatformMethod(name: "checkIfOldInetBoxBondingExists") { (name, context, completion) in
-            context.removeInetBoxBonding(name: name, completion: completion)
+            context.checkIfOldInetBoxBondingExists(name: name, completion: completion)
         }),
         AnyPlatformMethod(NullaryPlatformMethod(name: "removeInetBoxBonding") { (name, context, completion) in
             context.removeInetBoxBonding(name: name, completion: completion)
