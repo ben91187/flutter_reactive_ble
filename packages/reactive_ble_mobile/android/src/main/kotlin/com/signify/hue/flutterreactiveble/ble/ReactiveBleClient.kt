@@ -867,7 +867,7 @@ open class ReactiveBleClient(private val context: Context) : BleClient {
 
         for (device in bondedDevices) {
             var deviceName: String = device.getName()
-            if (deviceName.contains("iNet Box") && (device.getType() == 0x00000003 )) {
+            if (deviceName.contains("iNet Box") && ((device.getType() == 0x00000001) || (device.getType() == 0x00000003))) {
                 return true;
             }
         }
@@ -890,7 +890,7 @@ open class ReactiveBleClient(private val context: Context) : BleClient {
 
         for (device in bondedDevices) {
             var deviceName: String = device.getName()
-            if (deviceName.contains("iNet Box") && (device.getType() == 0x00000003)) {
+            if (deviceName.contains("iNet Box") && ((device.getType() == 0x00000001) || (device.getType() == 0x00000003))) {
                 try {
                     val pair = device.javaClass.getMethod("removeBond")
                     pair.invoke(device)
