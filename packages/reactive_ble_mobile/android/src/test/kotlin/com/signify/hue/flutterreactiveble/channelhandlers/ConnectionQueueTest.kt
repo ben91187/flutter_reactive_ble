@@ -1,6 +1,6 @@
 package com.signify.hue.flutterreactiveble.channelhandlers
 import com.google.common.truth.Truth.assertThat
-import io.reactivex.subjects.BehaviorSubject
+import io.reactivex.subjects.PublishSubject
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.BeforeEach
 
@@ -43,7 +43,7 @@ class ConnectionQueueTest {
 
     @Test
     fun `should provide behavior subject for observing latest queue state`() {
-        assertThat(sut.observeQueue()).isInstanceOf(BehaviorSubject::class.java)
+        assertThat(sut.observeQueue()).isInstanceOf(PublishSubject::class.java)
     }
 
     @Test

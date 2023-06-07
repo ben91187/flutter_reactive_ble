@@ -28,6 +28,7 @@ import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.subjects.BehaviorSubject
+import io.reactivex.subjects.PublishSubject
 import java.util.UUID
 import java.util.concurrent.TimeUnit
 import kotlin.collections.component1
@@ -67,10 +68,10 @@ open class ReactiveBleClient(private val context: Context) : BleClient {
     companion object {
         // this needs to be in companion update since backgroundisolates respawn the eventchannels
         // Fix for https://github.com/PhilipsHue/flutter_reactive_ble/issues/277
-        private val connectionUpdateBehaviorSubject: BehaviorSubject<ConnectionUpdate> =
-            BehaviorSubject.create()
-        private val centralConnectionUpdateBehaviorSubject: BehaviorSubject<ConnectionUpdate> =
-            BehaviorSubject.create()
+        private val connectionUpdateBehaviorSubject: PublishSubject<ConnectionUpdate> =
+            PublishSubject.create()
+        private val centralConnectionUpdateBehaviorSubject: PublishSubject<ConnectionUpdate> =
+            PublishSubject.create()
         private val charRequestBehaviorSubject: BehaviorSubject<CharOperationResult> =
             BehaviorSubject.create()
         lateinit var rxBleClient: RxBleClient
@@ -81,10 +82,10 @@ open class ReactiveBleClient(private val context: Context) : BleClient {
         internal var gattServices = mutableMapOf<String, BluetoothGattService>()
     }
 
-    override val connectionUpdateSubject: BehaviorSubject<ConnectionUpdate>
+    override val connectionUpdateSubject: PublishSubject<ConnectionUpdate>
         get() = connectionUpdateBehaviorSubject
 
-    override val centralConnectionUpdateSubject: BehaviorSubject<ConnectionUpdate>
+    override val centralConnectionUpdateSubject: PublishSubject<ConnectionUpdate>
         get() = centralConnectionUpdateBehaviorSubject
 
     override val charRequestSubject: BehaviorSubject<CharOperationResult>

@@ -7,14 +7,14 @@ import com.signify.hue.flutterreactiveble.utils.Duration
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
-import io.reactivex.subjects.BehaviorSubject
+import io.reactivex.subjects.PublishSubject
 import java.util.UUID
 
 @Suppress("TooManyFunctions")
 interface BleClient {
 
-    val connectionUpdateSubject: BehaviorSubject<com.signify.hue.flutterreactiveble.ble.ConnectionUpdate>
-    val centralConnectionUpdateSubject: BehaviorSubject<com.signify.hue.flutterreactiveble.ble.ConnectionUpdate>
+    val connectionUpdateSubject: PublishSubject<com.signify.hue.flutterreactiveble.ble.ConnectionUpdate>
+    val centralConnectionUpdateSubject: PublishSubject<com.signify.hue.flutterreactiveble.ble.ConnectionUpdate>
     val charRequestSubject: BehaviorSubject<com.signify.hue.flutterreactiveble.ble.CharOperationResult>
 
     fun initializeClient()
