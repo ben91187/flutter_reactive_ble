@@ -161,7 +161,7 @@ final class Central {
     func stopAdvertising(){
         print("stopAdvertising")
         peripheralManager.stopAdvertising()
-        //peripheralManager.removeAllServices()
+        peripheralManager.removeAllServices()
     }
 
     func addExampleGattService() {
