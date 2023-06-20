@@ -1,3 +1,6 @@
+# TAG v1.1.21 - Test
+- Try to fix null error if device name is null
+
 # TAG v1.1.20 - Stable
 - Central.swift: Add removeAllServices() function call in stopAdvertising()
 

@@ -869,12 +869,15 @@ open class ReactiveBleClient(private val context: Context) : BleClient {
         val bondedDevices: Set<BluetoothDevice> = bluetoothAdapter.getBondedDevices()
 
         for (device in bondedDevices) {
-            var deviceName: String = device.getName()
+            var deviceName: String? = device.getName()
+            if (deviceName == null) {
+                return false;
+            }
             Log.d(tag, "found device");
-            Log.d(tag, deviceName.toString());
+            Log.d(tag, deviceName!!.toString());
             Log.d(tag, device.getType().toString());
             Log.d(tag, device.toString());
-            if (deviceName.contains("iNet Box") && ((device.getType() == 0x00000001) || (device.getType() == 0x00000003))) {
+            if (deviceName!!.contains("iNet Box") && ((device.getType() == 0x00000001) || (device.getType() == 0x00000003))) {
                 return true;
             }
         }
