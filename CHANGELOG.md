@@ -1,4 +1,4 @@
-# TAG v1.1.21 - Test
+# TAG v1.1.21 - Stable
 - Try to fix null error if device name is null
 
 # TAG v1.1.20 - Stable
