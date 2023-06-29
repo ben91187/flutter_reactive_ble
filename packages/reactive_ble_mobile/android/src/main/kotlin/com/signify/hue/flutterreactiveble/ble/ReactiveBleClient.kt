@@ -867,7 +867,7 @@ open class ReactiveBleClient(private val context: Context) : BleClient {
             mBluetoothGattServer?.clearServices()
             mBluetoothGattServer?.close()
         } catch (error: Exception) {
-            Log.e(tag, error)
+            Log.e(tag, error.toString())
         }
     }
 
