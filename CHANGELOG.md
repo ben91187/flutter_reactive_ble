@@ -1,3 +1,7 @@
+# TAG v1.1.22 - Test
+
+- Making the ble code more null safe
+
 # TAG v1.1.21 - Stable
 - Try to fix null error if device name is null
 

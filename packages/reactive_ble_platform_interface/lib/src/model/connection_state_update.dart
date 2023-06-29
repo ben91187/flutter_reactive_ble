@@ -41,7 +41,13 @@ enum DeviceConnectionState {
   unknown,
 
   /// Device bonding was deleted.
-  forceDisconnected
+  forceDisconnected,
+
+  /// Bonding is in Progress
+  bonding,
+
+  /// Bonding finished
+  bonded
 }
 
 /// Type of connection error.

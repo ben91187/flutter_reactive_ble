@@ -42,7 +42,7 @@ import android.util.Log
 
 private const val tag: String = "ReactiveBleClient"
 
-private lateinit var mBluetoothGattServer: BluetoothGattServer
+private var mBluetoothGattServer: BluetoothGattServer? = null
 
 private lateinit var mCentralBluetoothDevice: BluetoothDevice
 
@@ -534,10 +534,22 @@ open class ReactiveBleClient(private val context: Context) : BleClient {
                     11 -> {
                         Log.i(tag, "BOND_BONDING")
                         bondedStateActiveBefore = false
+                        connectionUpdateBehaviorSubject.onNext(
+                            ConnectionUpdateSuccess(
+                                deviceId,
+                                6
+                            )
+                        )
                     }
                     12 -> {
                         Log.i(tag, "BOND_BONDED")
                         bondedStateActiveBefore = true
+                        connectionUpdateBehaviorSubject.onNext(
+                            ConnectionUpdateSuccess(
+                                deviceId,
+                                7
+                            )
+                        )
                     }
                     10 -> {
                         Log.i(tag, "BOND_NONE")
@@ -548,8 +560,9 @@ open class ReactiveBleClient(private val context: Context) : BleClient {
                                     5 /*FORCEDISCONNECTED*/
                                 )
                             )
-                            activeConnections[deviceId]?.disconnectDevice(deviceId)
-                            activeConnections.remove(deviceId)
+                            // fixme: removed disconnect as the smartphone will receive no further updates
+                            /*activeConnections[deviceId]?.disconnectDevice(deviceId)
+                            activeConnections.remove(deviceId)*/
                         }
                         bondedStateActiveBefore = false;
 
@@ -558,6 +571,12 @@ open class ReactiveBleClient(private val context: Context) : BleClient {
                     else -> {
                         Log.i(tag, "BOND_UNKNOWN")
                         bondedStateActiveBefore = false;
+                        connectionUpdateBehaviorSubject.onNext(
+                            ConnectionUpdateSuccess(
+                                deviceId,
+                                4
+                            )
+                        )
                     }
                 }
 
@@ -594,15 +613,15 @@ open class ReactiveBleClient(private val context: Context) : BleClient {
                 //TODO initialise next service
                 var ServiceUuid: String = service?.getUuid().toString()
                 Log.i(tag, ServiceUuid)
-                if (ServiceUuid.equals(SrvUUID1)) {
+                if (mBluetoothGattServer != null && ServiceUuid.equals(SrvUUID1)) {
                     while (!mBluetoothGattServer!!.addService(gattServices.get(SrvUUID2)));
                 }
 
-                if (ServiceUuid.equals(SrvUUID2)) {
+                if (mBluetoothGattServer != null && ServiceUuid.equals(SrvUUID2)) {
                     while (!mBluetoothGattServer!!.addService(gattServices.get(SrvUUID3)));
                 }
 
-                if (ServiceUuid.equals(SrvUUID3)) {
+                if (mBluetoothGattServer != null && ServiceUuid.equals(SrvUUID3)) {
                     while (!mBluetoothGattServer!!.addService(gattServices.get(UartSrvUUID)));
                 }
 
@@ -621,7 +640,7 @@ open class ReactiveBleClient(private val context: Context) : BleClient {
                 super.onCharacteristicReadRequest(device, requestId, offset, characteristic)
                 Log.i(tag, "onCharacteristicReadRequest")
 
-                mBluetoothGattServer!!.sendResponse(
+                mBluetoothGattServer?.sendResponse(
                     device, requestId, BluetoothGatt.GATT_SUCCESS, offset,
                     characteristic?.getValue()
                 );
@@ -651,7 +670,7 @@ open class ReactiveBleClient(private val context: Context) : BleClient {
 
                 if (responseNeeded) {
                     Log.i(tag, "BLE Write Request - Response")
-                    mBluetoothGattServer!!.sendResponse(
+                    mBluetoothGattServer?.sendResponse(
                         device,
                         requestId,
                         BluetoothGatt.GATT_SUCCESS,
@@ -705,7 +724,7 @@ open class ReactiveBleClient(private val context: Context) : BleClient {
                 var descriptorUuid: String = descriptor?.getUuid().toString()
 
                 if (descriptorUuid.equals(CccdUUID)) {
-                    mBluetoothGattServer!!.sendResponse(
+                    mBluetoothGattServer?.sendResponse(
                         device,
                         requestId,
                         BluetoothGatt.GATT_SUCCESS,
@@ -741,13 +760,13 @@ open class ReactiveBleClient(private val context: Context) : BleClient {
 
                 Log.d(tag, "Device tried to read descriptor: " + descriptor?.getUuid());
                 if (offset != 0) {
-                    mBluetoothGattServer!!.sendResponse(
+                    mBluetoothGattServer?.sendResponse(
                         device, requestId, BluetoothGatt.GATT_INVALID_OFFSET, offset,
                         /* value (optional) */ null
                     );
                     return;
                 }
-                mBluetoothGattServer!!.sendResponse(
+                mBluetoothGattServer?.sendResponse(
                     device, requestId, BluetoothGatt.GATT_SUCCESS, offset,
                     descriptor?.getValue()
                 );
@@ -813,7 +832,9 @@ open class ReactiveBleClient(private val context: Context) : BleClient {
 
 
         // add first service to the gattserver
-        while (!mBluetoothGattServer!!.addService(service1));
+        if (mBluetoothGattServer != null) {
+            while (!mBluetoothGattServer!!.addService(service1));
+        }
     }
 
     override fun stopAdvertising() {
@@ -828,8 +849,8 @@ open class ReactiveBleClient(private val context: Context) : BleClient {
         advertiser!!.stopAdvertising(advertiseCallback)
 
         // clear and close gatt server after advertising stopped
-        // mBluetoothGattServer!!.clearServices()
-        // mBluetoothGattServer!!.close()
+        // mBluetoothGattServer?.clearServices()
+        // mBluetoothGattServer?.close()
     }
 
     override fun startGattServer() {
@@ -842,8 +863,12 @@ open class ReactiveBleClient(private val context: Context) : BleClient {
         if (mBluetoothGattServer == null) {
             return
         }
-        mBluetoothGattServer!!.clearServices()
-        mBluetoothGattServer!!.close()
+        try {
+            mBluetoothGattServer?.clearServices()
+            mBluetoothGattServer?.close()
+        } catch (error: Exception) {
+            Log.e(tag, error)
+        }
     }
 
     override fun addGattService() {
@@ -936,7 +961,7 @@ open class ReactiveBleClient(private val context: Context) : BleClient {
                     // TODO This method was deprecated in API level 33.
                     // https://developer.android.com/reference/android/bluetooth/BluetoothGattServer
                     // mBluetoothGattServer!!.notifyCharacteristicChanged(mCentralBluetoothDevice, bluetoothGattCharacteristic, false, value)
-                    mBluetoothGattServer!!.notifyCharacteristicChanged(
+                    mBluetoothGattServer?.notifyCharacteristicChanged(
                         mCentralBluetoothDevice,
                         bluetoothGattCharacteristic,
                         false
