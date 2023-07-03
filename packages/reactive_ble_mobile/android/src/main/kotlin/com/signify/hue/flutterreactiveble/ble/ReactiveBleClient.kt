@@ -334,96 +334,94 @@ open class ReactiveBleClient(private val context: Context) : BleClient {
         //addExampleGattService()
     }
 
+    var UartSrvUUID: String = "6E400001-B5A3-F393-E0A9-E50E24DCCA9E"
+    var UartCharRxUUID: String = "6E400002-B5A3-F393-E0A9-E50E24DCCA9E"
+    var UartCharTxUUID: String = "6E400003-B5A3-F393-E0A9-E50E24DCCA9E"
+
+    var CccdUUID: String = "00002902-0000-1000-8000-00805f9b34fb"
+    //https://medium.com/@martijn.van.welie/making-android-ble-work-part-4-72a0b85cb442
+    var SrvUUID1: String = "d0611e78-bbb4-4591-a5f8-487910ae4366"
+    var SrvUUID2: String = "ad0badb1-5b99-43cd-917a-a77bc549e3cc"
+    var SrvUUID3: String = "73a58d00-c5a1-4f8e-8f55-1def871ddc81"
+
+    var CharUUID1: String = "8667556c-9a37-4c91-84ed-54ee27d90049"
+    var CharUUID2: String = "af0badb1-5b99-43cd-917a-a77bc549e3cc"
+    var CharUUID3: String = "73a58d01-c5a1-4f8e-8f55-1def871ddc81"
+
+    val UartCharRx: BluetoothGattCharacteristic = BluetoothGattCharacteristic(
+        UUID.fromString(UartCharRxUUID),
+        BluetoothGattCharacteristic.PROPERTY_READ + BluetoothGattCharacteristic.PROPERTY_NOTIFY,
+        BluetoothGattCharacteristic.PERMISSION_READ_ENCRYPTED,
+    )
+
+    val UartCharTx: BluetoothGattCharacteristic = BluetoothGattCharacteristic(
+        UUID.fromString(UartCharTxUUID),
+        BluetoothGattCharacteristic.PROPERTY_WRITE + BluetoothGattCharacteristic.WRITE_TYPE_NO_RESPONSE,
+        BluetoothGattCharacteristic.PERMISSION_WRITE_ENCRYPTED,
+    )
+
+    val Characteristic1: BluetoothGattCharacteristic = BluetoothGattCharacteristic(
+        UUID.fromString(CharUUID1),
+        BluetoothGattCharacteristic.PROPERTY_WRITE + BluetoothGattCharacteristic.PROPERTY_NOTIFY,
+        BluetoothGattCharacteristic.PERMISSION_WRITE,
+    )
+
+    val Characteristic2: BluetoothGattCharacteristic = BluetoothGattCharacteristic(
+        UUID.fromString(CharUUID2),
+        BluetoothGattCharacteristic.PROPERTY_WRITE or BluetoothGattCharacteristic.PROPERTY_NOTIFY,
+        BluetoothGattCharacteristic.PERMISSION_WRITE,
+    )
+
+    val Characteristic3: BluetoothGattCharacteristic = BluetoothGattCharacteristic(
+        UUID.fromString(CharUUID3),
+        BluetoothGattCharacteristic.PROPERTY_READ + BluetoothGattCharacteristic.PROPERTY_NOTIFY,
+        BluetoothGattCharacteristic.PERMISSION_READ_ENCRYPTED,
+    )
+
+    val CCCDUartRx: BluetoothGattDescriptor = BluetoothGattDescriptor(
+        UUID.fromString(CccdUUID),
+        BluetoothGattDescriptor.PERMISSION_READ + BluetoothGattDescriptor.PERMISSION_WRITE,
+    )
+
+    val CCCD1: BluetoothGattDescriptor = BluetoothGattDescriptor(
+        UUID.fromString(CccdUUID),
+        BluetoothGattDescriptor.PERMISSION_READ or BluetoothGattDescriptor.PERMISSION_WRITE,
+    )
+
+    val CCCD2: BluetoothGattDescriptor = BluetoothGattDescriptor(
+        UUID.fromString(CccdUUID),
+        BluetoothGattDescriptor.PERMISSION_READ or BluetoothGattDescriptor.PERMISSION_WRITE,
+    )
+
+    val CCCD3: BluetoothGattDescriptor = BluetoothGattDescriptor(
+        UUID.fromString(CccdUUID),
+        BluetoothGattDescriptor.PERMISSION_READ or BluetoothGattDescriptor.PERMISSION_WRITE,
+    )
+
+    val uartService = BluetoothGattService(
+        UUID.fromString(UartSrvUUID),
+        BluetoothGattService.SERVICE_TYPE_PRIMARY,
+    )
+
+    val service1 = BluetoothGattService(
+        UUID.fromString(SrvUUID1),
+        BluetoothGattService.SERVICE_TYPE_PRIMARY,
+    )
+
+    val service2 = BluetoothGattService(
+        UUID.fromString(SrvUUID2),
+        BluetoothGattService.SERVICE_TYPE_PRIMARY,
+    )
+
+    val service3 = BluetoothGattService(
+        UUID.fromString(SrvUUID3),
+        BluetoothGattService.SERVICE_TYPE_PRIMARY,
+    )
+
     private fun addExampleGattService() {
         val bluetoothManager: BluetoothManager =
             ctx.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
         //lateinit var mBluetoothGattServer: BluetoothGattServer
-        var mBluetoothGatt: BluetoothGatt? = null
-        var mBluetoothDevice: BluetoothDevice? = null
-
-        var UartSrvUUID: String = "6E400001-B5A3-F393-E0A9-E50E24DCCA9E"
-        var UartCharRxUUID: String = "6E400002-B5A3-F393-E0A9-E50E24DCCA9E"
-        var UartCharTxUUID: String = "6E400003-B5A3-F393-E0A9-E50E24DCCA9E"
-
-        var CccdUUID: String = "00002902-0000-1000-8000-00805f9b34fb"
-        //https://medium.com/@martijn.van.welie/making-android-ble-work-part-4-72a0b85cb442
-        var SrvUUID1: String = "d0611e78-bbb4-4591-a5f8-487910ae4366"
-        var SrvUUID2: String = "ad0badb1-5b99-43cd-917a-a77bc549e3cc"
-        var SrvUUID3: String = "73a58d00-c5a1-4f8e-8f55-1def871ddc81"
-
-        var CharUUID1: String = "8667556c-9a37-4c91-84ed-54ee27d90049"
-        var CharUUID2: String = "af0badb1-5b99-43cd-917a-a77bc549e3cc"
-        var CharUUID3: String = "73a58d01-c5a1-4f8e-8f55-1def871ddc81"
-
-        val UartCharRx: BluetoothGattCharacteristic = BluetoothGattCharacteristic(
-            UUID.fromString(UartCharRxUUID),
-            BluetoothGattCharacteristic.PROPERTY_READ + BluetoothGattCharacteristic.PROPERTY_NOTIFY,
-            BluetoothGattCharacteristic.PERMISSION_READ_ENCRYPTED,
-        )
-
-        val UartCharTx: BluetoothGattCharacteristic = BluetoothGattCharacteristic(
-            UUID.fromString(UartCharTxUUID),
-            BluetoothGattCharacteristic.PROPERTY_WRITE + BluetoothGattCharacteristic.WRITE_TYPE_NO_RESPONSE,
-            BluetoothGattCharacteristic.PERMISSION_WRITE_ENCRYPTED,
-        )
-
-        val Characteristic1: BluetoothGattCharacteristic = BluetoothGattCharacteristic(
-            UUID.fromString(CharUUID1),
-            BluetoothGattCharacteristic.PROPERTY_WRITE + BluetoothGattCharacteristic.PROPERTY_NOTIFY,
-            BluetoothGattCharacteristic.PERMISSION_WRITE,
-        )
-
-        val Characteristic2: BluetoothGattCharacteristic = BluetoothGattCharacteristic(
-            UUID.fromString(CharUUID2),
-            BluetoothGattCharacteristic.PROPERTY_WRITE or BluetoothGattCharacteristic.PROPERTY_NOTIFY,
-            BluetoothGattCharacteristic.PERMISSION_WRITE,
-        )
-
-        val Characteristic3: BluetoothGattCharacteristic = BluetoothGattCharacteristic(
-            UUID.fromString(CharUUID3),
-            BluetoothGattCharacteristic.PROPERTY_READ + BluetoothGattCharacteristic.PROPERTY_NOTIFY,
-            BluetoothGattCharacteristic.PERMISSION_READ_ENCRYPTED,
-        )
-
-        val CCCDUartRx: BluetoothGattDescriptor = BluetoothGattDescriptor(
-            UUID.fromString(CccdUUID),
-            BluetoothGattDescriptor.PERMISSION_READ + BluetoothGattDescriptor.PERMISSION_WRITE,
-        )
-
-        val CCCD1: BluetoothGattDescriptor = BluetoothGattDescriptor(
-            UUID.fromString(CccdUUID),
-            BluetoothGattDescriptor.PERMISSION_READ or BluetoothGattDescriptor.PERMISSION_WRITE,
-        )
-
-        val CCCD2: BluetoothGattDescriptor = BluetoothGattDescriptor(
-            UUID.fromString(CccdUUID),
-            BluetoothGattDescriptor.PERMISSION_READ or BluetoothGattDescriptor.PERMISSION_WRITE,
-        )
-
-        val CCCD3: BluetoothGattDescriptor = BluetoothGattDescriptor(
-            UUID.fromString(CccdUUID),
-            BluetoothGattDescriptor.PERMISSION_READ or BluetoothGattDescriptor.PERMISSION_WRITE,
-        )
-
-        val uartService = BluetoothGattService(
-            UUID.fromString(UartSrvUUID),
-            BluetoothGattService.SERVICE_TYPE_PRIMARY,
-        )
-
-        val service1 = BluetoothGattService(
-            UUID.fromString(SrvUUID1),
-            BluetoothGattService.SERVICE_TYPE_PRIMARY,
-        )
-
-        val service2 = BluetoothGattService(
-            UUID.fromString(SrvUUID2),
-            BluetoothGattService.SERVICE_TYPE_PRIMARY,
-        )
-
-        val service3 = BluetoothGattService(
-            UUID.fromString(SrvUUID3),
-            BluetoothGattService.SERVICE_TYPE_PRIMARY,
-        )
 
         val gattCallback = object : BluetoothGattCallback() {
             @Override
@@ -859,14 +857,23 @@ open class ReactiveBleClient(private val context: Context) : BleClient {
     }
 
     override fun stopGattServer() {
+        Log.i(tag, "stop gatt server!")
         // clear and close gatt server after advertising stopped
         if (mBluetoothGattServer == null) {
-            Log.e(tag, "gatt server is null, cant close!")
+            Log.i(tag, "gatt server is null, cant close!")
             return
         }
         try {
-            mBluetoothGattServer?.clearServices()
-            mBluetoothGattServer?.close()
+            Log.i(tag, "start removing gatt services!")
+            mBluetoothGattServer!!.removeService(gattServices.remove(SrvUUID1))
+            mBluetoothGattServer!!.removeService(gattServices.remove(SrvUUID2))
+            mBluetoothGattServer!!.removeService(gattServices.remove(SrvUUID3))
+            mBluetoothGattServer!!.removeService(gattServices.remove(UartSrvUUID))
+
+            mBluetoothGattServer!!.clearServices()
+            Log.i(tag, "gatt server: services cleared")
+            mBluetoothGattServer!!.close()
+            Log.i(tag, "gatt server: services closed")
         } catch (error: Exception) {
             Log.e(tag, error.toString())
         }

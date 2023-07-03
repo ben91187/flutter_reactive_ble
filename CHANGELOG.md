@@ -1,3 +1,7 @@
+# TAG v1.1.30 - Test
+
+- remove services by hand
+
 # TAG v1.1.29 - Test
 
 - check if services are not cleared, caused by mBluetoothGattServer is null
