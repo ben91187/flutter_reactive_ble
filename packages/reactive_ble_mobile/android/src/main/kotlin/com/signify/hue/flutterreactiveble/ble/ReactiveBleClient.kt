@@ -162,6 +162,7 @@ open class ReactiveBleClient(private val context: Context) : BleClient {
     }
 
     override fun disconnectDevice(deviceId: String) {
+        clearGattCache(deviceId)
         activeConnections[deviceId]?.disconnectDevice(deviceId)
         activeConnections.remove(deviceId)
         allConnections.clear()

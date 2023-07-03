@@ -1,3 +1,7 @@
+# TAG v1.1.26 - Test
+
+- clear gatt
+
 # TAG v1.1.25 - Test
 
 - add logging and remove all connections
