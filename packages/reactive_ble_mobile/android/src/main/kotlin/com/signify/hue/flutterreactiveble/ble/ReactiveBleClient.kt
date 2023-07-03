@@ -607,8 +607,6 @@ open class ReactiveBleClient(private val context: Context) : BleClient {
 
             @Override
             override fun onServiceAdded(status: Int, service: BluetoothGattService?) {
-                Log.i(tag, "services not added")
-                return
                 super.onServiceAdded(status, service)
                 Log.i(tag, "onServiceAdded")
 
@@ -863,6 +861,7 @@ open class ReactiveBleClient(private val context: Context) : BleClient {
     override fun stopGattServer() {
         // clear and close gatt server after advertising stopped
         if (mBluetoothGattServer == null) {
+            Log.e(tag, "gatt server is null, cant close!")
             return
         }
         try {
