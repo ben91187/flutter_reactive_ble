@@ -1,3 +1,7 @@
+# TAG v1.1.24 - Test
+
+- remove gatt server on disconnect
+
 # TAG v1.1.23 - Test
 
 - bug fix
