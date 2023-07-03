@@ -1,3 +1,7 @@
+# TAG v1.1.31 - Test
+
+- log service removal
+
 # TAG v1.1.30 - Test
 
 - remove services by hand

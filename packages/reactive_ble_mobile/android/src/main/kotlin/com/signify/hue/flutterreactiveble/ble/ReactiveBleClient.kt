@@ -865,10 +865,18 @@ open class ReactiveBleClient(private val context: Context) : BleClient {
         }
         try {
             Log.i(tag, "start removing gatt services!")
-            mBluetoothGattServer!!.removeService(gattServices.remove(SrvUUID1))
-            mBluetoothGattServer!!.removeService(gattServices.remove(SrvUUID2))
-            mBluetoothGattServer!!.removeService(gattServices.remove(SrvUUID3))
-            mBluetoothGattServer!!.removeService(gattServices.remove(UartSrvUUID))
+
+            Log.i(tag, "remove srvuuid1")
+            Log.i(tag, mBluetoothGattServer!!.removeService(gattServices.remove(SrvUUID1)).toString())
+
+            Log.i(tag, "remove srvuuid2")
+            Log.i(tag, mBluetoothGattServer!!.removeService(gattServices.remove(SrvUUID2)))
+
+            Log.i(tag, "remove srvuuid3")
+            Log.i(tag, mBluetoothGattServer!!.removeService(gattServices.remove(SrvUUID3)))
+
+            Log.i(tag, "remove uart srvuuid")
+            Log.i(tag, mBluetoothGattServer!!.removeService(gattServices.remove(UartSrvUUID)))
 
             mBluetoothGattServer!!.clearServices()
             Log.i(tag, "gatt server: services cleared")
