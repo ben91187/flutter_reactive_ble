@@ -82,20 +82,9 @@ internal class DeviceConnector(
     }
 
     private fun disposeSubscriptions() {
-        if (connectionDisposable == null) {
-            print("connection disposable is null!")
-        }
         connectionDisposable?.dispose()
-        if (connectionDisposable?.isDisposed() ?: false) {
-            print("successfully disposed connection!")
-            print(connectionDisposable?.hashCode().toString())
-        }
         connectDeviceSubject.onComplete()
         connectionStatusUpdates.dispose()
-        if (connectionStatusUpdates.isDisposed()) {
-            print("successfully disposed status updates!")
-            print(connectionStatusUpdates.hashCode().toString())
-        }
     }
 
     private fun establishConnection(rxBleDevice: RxBleDevice): Disposable {

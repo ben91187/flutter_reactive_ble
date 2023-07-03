@@ -163,6 +163,7 @@ open class ReactiveBleClient(private val context: Context) : BleClient {
 
     override fun disconnectDevice(deviceId: String) {
         activeConnections[deviceId]?.disconnectDevice(deviceId)
+        activeConnections.remove(deviceId)
     }
 
     override fun disconnectAllDevices() {
@@ -606,6 +607,8 @@ open class ReactiveBleClient(private val context: Context) : BleClient {
 
             @Override
             override fun onServiceAdded(status: Int, service: BluetoothGattService?) {
+                Log.i(tag, "services not added")
+                return
                 super.onServiceAdded(status, service)
                 Log.i(tag, "onServiceAdded")
 
