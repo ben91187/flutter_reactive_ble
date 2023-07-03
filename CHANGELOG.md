@@ -1,3 +1,7 @@
+# TAG v1.1.25 - Test
+
+- add logging and remove all connections
+
 # TAG v1.1.24 - Test
 
 - remove gatt server on disconnect
