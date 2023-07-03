@@ -1,3 +1,7 @@
+# TAG v1.1.32 - Test
+
+- bug fix
+
 # TAG v1.1.31 - Test
 
 - log service removal
