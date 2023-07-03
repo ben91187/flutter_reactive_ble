@@ -1,3 +1,7 @@
+# TAG v1.1.27 - Test
+
+- only disconnect
+
 # TAG v1.1.26 - Test
 
 - clear gatt
