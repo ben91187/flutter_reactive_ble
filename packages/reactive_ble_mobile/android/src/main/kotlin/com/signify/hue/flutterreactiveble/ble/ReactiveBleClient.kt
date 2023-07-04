@@ -910,8 +910,10 @@ open class ReactiveBleClient(private val context: Context) : BleClient {
             Log.i(tag, "gatt server: services closed")
 
             if (mBluetoothGatt != null) {
-                mBluetoothGatt.disconnect()
-                mBluetoothGatt.close()
+                mBluetoothGatt!!.disconnect()
+                mBluetoothGatt!!.close()
+            } else {
+                Log.i(tag, "mBluetoothGatt is null")
             }
         } catch (error: Exception) {
             Log.e(tag, error.toString())
