@@ -1,3 +1,7 @@
+# TAG v1.1.35 - Test
+
+- keep connection in memory
+
 # TAG v1.1.34 - Test
 
 - fix v1.1.33

@@ -169,7 +169,7 @@ open class ReactiveBleClient(private val context: Context) : BleClient {
         val advertiser: BluetoothLeAdvertiser? = bluetoothAdapter.getBluetoothLeAdvertiser()
 
         activeConnections[deviceId]?.disconnectDevice(deviceId)
-        activeConnections.remove(deviceId)
+//        activeConnections.remove(deviceId)
 
         var device: BluetoothDevice = bluetoothAdapter.getRemoteDevice(deviceId);
 
