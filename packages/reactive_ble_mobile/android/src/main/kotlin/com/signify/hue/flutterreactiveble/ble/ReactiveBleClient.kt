@@ -43,6 +43,7 @@ import android.util.Log
 private const val tag: String = "ReactiveBleClient"
 
 private var mBluetoothGattServer: BluetoothGattServer? = null
+private var mBluetoothGatt: BluetoothGatt? = null
 
 private lateinit var mCentralBluetoothDevice: BluetoothDevice
 
@@ -162,8 +163,32 @@ open class ReactiveBleClient(private val context: Context) : BleClient {
     }
 
     override fun disconnectDevice(deviceId: String) {
+        val bluetoothManager: BluetoothManager =
+            ctx.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
+        val bluetoothAdapter: BluetoothAdapter = bluetoothManager.adapter
+        val advertiser: BluetoothLeAdvertiser? = bluetoothAdapter.getBluetoothLeAdvertiser()
+
         activeConnections[deviceId]?.disconnectDevice(deviceId)
         activeConnections.remove(deviceId)
+
+        var device: BluetoothDevice = bluetoothAdapter.getRemoteDevice(deviceId);
+
+        var state: Int = bluetoothManager.getConnectionState(device, BluetoothProfile.GATT);
+        if (state == BluetoothProfile.STATE_DISCONNECTED) {
+            mBluetoothGattServer!!.clearServices()
+            Log.i(tag, "gatt server: services cleared")
+            mBluetoothGattServer!!.close()
+            Log.i(tag, "gatt server: services closed")
+        }
+
+        if (mBluetoothGatt != null) {
+            Log.i(tag, "disconnect gatt")
+            mBluetoothGatt!!.disconnect()
+            Log.i(tag, "close gatt")
+            mBluetoothGatt!!.close()
+        } else {
+            Log.i(tag, "mBluetoothGatt is null")
+        }
     }
 
     override fun disconnectAllDevices() {
@@ -427,6 +452,7 @@ open class ReactiveBleClient(private val context: Context) : BleClient {
             @Override
             override fun onConnectionStateChange(gatt: BluetoothGatt, status: Int, newState: Int) {
                 super.onConnectionStateChange(gatt, status, newState)
+                mBluetoothGatt = gatt
                 Log.i(tag, "onConnectionStateChange")
             }
 
@@ -882,6 +908,11 @@ open class ReactiveBleClient(private val context: Context) : BleClient {
             Log.i(tag, "gatt server: services cleared")
             mBluetoothGattServer!!.close()
             Log.i(tag, "gatt server: services closed")
+
+            if (mBluetoothGatt != null) {
+                mBluetoothGatt.disconnect()
+                mBluetoothGatt.close()
+            }
         } catch (error: Exception) {
             Log.e(tag, error.toString())
         }

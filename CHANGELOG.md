@@ -1,3 +1,7 @@
+# TAG v1.1.33 - Test
+
+- add disconnect function
+
 # TAG v1.1.32 - Test
 
 - bug fix

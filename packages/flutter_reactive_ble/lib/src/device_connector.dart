@@ -19,6 +19,8 @@ abstract class DeviceConnector {
     Map<Uuid, List<Uuid>>? servicesWithCharacteristicsToDiscover,
     Duration? connectionTimeout,
   });
+
+  void disconnect(String id);
 }
 
 class DeviceConnectorImpl implements DeviceConnector {
@@ -73,8 +75,13 @@ class DeviceConnectorImpl implements DeviceConnector {
           .asyncExpand((_) => specificConnectedDeviceStream),
       onCancel: () => _blePlatform.disconnectDevice(id),
     );
-
     return autoconnectingRepeater.stream;
+  }
+
+
+  @override
+  void disconnect(String id) {
+    _blePlatform.disconnectDevice(id);
   }
 
   @override

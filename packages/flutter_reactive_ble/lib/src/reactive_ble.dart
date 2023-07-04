@@ -364,6 +364,8 @@ class FlutterReactiveBle {
             ),
           );
 
+  void disconnect(String id) => _deviceConnector.disconnect(id);
+
   /// Scans for a specific device and connects to it in case a device containing the specified [id]
   /// is found and that is advertising the services specified in [withServices].
   ///
