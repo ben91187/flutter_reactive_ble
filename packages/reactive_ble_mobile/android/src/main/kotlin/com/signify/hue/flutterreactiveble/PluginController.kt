@@ -67,6 +67,9 @@ class PluginController {
     private val uuidConverter = UuidConverter()
     private val protoConverter = ProtobufMessageConverter()
 
+    private val tag: String = "ReactiveBleClient"
+    private var serviceDiscoveryDelayInSeconds: Long = 0L
+
     internal fun initialize(messenger: BinaryMessenger, context: Context) {
         bleClient = com.signify.hue.flutterreactiveble.ble.ReactiveBleClient(context)
 
@@ -148,6 +151,7 @@ class PluginController {
         val connectDeviceMessage =
             pb.DisconnectFromDeviceRequest.parseFrom(call.arguments as ByteArray)
         deviceConnectionHandler.disconnectDevice(connectDeviceMessage.deviceId)
+        serviceDiscoveryDelayInSeconds = 15
     }
 
     private fun readCharacteristic(call: MethodCall, result: Result) {
@@ -376,6 +380,10 @@ class PluginController {
 
     private fun discoverServices(call: MethodCall, result: Result) {
         val request = pb.DiscoverServicesRequest.parseFrom(call.arguments as ByteArray)
+
+        TimeUnit.SECONDS.sleep(serviceDiscoveryDelayInSeconds)
+        Log.i(tag, "wait for $serviceDiscoveryDelayInSeconds seconds - 123")
+        serviceDiscoveryDelayInSeconds = 0L
 
         bleClient.discoverServices(request.deviceId)
             .observeOn(AndroidSchedulers.mainThread())

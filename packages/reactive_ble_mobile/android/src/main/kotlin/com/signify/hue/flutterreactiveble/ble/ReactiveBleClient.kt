@@ -859,41 +859,7 @@ open class ReactiveBleClient(private val context: Context) : BleClient {
     }
 
     override fun stopGattServer() {
-        /*Log.i(tag, "stop gatt server!")
-        // clear and close gatt server after advertising stopped
-        if (mBluetoothGattServer == null) {
-            Log.i(tag, "gatt server is null, cant close!")
-            return
-        }
-        try {
-            Log.i(tag, "start removing gatt services!")
-
-            Log.i(tag, "remove srvuuid1")
-            Log.i(tag, mBluetoothGattServer!!.removeService(gattServices.remove(SrvUUID1)).toString())
-
-            Log.i(tag, "remove srvuuid2")
-            Log.i(tag, mBluetoothGattServer!!.removeService(gattServices.remove(SrvUUID2)).toString())
-
-            Log.i(tag, "remove srvuuid3")
-            Log.i(tag, mBluetoothGattServer!!.removeService(gattServices.remove(SrvUUID3)).toString())
-
-            Log.i(tag, "remove uart srvuuid")
-            Log.i(tag, mBluetoothGattServer!!.removeService(gattServices.remove(UartSrvUUID)).toString())
-
-            mBluetoothGattServer!!.clearServices()
-            Log.i(tag, "gatt server: services cleared")
-            mBluetoothGattServer!!.close()
-            Log.i(tag, "gatt server: services closed")
-
-            if (mBluetoothGatt != null) {
-                mBluetoothGatt!!.disconnect()
-                mBluetoothGatt!!.close()
-            } else {
-                Log.i(tag, "mBluetoothGatt is null")
-            }
-        } catch (error: Exception) {
-            Log.e(tag, error.toString())
-        }*/
+        Log.d(tag, "stop gatt server!")
         try {
             mBluetoothGattServer?.clearServices()
             mBluetoothGattServer?.close()

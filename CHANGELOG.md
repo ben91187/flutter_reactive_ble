@@ -1,3 +1,7 @@
+# TAG v1.1.37 - Test
+
+- added delay before service discovery after disconnect
+
 # TAG v1.1.36 - Test
 
 - clean code
