@@ -21,6 +21,7 @@ import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import java.util.UUID
 import com.signify.hue.flutterreactiveble.ProtobufModel as pb
+import java.util.concurrent.TimeUnit
 
 @Suppress("TooManyFunctions")
 class PluginController {
