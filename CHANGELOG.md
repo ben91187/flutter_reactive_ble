@@ -1,3 +1,7 @@
+# TAG v1.1.39 - Test
+
+- added import for Log-class
+
 # TAG v1.1.38 - Test
 
 - added import for time unit
