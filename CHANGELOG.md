@@ -1,3 +1,7 @@
+# TAG v1.1.40 - Test
+
+- remove characteristic from server
+
 # TAG v1.1.39 - Test
 
 - added import for Log-class

@@ -809,7 +809,11 @@ open class ReactiveBleClient(private val context: Context) : BleClient {
         // add characterisitic to a service
         while (!service1.addCharacteristic(Characteristic1));
         while (!service2.addCharacteristic(Characteristic2));
-        while (!service3.addCharacteristic(Characteristic3));
+        /*var btChar: BluetoothGattCharacteristic? = null
+        btChar = service3.getCharacteristic(Characteristic3.uuid)
+        if (btChar == null) {
+            while (!service3.addCharacteristic(Characteristic3));
+        }*/
         while (!uartService.addCharacteristic(UartCharRx));
         while (!uartService.addCharacteristic(UartCharTx));
 
