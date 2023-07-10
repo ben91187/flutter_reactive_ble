@@ -1,4 +1,4 @@
-# TAG v1.1.41 - Test
+# TAG v1.1.41 - Stable
 
 - code cleaning
 - refactor adding services to gatt stack
