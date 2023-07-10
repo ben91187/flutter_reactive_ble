@@ -43,8 +43,6 @@ import android.util.Log
 private const val tag: String = "ReactiveBleClient"
 
 private var mBluetoothGattServer: BluetoothGattServer? = null
-private var mBluetoothGatt: BluetoothGatt? = null
-
 private lateinit var mCentralBluetoothDevice: BluetoothDevice
 
 private var advertiseCallback: AdvertiseCallback = object : AdvertiseCallback() {
@@ -91,6 +89,14 @@ open class ReactiveBleClient(private val context: Context) : BleClient {
 
     override val charRequestSubject: BehaviorSubject<CharOperationResult>
         get() = charRequestBehaviorSubject
+
+    var CccdUUID: String = "00002902-0000-1000-8000-00805f9b34fb"
+
+    //https://medium.com/@martijn.van.welie/making-android-ble-work-part-4-72a0b85cb442
+    var SrvUUID1: String = "d0611e78-bbb4-4591-a5f8-487910ae4366"
+    var SrvUUID2: String = "ad0badb1-5b99-43cd-917a-a77bc549e3cc"
+    var SrvUUID3: String = "73a58d00-c5a1-4f8e-8f55-1def871ddc81"
+    var UartSrvUUID: String = "6E400001-B5A3-F393-E0A9-E50E24DCCA9E"
 
     override fun initializeClient() {
         activeConnections = mutableMapOf()
@@ -164,7 +170,7 @@ open class ReactiveBleClient(private val context: Context) : BleClient {
 
     override fun disconnectDevice(deviceId: String) {
         activeConnections[deviceId]?.disconnectDevice(deviceId)
-        //activeConnections.remove(deviceId)
+        activeConnections.remove(deviceId)
     }
 
     override fun disconnectAllDevices() {
@@ -299,23 +305,15 @@ open class ReactiveBleClient(private val context: Context) : BleClient {
     override fun startAdvertising() {
         val bluetoothManager = ctx.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
         val bluetoothAdapter: BluetoothAdapter = bluetoothManager.adapter
-        val advertiser: BluetoothLeAdvertiser? = bluetoothAdapter.getBluetoothLeAdvertiser()
-
-        if (advertiser == null) {
-            return;
-        }
-
+        val advertiser: BluetoothLeAdvertiser =
+            bluetoothAdapter.getBluetoothLeAdvertiser() ?: return
 
         val advertiseSettings = AdvertiseSettings.Builder()
             .setAdvertiseMode(AdvertiseSettings.ADVERTISE_MODE_BALANCED)
             .setConnectable(true)
-            // https://issuetracker.google.com/issues/37132890
-            //.setTimeout(0)
             .setTxPowerLevel(AdvertiseSettings.ADVERTISE_TX_POWER_MEDIUM).build()
 
         val SERVICE_UUID = "61808880-b7b3-11E4-b3a4-0002a5d5c51b"
-
-        //val isNameChanged: Boolean = bluetoothAdapter.setName("Truma App")
 
         val advertiseData: AdvertiseData = AdvertiseData.Builder()
             .addServiceUuid(ParcelUuid.fromString(SERVICE_UUID))
@@ -331,98 +329,88 @@ open class ReactiveBleClient(private val context: Context) : BleClient {
             scanResponse,
             advertiseCallback
         )
-
-        //addExampleGattService()
     }
-
-    var UartSrvUUID: String = "6E400001-B5A3-F393-E0A9-E50E24DCCA9E"
-    var UartCharRxUUID: String = "6E400002-B5A3-F393-E0A9-E50E24DCCA9E"
-    var UartCharTxUUID: String = "6E400003-B5A3-F393-E0A9-E50E24DCCA9E"
-
-    var CccdUUID: String = "00002902-0000-1000-8000-00805f9b34fb"
-    //https://medium.com/@martijn.van.welie/making-android-ble-work-part-4-72a0b85cb442
-    var SrvUUID1: String = "d0611e78-bbb4-4591-a5f8-487910ae4366"
-    var SrvUUID2: String = "ad0badb1-5b99-43cd-917a-a77bc549e3cc"
-    var SrvUUID3: String = "73a58d00-c5a1-4f8e-8f55-1def871ddc81"
-
-    var CharUUID1: String = "8667556c-9a37-4c91-84ed-54ee27d90049"
-    var CharUUID2: String = "af0badb1-5b99-43cd-917a-a77bc549e3cc"
-    var CharUUID3: String = "73a58d01-c5a1-4f8e-8f55-1def871ddc81"
-
-    val UartCharRx: BluetoothGattCharacteristic = BluetoothGattCharacteristic(
-        UUID.fromString(UartCharRxUUID),
-        BluetoothGattCharacteristic.PROPERTY_READ + BluetoothGattCharacteristic.PROPERTY_NOTIFY,
-        BluetoothGattCharacteristic.PERMISSION_READ_ENCRYPTED,
-    )
-
-    val UartCharTx: BluetoothGattCharacteristic = BluetoothGattCharacteristic(
-        UUID.fromString(UartCharTxUUID),
-        BluetoothGattCharacteristic.PROPERTY_WRITE + BluetoothGattCharacteristic.WRITE_TYPE_NO_RESPONSE,
-        BluetoothGattCharacteristic.PERMISSION_WRITE_ENCRYPTED,
-    )
-
-    val Characteristic1: BluetoothGattCharacteristic = BluetoothGattCharacteristic(
-        UUID.fromString(CharUUID1),
-        BluetoothGattCharacteristic.PROPERTY_WRITE + BluetoothGattCharacteristic.PROPERTY_NOTIFY,
-        BluetoothGattCharacteristic.PERMISSION_WRITE,
-    )
-
-    val Characteristic2: BluetoothGattCharacteristic = BluetoothGattCharacteristic(
-        UUID.fromString(CharUUID2),
-        BluetoothGattCharacteristic.PROPERTY_WRITE or BluetoothGattCharacteristic.PROPERTY_NOTIFY,
-        BluetoothGattCharacteristic.PERMISSION_WRITE,
-    )
-
-    val Characteristic3: BluetoothGattCharacteristic = BluetoothGattCharacteristic(
-        UUID.fromString(CharUUID3),
-        BluetoothGattCharacteristic.PROPERTY_READ + BluetoothGattCharacteristic.PROPERTY_NOTIFY,
-        BluetoothGattCharacteristic.PERMISSION_READ_ENCRYPTED,
-    )
-
-    val CCCDUartRx: BluetoothGattDescriptor = BluetoothGattDescriptor(
-        UUID.fromString(CccdUUID),
-        BluetoothGattDescriptor.PERMISSION_READ + BluetoothGattDescriptor.PERMISSION_WRITE,
-    )
-
-    val CCCD1: BluetoothGattDescriptor = BluetoothGattDescriptor(
-        UUID.fromString(CccdUUID),
-        BluetoothGattDescriptor.PERMISSION_READ or BluetoothGattDescriptor.PERMISSION_WRITE,
-    )
-
-    val CCCD2: BluetoothGattDescriptor = BluetoothGattDescriptor(
-        UUID.fromString(CccdUUID),
-        BluetoothGattDescriptor.PERMISSION_READ or BluetoothGattDescriptor.PERMISSION_WRITE,
-    )
-
-    val CCCD3: BluetoothGattDescriptor = BluetoothGattDescriptor(
-        UUID.fromString(CccdUUID),
-        BluetoothGattDescriptor.PERMISSION_READ or BluetoothGattDescriptor.PERMISSION_WRITE,
-    )
-
-    val uartService = BluetoothGattService(
-        UUID.fromString(UartSrvUUID),
-        BluetoothGattService.SERVICE_TYPE_PRIMARY,
-    )
-
-    val service1 = BluetoothGattService(
-        UUID.fromString(SrvUUID1),
-        BluetoothGattService.SERVICE_TYPE_PRIMARY,
-    )
-
-    val service2 = BluetoothGattService(
-        UUID.fromString(SrvUUID2),
-        BluetoothGattService.SERVICE_TYPE_PRIMARY,
-    )
-
-    val service3 = BluetoothGattService(
-        UUID.fromString(SrvUUID3),
-        BluetoothGattService.SERVICE_TYPE_PRIMARY,
-    )
 
     private fun addExampleGattService() {
         val bluetoothManager: BluetoothManager =
             ctx.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
-        //lateinit var mBluetoothGattServer: BluetoothGattServer
+
+        var UartCharRxUUID: String = "6E400002-B5A3-F393-E0A9-E50E24DCCA9E"
+        var UartCharTxUUID: String = "6E400003-B5A3-F393-E0A9-E50E24DCCA9E"
+
+        var CharUUID1: String = "8667556c-9a37-4c91-84ed-54ee27d90049"
+        var CharUUID2: String = "af0badb1-5b99-43cd-917a-a77bc549e3cc"
+        var CharUUID3: String = "73a58d01-c5a1-4f8e-8f55-1def871ddc81"
+
+        val UartCharRx: BluetoothGattCharacteristic = BluetoothGattCharacteristic(
+            UUID.fromString(UartCharRxUUID),
+            BluetoothGattCharacteristic.PROPERTY_READ + BluetoothGattCharacteristic.PROPERTY_NOTIFY,
+            BluetoothGattCharacteristic.PERMISSION_READ_ENCRYPTED,
+        )
+
+        val UartCharTx: BluetoothGattCharacteristic = BluetoothGattCharacteristic(
+            UUID.fromString(UartCharTxUUID),
+            BluetoothGattCharacteristic.PROPERTY_WRITE + BluetoothGattCharacteristic.WRITE_TYPE_NO_RESPONSE,
+            BluetoothGattCharacteristic.PERMISSION_WRITE_ENCRYPTED,
+        )
+
+        val Characteristic1: BluetoothGattCharacteristic = BluetoothGattCharacteristic(
+            UUID.fromString(CharUUID1),
+            BluetoothGattCharacteristic.PROPERTY_WRITE + BluetoothGattCharacteristic.PROPERTY_NOTIFY,
+            BluetoothGattCharacteristic.PERMISSION_WRITE,
+        )
+
+        val Characteristic2: BluetoothGattCharacteristic = BluetoothGattCharacteristic(
+            UUID.fromString(CharUUID2),
+            BluetoothGattCharacteristic.PROPERTY_WRITE or BluetoothGattCharacteristic.PROPERTY_NOTIFY,
+            BluetoothGattCharacteristic.PERMISSION_WRITE,
+        )
+
+        val Characteristic3: BluetoothGattCharacteristic = BluetoothGattCharacteristic(
+            UUID.fromString(CharUUID3),
+            BluetoothGattCharacteristic.PROPERTY_READ + BluetoothGattCharacteristic.PROPERTY_NOTIFY,
+            BluetoothGattCharacteristic.PERMISSION_READ_ENCRYPTED,
+        )
+
+        val CCCDUartRx: BluetoothGattDescriptor = BluetoothGattDescriptor(
+            UUID.fromString(CccdUUID),
+            BluetoothGattDescriptor.PERMISSION_READ + BluetoothGattDescriptor.PERMISSION_WRITE,
+        )
+
+        val CCCD1: BluetoothGattDescriptor = BluetoothGattDescriptor(
+            UUID.fromString(CccdUUID),
+            BluetoothGattDescriptor.PERMISSION_READ or BluetoothGattDescriptor.PERMISSION_WRITE,
+        )
+
+        val CCCD2: BluetoothGattDescriptor = BluetoothGattDescriptor(
+            UUID.fromString(CccdUUID),
+            BluetoothGattDescriptor.PERMISSION_READ or BluetoothGattDescriptor.PERMISSION_WRITE,
+        )
+
+        val CCCD3: BluetoothGattDescriptor = BluetoothGattDescriptor(
+            UUID.fromString(CccdUUID),
+            BluetoothGattDescriptor.PERMISSION_READ or BluetoothGattDescriptor.PERMISSION_WRITE,
+        )
+
+        val uartService = BluetoothGattService(
+            UUID.fromString(UartSrvUUID),
+            BluetoothGattService.SERVICE_TYPE_PRIMARY,
+        )
+
+        val service1 = BluetoothGattService(
+            UUID.fromString(SrvUUID1),
+            BluetoothGattService.SERVICE_TYPE_PRIMARY,
+        )
+
+        val service2 = BluetoothGattService(
+            UUID.fromString(SrvUUID2),
+            BluetoothGattService.SERVICE_TYPE_PRIMARY,
+        )
+
+        val service3 = BluetoothGattService(
+            UUID.fromString(SrvUUID3),
+            BluetoothGattService.SERVICE_TYPE_PRIMARY,
+        )
 
         val gattCallback = object : BluetoothGattCallback() {
             @Override
@@ -559,9 +547,6 @@ open class ReactiveBleClient(private val context: Context) : BleClient {
                                     5 /*FORCEDISCONNECTED*/
                                 )
                             )
-                            // fixme: removed disconnect as the smartphone will receive no further updates
-                            /*activeConnections[deviceId]?.disconnectDevice(deviceId)
-                            activeConnections.remove(deviceId)*/
                         }
                         bondedStateActiveBefore = false;
 
@@ -586,22 +571,6 @@ open class ReactiveBleClient(private val context: Context) : BleClient {
                         // stop advertising here or whatever else you need to do        
                     }
                 }
-
-                /* sample code
-                if (!deviceAdressString.isNullOrEmpty()) {
-                    connectToDevice(deviceAdressString, Duration(5000, TimeUnit.MILLISECONDS))
-                    Log.i(tag, "called connectToDevice")
-                }
-                */
-
-                /*
-                result ->
-                ScanInfo(device?.getAddress(), device?.getName() ?: result.bleDevice.name ?: "",
-                    50,
-                    emptyMap(),
-                    emptyList(),
-                    emptyList(),)
-                */
             }
 
             @Override
@@ -614,18 +583,17 @@ open class ReactiveBleClient(private val context: Context) : BleClient {
                 Log.i(tag, ServiceUuid)
                 if (mBluetoothGattServer != null && ServiceUuid.equals(SrvUUID1)) {
                     while (!mBluetoothGattServer!!.addService(gattServices.get(SrvUUID2)));
+                    Log.i(tag, "service2 added")
                 }
 
                 if (mBluetoothGattServer != null && ServiceUuid.equals(SrvUUID2)) {
                     while (!mBluetoothGattServer!!.addService(gattServices.get(SrvUUID3)));
+                    Log.i(tag, "service3 added")
                 }
 
                 if (mBluetoothGattServer != null && ServiceUuid.equals(SrvUUID3)) {
                     while (!mBluetoothGattServer!!.addService(gattServices.get(UartSrvUUID)));
-                }
-
-                if (ServiceUuid.equals(UartSrvUUID)) {
-                    Log.i(tag, "all gatt services initialised")
+                    Log.i(tag, "serviceUart added")
                 }
             }
 
@@ -807,15 +775,11 @@ open class ReactiveBleClient(private val context: Context) : BleClient {
         UartCharRx.addDescriptor(CCCDUartRx);
 
         // add characterisitic to a service
-        while (!service1.addCharacteristic(Characteristic1));
-        while (!service2.addCharacteristic(Characteristic2));
-        /*var btChar: BluetoothGattCharacteristic? = null
-        btChar = service3.getCharacteristic(Characteristic3.uuid)
-        if (btChar == null) {
-            while (!service3.addCharacteristic(Characteristic3));
-        }*/
-        while (!uartService.addCharacteristic(UartCharRx));
-        while (!uartService.addCharacteristic(UartCharTx));
+        addService(service1, Characteristic1)
+        addService(service2, Characteristic2)
+        addService(service3, Characteristic3)
+        addService(uartService, UartCharRx)
+        addService(uartService, UartCharTx)
 
         mBluetoothGattServer = bluetoothManager.openGattServer(
             context,
@@ -840,6 +804,22 @@ open class ReactiveBleClient(private val context: Context) : BleClient {
         }
     }
 
+    private fun addService(
+        service: BluetoothGattService,
+        characteristic: BluetoothGattCharacteristic
+    ) {
+        var btChar: BluetoothGattCharacteristic? = null
+        btChar = service.getCharacteristic(characteristic.uuid)
+        if (btChar == null) {
+            while (!service.addCharacteristic(characteristic)){
+                Log.d(tag, "could not add characteristic: ${characteristic.uuid} to service: ${service.uuid}")
+            }
+            Log.d(tag, "characteristic ${characteristic.uuid} added to service ${service.uuid}")
+        } else {
+            Log.d(tag, "characteristic: ${characteristic.uuid} already exists in service ${service.uuid}")
+        }
+    }
+
     override fun stopAdvertising() {
         val bluetoothManager: BluetoothManager =
             ctx.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
@@ -850,11 +830,7 @@ open class ReactiveBleClient(private val context: Context) : BleClient {
             Log.d(tag, "can not stop advertising, advertiser is null")
             return;
         }
-        advertiser!!.stopAdvertising(advertiseCallback)
-
-        // clear and close gatt server after advertising stopped
-        // mBluetoothGattServer?.clearServices()
-        // mBluetoothGattServer?.close()
+        advertiser.stopAdvertising(advertiseCallback)
     }
 
     override fun startGattServer() {
@@ -865,11 +841,46 @@ open class ReactiveBleClient(private val context: Context) : BleClient {
     override fun stopGattServer() {
         Log.d(tag, "stop gatt server!")
         try {
+
+            if (mBluetoothGattServer == null){
+                Log.d(tag, "gatt server is null!!!!")
+                return
+            }
+
+            serviceUUIDsList.remove(SrvUUID1)
+            serviceUUIDsList.remove(SrvUUID2)
+            serviceUUIDsList.remove(SrvUUID3)
+            serviceUUIDsList.remove(UartSrvUUID)
+
+            // remove service from the service map and use it's values
+            val service1:BluetoothGattService? = gattServices.remove(SrvUUID1)
+            val service2:BluetoothGattService? = gattServices.remove(SrvUUID2)
+            val service3:BluetoothGattService? = gattServices.remove(SrvUUID3)
+            val serviceUart:BluetoothGattService? = gattServices.remove(UartSrvUUID)
+
+            removeService(service1)
+            removeService(service2)
+            removeService(service3)
+            removeService(serviceUart)
+
             mBluetoothGattServer?.clearServices()
             mBluetoothGattServer?.close()
+
+            mBluetoothGattServer = null
         } catch (error: Exception) {
             Log.e(tag, error.toString())
         }
+    }
+
+    private fun removeService(service: BluetoothGattService?) {
+        if (mBluetoothGattServer == null ||service == null) {
+            Log.d(tag, "can not remove gatt service ${service}, gatt server is null")
+            return
+        }
+        while (!mBluetoothGattServer!!.removeService(service)){
+            Log.d(tag, "gatt service ${service} not removed")
+        }
+        Log.d(tag, "gatt service ${service} removed")
     }
 
     override fun addGattService() {
@@ -1079,24 +1090,6 @@ open class ReactiveBleClient(private val context: Context) : BleClient {
                                 deviceConnection.rxConnection.setupIndication(characteristic, mode)
                             }
                         }
-                    /*
-                    .flatMap { deviceServices -> deviceServices.getCharacteristic(characteristic) }
-                    .flatMapObservable { char ->
-                        val mode = if (char.descriptors.isEmpty()) {
-                            NotificationSetupMode.COMPAT
-                        } else {
-                            NotificationSetupMode.DEFAULT
-                        }
-
-                        if ((char.properties and BluetoothGattCharacteristic.PROPERTY_NOTIFY) > 0) {
-                            deviceConnection.rxConnection.setupNotification(
-                                characteristic,
-                                mode
-                            )
-                        } else {
-                            deviceConnection.rxConnection.setupIndication(characteristic, mode)
-                        }
-                    }*/
                 }
             }
             is EstablishConnectionFailure -> {

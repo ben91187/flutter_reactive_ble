@@ -1,3 +1,9 @@
+# TAG v1.1.41 - Test
+
+- code cleaning
+- refactor adding services to gatt stack
+- refactor removing services from gatt stack
+
 # TAG v1.1.40 - Test
 
 - remove characteristic from server
