@@ -50,7 +50,7 @@ class PluginController {
         "writeLocalCharacteristic" to this::writeLocalCharacteristic,
         "checkIfOldInetBoxBondingExists" to this::checkIfOldInetBoxBondingExists,
         "removeInetBoxBonding" to this::removeInetBoxBonding,
-        "getConnection" to this::getConnection,
+        "isDeviceConnected" to this::isDeviceConnected,
     )
 
     lateinit var bleClient: com.signify.hue.flutterreactiveble.ble.BleClient

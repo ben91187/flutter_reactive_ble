@@ -1,4 +1,8 @@
-# TAG v1.1.42 - Stable
+# TAG v1.1.43 - Test
+
+- rename function
+
+# TAG v1.1.42 - Test
 
 - add connection check for ios and android
 
