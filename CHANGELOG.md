@@ -1,5 +1,10 @@
 # TAG v1.1.50 - Test
 
+- rename deviceId to deviceID
+- remove value from GetConnectionRequest
+
+# TAG v1.1.50 - Test
+
 - fix guard statement
 - exception if device id couldnt be parsed
 
