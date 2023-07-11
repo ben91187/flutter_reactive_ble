@@ -542,12 +542,10 @@ final class Central {
         )
     }
 
-    func isDeviceConnected(peripheralID: PeripheralID) throws -> Bool {
+    func isDeviceConnected(peripheralID: PeripheralID) -> Bool {
             print("get connection state")
-            guard let peripheral: CBPeripheral = try resolve(connected: peripheralID) 
-                else {
-                    return false
-                }
+            guard let peripheral: CBPeripheral = try? resolve(connected: peripheralID) 
+                else { return false }
             return peripheral.state == .connected
         }
 

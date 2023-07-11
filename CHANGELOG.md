@@ -1,5 +1,9 @@
 # TAG v1.1.54 - Test
 
+- fix protobuf en- and decoding
+
+# TAG v1.1.54 - Test
+
 - add device connection info model
 
 # TAG v1.1.53 - Test
