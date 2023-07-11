@@ -74,4 +74,6 @@ interface BleClient {
         characteristic: UUID,
         value: ByteArray
     )
+
+    fun isDeviceConnected(deviceId: String): Boolean
 }

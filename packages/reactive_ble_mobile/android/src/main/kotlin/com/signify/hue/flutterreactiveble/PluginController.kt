@@ -50,6 +50,7 @@ class PluginController {
         "writeLocalCharacteristic" to this::writeLocalCharacteristic,
         "checkIfOldInetBoxBondingExists" to this::checkIfOldInetBoxBondingExists,
         "removeInetBoxBonding" to this::removeInetBoxBonding,
+        "getConnection" to this::getConnection,
     )
 
     lateinit var bleClient: com.signify.hue.flutterreactiveble.ble.BleClient
@@ -394,5 +395,12 @@ class PluginController {
                 result.error("service_discovery_failure", throwable.message, null)
             })
             .discard()
+    }
+
+    private fun isDeviceConnected(call: MethodCall, result: Result) {
+        val request = pb.DiscoverServicesRequest.parseFrom(call.arguments as ByteArray)
+        val connection: Observable<EstablishConnectionResult> = bleClient.isDeviceConnected(deviceId)
+        val hasConnection = connection.value is EstablishConnectionResult
+        result.success(hasConnection)
     }
 }

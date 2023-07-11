@@ -1,3 +1,7 @@
+# TAG v1.1.42 - Stable
+
+- add connection check for ios and android
+
 # TAG v1.1.41 - Stable
 
 - code cleaning

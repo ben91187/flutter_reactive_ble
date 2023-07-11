@@ -720,4 +720,21 @@ final class PluginController {
 
         sink.add(.success(message))
     }
+
+    func isDeviceConnected(name: String, args: GetConnectionRequest, completion: @escaping PlatformMethodCompletionHandler) {
+            guard let central = central
+                else {
+                    completion(.failure(PluginError.notInitialized.asFlutterError))
+                    return
+                }
+
+            do {
+                try let isDeviceConnected = central.isDeviceConnected(args.deviceID)
+
+            }
+            catch {
+                completion(.failure(PluginError.notInitialized.asFlutterError))
+            }
+            completion(.success(isDeviceConnected))
+        }
 }

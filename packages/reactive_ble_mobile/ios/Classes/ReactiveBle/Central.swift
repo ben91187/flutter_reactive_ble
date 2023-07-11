@@ -541,6 +541,12 @@ final class Central {
         )
     }
 
+    func isDeviceConnected(peripheralID: PeripheralID) throws -> Bool {
+            print("get connection state")
+            guard let peripheral: CBPeripheral = resolve(connected: peripheralID)
+            return peripheral.state == .connected
+        }
+
     private func resolve(known peripheralID: PeripheralID) throws -> CBPeripheral {
         print("resolve known PeripheralID")
         guard let peripheral = centralManager.retrievePeripherals(withIdentifiers: [peripheralID]).first
