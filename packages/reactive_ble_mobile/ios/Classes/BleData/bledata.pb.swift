@@ -1770,8 +1770,8 @@ extension GetConnectionRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImp
   }
 
   func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
-    if let v = self.deviceID {
-      try visitor.visitSingularStringField(value: v, fieldNumber: 1)
+    if !self.deviceID.isEmpty {
+      try visitor.visitSingularStringField(value: self.deviceID, fieldNumber: 1)
     }
     try unknownFields.traverse(visitor: &visitor)
   }
@@ -1802,11 +1802,12 @@ extension GetConnectionInfo: SwiftProtobuf.Message, SwiftProtobuf._MessageImplem
   }
 
   func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
-    if let v = self.state {
-      try visitor.visitSingularBoolField(value: v, fieldNumber: 1)
+    if self.state != false {
+      try visitor.visitSingularBoolField(value: self.state, fieldNumber: 1)
     }
     try unknownFields.traverse(visitor: &visitor)
   }
+  
 
   static func ==(lhs: GetConnectionInfo, rhs: GetConnectionInfo) -> Bool {
     if lhs.state != rhs.state {return false}

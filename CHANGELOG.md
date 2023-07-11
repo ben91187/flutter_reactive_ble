@@ -1,4 +1,8 @@
-# TAG v1.1.54 - Test
+# TAG v1.1.56 - Test
+
+- fix extra argument 'completion' in call
+
+# TAG v1.1.55 - Test
 
 - fix protobuf en- and decoding
 

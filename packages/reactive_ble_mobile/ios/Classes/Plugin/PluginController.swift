@@ -733,11 +733,8 @@ final class PluginController {
                     return
                 }
         do {
-            let deviceConnectionState: Bool = try central.isDeviceConnected(peripheralID: deviceID, completion: {
-                completion(.success(GetConnectionInfo.with {
-                        $0.state = deviceConnectionState
-                    }))
-            } )
+            let deviceConnectionState: Bool = try central.isDeviceConnected(peripheralID: deviceID)
+            completion(.success(GetConnectionInfo.with { $0.state = deviceConnectionState }))
         }
         catch {
             completion(.failure(PluginError.notInitialized.asFlutterError))
