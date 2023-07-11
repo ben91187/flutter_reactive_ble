@@ -1,3 +1,7 @@
+# TAG v1.1.47 - Test
+
+- add GetConnectionRequest extension
+
 # TAG v1.1.46 - Test
 
 - try to fix errors
