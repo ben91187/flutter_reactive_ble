@@ -723,6 +723,9 @@ final class PluginController {
 
     func isDeviceConnected(name: String, args: GetConnectionRequest, completion: @escaping PlatformMethodCompletionHandler) {
         guard let deviceID = UUID(uuidString: args.deviceID)
+        else{
+            return
+        }
             guard let central = central
                 else {
                     completion(.failure(PluginError.notInitialized.asFlutterError))

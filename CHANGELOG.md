@@ -1,3 +1,8 @@
+# TAG v1.1.50 - Test
+
+- fix guard statement
+- exception if device id couldnt be parsed
+
 # TAG v1.1.49 - Test
 
 - cast peripheral id string to uuid
