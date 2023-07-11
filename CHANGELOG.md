@@ -1,3 +1,7 @@
+# TAG v1.1.54 - Test
+
+- add device connection info model
+
 # TAG v1.1.53 - Test
 
 - fix data serialization

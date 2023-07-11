@@ -734,8 +734,8 @@ final class PluginController {
                 }
         do {
             let deviceConnectionState: Bool = try central.isDeviceConnected(peripheralID: deviceID, completion: {
-                completion(.success(DiscoverServicesInfo.with {
-                        $0.deviceID = deviceConnectionState
+                completion(.success(GetConnectionInfo.with {
+                        $0.state = deviceConnectionState
                     }))
             } )
         }
