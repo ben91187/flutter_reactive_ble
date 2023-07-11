@@ -1,4 +1,8 @@
-# TAG v1.1.50 - Test
+# TAG v1.1.52 - Test
+
+- save changes
+
+# TAG v1.1.51 - Test
 
 - rename deviceId to deviceID
 - remove value from GetConnectionRequest

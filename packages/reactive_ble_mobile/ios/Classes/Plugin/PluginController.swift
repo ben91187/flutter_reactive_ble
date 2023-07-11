@@ -723,20 +723,21 @@ final class PluginController {
 
     func isDeviceConnected(name: String, args: GetConnectionRequest, completion: @escaping PlatformMethodCompletionHandler) {
         guard let deviceID = UUID(uuidString: args.deviceID)
-        else{
-            return
-        }
-            guard let central = central
+            else {
+                completion(.failure(PluginError.invalidMethodCall(method: name, details: "\"deviceID\" is invalid").asFlutterError))
+                return
+            }
+        guard let central = central
                 else {
                     completion(.failure(PluginError.notInitialized.asFlutterError))
                     return
                 }
-            do {
-                let isDeviceConnected = try central.isDeviceConnected(peripheralID: deviceID)
-            }
-            catch {
-                completion(.failure(PluginError.notInitialized.asFlutterError))
-            }
-            completion(.success(isDeviceConnected))
+        do {
+            let isDeviceConnected = try central.isDeviceConnected(peripheralID: deviceID)
         }
+        catch {
+            completion(.failure(PluginError.notInitialized.asFlutterError))
+        }
+        completion(.success(isDeviceConnected))
+    }
 }
