@@ -727,10 +727,8 @@ final class PluginController {
                     completion(.failure(PluginError.notInitialized.asFlutterError))
                     return
                 }
-
             do {
-                try let isDeviceConnected = central.isDeviceConnected(args.deviceID)
-
+                let isDeviceConnected = try central.isDeviceConnected(peripheralID: args.deviceID)
             }
             catch {
                 completion(.failure(PluginError.notInitialized.asFlutterError))
