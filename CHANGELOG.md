@@ -1,3 +1,7 @@
+# TAG v1.1.53 - Test
+
+- fix data serialization
+
 # TAG v1.1.52 - Test
 
 - save changes

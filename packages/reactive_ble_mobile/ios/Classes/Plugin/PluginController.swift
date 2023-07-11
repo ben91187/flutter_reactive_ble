@@ -733,11 +733,16 @@ final class PluginController {
                     return
                 }
         do {
-            let isDeviceConnected = try central.isDeviceConnected(peripheralID: deviceID)
+            let deviceConnectionState: Bool = try central.isDeviceConnected(peripheralID: deviceID, completion: {
+                completion(.success(DiscoverServicesInfo.with {
+                        $0.deviceID = deviceConnectionState
+                    }))
+            } )
         }
         catch {
             completion(.failure(PluginError.notInitialized.asFlutterError))
         }
-        completion(.success(isDeviceConnected))
+        completion(.failure(PluginError.notInitialized.asFlutterError))
+        
     }
 }

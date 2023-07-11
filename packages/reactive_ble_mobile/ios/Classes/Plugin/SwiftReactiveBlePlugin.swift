@@ -205,8 +205,8 @@ public class SwiftReactiveBlePlugin: NSObject, FlutterPlugin {
             context.removeInetBoxBonding(name: name, completion: completion)
         }),
         AnyPlatformMethod(UnaryPlatformMethod(name: "isDeviceConnected") { (name, context, args: GetConnectionRequest, completion) in
-                    context.isDeviceConnected(name: name, args: args, completion: completion)
-                })
+            context.isDeviceConnected(name: name, args: args, completion: completion)
+        })
     ])
 
     public func handle(_ call: FlutterMethodCall, result completion: @escaping FlutterResult) {

@@ -21,6 +21,7 @@ final class Central {
     typealias CharacteristicSubscribedByCentralHandler = (Central, QualifiedCharacteristic, Data?, Error?) -> Void//(Central, CBCentral, CBCharacteristic) -> Void
     typealias SubChangeHandler = (Central, CBCentral, CBCharacteristic) -> Void
     typealias CharRequestHandler = (Central, CBPeripheralManager, QualifiedCharacteristic, Data?) -> Void
+    typealias ConnectionStateCallback = (Central, Bool) -> Void
 
     private var mConnectedCentral : CBCentral!
     
