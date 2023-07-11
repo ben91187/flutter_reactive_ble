@@ -1,3 +1,7 @@
+# TAG v1.1.49 - Test
+
+- cast peripheral id string to uuid
+
 # TAG v1.1.48 - Test
 
 - fix GetConnectionRequest extension
