@@ -1,3 +1,7 @@
+# TAG v1.1.61 - Test
+
+- fix return type
+
 # TAG v1.1.60 - Test
 
 - rename function parameter deviceID to deviceId
