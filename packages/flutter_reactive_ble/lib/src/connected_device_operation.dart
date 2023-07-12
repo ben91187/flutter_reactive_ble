@@ -27,6 +27,8 @@ abstract class ConnectedDeviceOperation {
 
   Future<void> requestConnectionPriority(
       String deviceId, ConnectionPriority priority);
+
+  Future<bool> isDeviceConnected(String deviceId);
 }
 
 class ConnectedDeviceOperationImpl implements ConnectedDeviceOperation {
@@ -109,6 +111,10 @@ class ConnectedDeviceOperationImpl implements ConnectedDeviceOperation {
       _blePlatform
           .requestConnectionPriority(deviceId, priority)
           .then((message) => message.result.dematerialize());
+
+  @override
+  Future<bool> isDeviceConnected(String deviceId) async =>
+      _blePlatform.isDeviceConnected(deviceId);
 }
 
 @visibleForTesting

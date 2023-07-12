@@ -221,8 +221,8 @@ class FlutterReactiveBle {
     await _blePlatform.addGattCharacteristic();
   }
 
-  Future<bool> checkIfOldInetBoxBondingExists() async => _blePlatform
-      .checkIfOldInetBoxBondingExists();
+  Future<bool> checkIfOldInetBoxBondingExists() async =>
+      _blePlatform.checkIfOldInetBoxBondingExists();
 
   Future<void> removeInetBoxBonding() async {
     await _blePlatform.removeInetBoxBonding();
@@ -441,7 +441,6 @@ class FlutterReactiveBle {
   /// Use [LogLevel.none] to disable logging. This is also the default.
   set logLevel(LogLevel logLevel) => _debugLogger.logLevel = logLevel;
 
-  Future<bool> isDeviceConnected(String deviceId) {
-    return _blePlatform.isDeviceConnected(deviceId).then((info) => info.dematerialize());
-  }
+  Future<bool> isDeviceConnected(String deviceId) =>
+      _blePlatform.isDeviceConnected(deviceId);
 }
