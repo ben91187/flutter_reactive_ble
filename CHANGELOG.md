@@ -1,3 +1,7 @@
+# TAG v1.1.72 - Test
+
+- fix missing "not"
+
 # TAG v1.1.71 - Test
 
 - fixed wrong type: bool -> Boolean
