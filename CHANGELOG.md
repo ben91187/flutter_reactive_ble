@@ -1,3 +1,7 @@
+# TAG v1.1.67 - Test
+
+- fix parsing data
+
 # TAG v1.1.66 - Test
 
 - fix import of class in PluginController.kt
