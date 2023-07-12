@@ -1,3 +1,7 @@
+# TAG v1.1.68 - Test
+
+- define isDeviceConnected function and return value
+
 # TAG v1.1.67 - Test
 
 - fix parsing data

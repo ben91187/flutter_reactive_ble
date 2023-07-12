@@ -24,6 +24,7 @@ import java.util.UUID
 import com.signify.hue.flutterreactiveble.ProtobufModel as pb
 import java.util.concurrent.TimeUnit
 import android.util.Log
+import io.reactivex.Observable
 
 @Suppress("TooManyFunctions")
 class PluginController {

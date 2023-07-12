@@ -1127,4 +1127,8 @@ open class ReactiveBleClient(private val context: Context) : BleClient {
                 .setShouldLogAttributeValues(true)
                 .build()
         )
+
+    fun isDeviceConnected(deviceId: String): Observable<EstablishConnectionResult> {
+      return getConnection(deviceId)
+    }
 }
