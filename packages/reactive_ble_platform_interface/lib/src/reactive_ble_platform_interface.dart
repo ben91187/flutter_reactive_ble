@@ -233,4 +233,8 @@ abstract class ReactiveBlePlatform extends PlatformInterface {
   Future<void> removeInetBoxBonding() {
     throw UnimplementedError('RemoveInetBoxBonding has not been implemented.');
   }
+
+  Future<void> isDeviceConnected() {
+    throw UnimplementedError('IsDeviceConnected has not been implemented.');
+  }
 }

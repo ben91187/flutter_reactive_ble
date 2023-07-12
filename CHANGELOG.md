@@ -1,3 +1,7 @@
+# TAG v1.1.58 - Test
+
+- added missing function
+
 # TAG v1.1.57 - Test
 
 - add isDeviceConnected function call to the dart side
