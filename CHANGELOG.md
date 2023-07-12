@@ -1,3 +1,7 @@
+# TAG v1.1.71 - Test
+
+- fixed wrong type: bool -> Boolean
+
 # TAG v1.1.70 - Test
 
 - added convert function for pb.GetConnectionInfo
