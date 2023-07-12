@@ -250,4 +250,11 @@ class ProtobufMessageConverter {
 
         return pb.Uuid.newBuilder().setData(ByteString.copyFrom(convertedUuid)).build()
     }
+    fun convertGetConnectionInfo(
+        state: bool
+    ): pb.GetConnectionInfo {
+        return pb.GetConnectionInfo.newBuilder()
+            .setState(state)
+            .build()
+    }
 }

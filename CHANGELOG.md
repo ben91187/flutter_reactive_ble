@@ -1,3 +1,7 @@
+# TAG v1.1.70 - Test
+
+- added convert function for pb.GetConnectionInfo
+
 # TAG v1.1.69 - Test
 
 - check if connection is empty
