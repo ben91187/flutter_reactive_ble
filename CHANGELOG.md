@@ -1,3 +1,7 @@
+# TAG v1.1.63 - Test
+
+- change string to bool in protobuf model
+
 # TAG v1.1.62 - Test
 
 - code cleaning

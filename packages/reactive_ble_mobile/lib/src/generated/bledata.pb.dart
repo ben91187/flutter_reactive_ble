@@ -2212,7 +2212,7 @@ class GetConnectionInfo extends $pb.GeneratedMessage {
   $core.bool get state => $_getSZ(0);
   @$pb.TagNumber(1)
   set state($core.bool v) {
-    $_setString(0, v);
+    $_setBool(0, v);
   }
 
   @$pb.TagNumber(1)
