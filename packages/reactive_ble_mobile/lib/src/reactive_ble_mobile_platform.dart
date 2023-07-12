@@ -353,6 +353,17 @@ class ReactiveBleMobilePlatform extends ReactiveBlePlatform {
   @override
   Future<void> removeInetBoxBonding() =>
       _bleMethodChannel.invokeMethod<void>("removeInetBoxBonding");
+
+  @override
+  Future<bool> isDeviceConnected(String deviceId) async =>
+      _bleMethodChannel
+          .invokeMethod<List<int>>(
+        'isDeviceConnected',
+        _argsToProtobufConverter
+            .createGetConnectionRequest(deviceId)
+            .writeToBuffer(),
+      )
+          .then((data) => _protobufConverter.getConnectionInfoFrom(data!));
 }
 
 class ReactiveBleMobilePlatformFactory {

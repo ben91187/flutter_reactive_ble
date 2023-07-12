@@ -2088,6 +2088,8 @@ class DiscoverServicesRequest extends $pb.GeneratedMessage {
   void clearDeviceId() => clearField(1);
 }
 
+// ############# GetConnection #################
+
 class GetConnectionRequest extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
       const $core.bool.fromEnvironment('protobuf.omit_message_names')
@@ -2153,6 +2155,74 @@ class GetConnectionRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   void clearDeviceId() => clearField(1);
 }
+class GetConnectionInfo extends $pb.GeneratedMessage {
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      const $core.bool.fromEnvironment('protobuf.omit_message_names')
+          ? ''
+          : 'GetConnectionInfo',
+      createEmptyInstance: create)
+    ..aOS(
+        1,
+        const $core.bool.fromEnvironment('protobuf.omit_field_names')
+            ? ''
+            : 'state',
+        protoName: 'state')
+    ..hasRequiredFields = false;
+
+  GetConnectionInfo._() : super();
+  factory GetConnectionInfo({
+    $core.bool? state,
+  }) {
+    final _result = create();
+    if (state != null) {
+      _result.state = state;
+    }
+    return _result;
+  }
+  factory GetConnectionInfo.fromBuffer($core.List<$core.int> i,
+      [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(i, r);
+  factory GetConnectionInfo.fromJson($core.bool i,
+      [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(i, r);
+  @$core.Deprecated('Using this can add significant overhead to your binary. '
+      'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
+      'Will be removed in next major version')
+  GetConnectionInfo clone() =>
+      GetConnectionInfo()..mergeFromMessage(this);
+  @$core.Deprecated('Using this can add significant overhead to your binary. '
+      'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
+      'Will be removed in next major version')
+  GetConnectionInfo copyWith(
+      void Function(GetConnectionInfo) updates) =>
+      super.copyWith((message) => updates(message as GetConnectionInfo))
+      as GetConnectionInfo; // ignore: deprecated_member_use
+  $pb.BuilderInfo get info_ => _i;
+  @$core.pragma('dart2js:noInline')
+  static GetConnectionInfo create() => GetConnectionInfo._();
+  GetConnectionInfo createEmptyInstance() => create();
+  static $pb.PbList<GetConnectionInfo> createRepeated() =>
+      $pb.PbList<GetConnectionInfo>();
+  @$core.pragma('dart2js:noInline')
+  static GetConnectionInfo getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<GetConnectionInfo>(create);
+  static GetConnectionInfo? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.bool get state => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set state($core.bool v) {
+    $_setString(0, v);
+  }
+
+  @$pb.TagNumber(1)
+  $core.bool hasState() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearState() => clearField(1);
+}
+
+
+// ##############################
 
 class DiscoverServicesInfo extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(

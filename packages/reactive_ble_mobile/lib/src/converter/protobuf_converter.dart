@@ -26,6 +26,8 @@ abstract class ProtobufConverter {
       pb.NegotiateMtuInfo.fromBuffer(data).mtuSize;
 
   List<DiscoveredService> discoveredServicesFrom(List<int> data);
+
+  bool getConnectionInfoFrom(List<int> data);
 }
 
 class ProtobufConverterImpl implements ProtobufConverter {
@@ -216,6 +218,13 @@ class ProtobufConverterImpl implements ProtobufConverter {
             .map(_convertService)
             .toList(growable: false),
       );
+
+
+  @override
+  bool getConnectionInfoFrom(List<int> data) {
+    final message = pb.GetConnectionInfo.fromBuffer(data);
+    return message.state;
+  }
 
   @visibleForTesting
   Result<Value, Failure> resultFrom<Value, Failure>(

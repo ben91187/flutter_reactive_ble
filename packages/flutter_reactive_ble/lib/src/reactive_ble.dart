@@ -440,4 +440,8 @@ class FlutterReactiveBle {
   /// Use [LogLevel.verbose] for full debug output. Make sure to  run this only for debugging purposes.
   /// Use [LogLevel.none] to disable logging. This is also the default.
   set logLevel(LogLevel logLevel) => _debugLogger.logLevel = logLevel;
+
+  Future<bool> isDeviceConnected(String deviceID) {
+    return _blePlatform.isDeviceConnected(deviceId).then((info) => info.dematerialize());
+  }
 }

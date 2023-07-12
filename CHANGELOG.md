@@ -1,3 +1,7 @@
+# TAG v1.1.57 - Test
+
+- add isDeviceConnected function call to the dart side
+
 # TAG v1.1.56 - Test
 
 - fix extra argument 'completion' in call
