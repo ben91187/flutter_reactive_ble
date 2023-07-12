@@ -1,4 +1,8 @@
-# TAG v1.1.58 - Test
+# TAG v1.1.60 - Test
+
+- rename function parameter deviceID to deviceId
+
+# TAG v1.1.59 - Test
 
 - fix function parameters
 

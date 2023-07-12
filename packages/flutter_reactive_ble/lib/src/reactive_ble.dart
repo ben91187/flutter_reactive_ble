@@ -441,7 +441,7 @@ class FlutterReactiveBle {
   /// Use [LogLevel.none] to disable logging. This is also the default.
   set logLevel(LogLevel logLevel) => _debugLogger.logLevel = logLevel;
 
-  Future<bool> isDeviceConnected(String deviceID) {
+  Future<bool> isDeviceConnected(String deviceId) {
     return _blePlatform.isDeviceConnected(deviceId).then((info) => info.dematerialize());
   }
 }
