@@ -402,7 +402,7 @@ class PluginController {
     private fun isDeviceConnected(call: MethodCall, result: Result) {
         val request: pb.GetConnectionRequest = pb.GetConnectionRequest.parseFrom(call.arguments as ByteArray)
         val connection: Observable<EstablishConnectionResult> = bleClient.isDeviceConnected(request.deviceId)
-        val hasConnection = connection.value is EstablishConnectionResult
+        val hasConnection = connection.isEmpty.blockingGet()
         result.success(hasConnection)
     }
 }

@@ -1128,7 +1128,7 @@ open class ReactiveBleClient(private val context: Context) : BleClient {
                 .build()
         )
 
-    fun isDeviceConnected(deviceId: String): Observable<EstablishConnectionResult> {
+    override fun isDeviceConnected(deviceId: String): Observable<EstablishConnectionResult> {
       return getConnection(deviceId)
     }
 }

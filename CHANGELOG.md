@@ -1,3 +1,7 @@
+# TAG v1.1.69 - Test
+
+- check if connection is empty
+
 # TAG v1.1.68 - Test
 
 - define isDeviceConnected function and return value
