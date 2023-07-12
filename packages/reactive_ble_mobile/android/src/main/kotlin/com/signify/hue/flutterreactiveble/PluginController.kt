@@ -2,6 +2,7 @@ package com.signify.hue.flutterreactiveble
 
 import android.content.Context
 import com.signify.hue.flutterreactiveble.ble.RequestConnectionPriorityFailed
+import com.signify.hue.flutterreactiveble.ble.EstablishConnectionResult
 import com.signify.hue.flutterreactiveble.channelhandlers.BleStatusHandler
 import com.signify.hue.flutterreactiveble.channelhandlers.CharNotificationHandler
 import com.signify.hue.flutterreactiveble.channelhandlers.DeviceConnectionHandler

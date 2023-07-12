@@ -1,3 +1,7 @@
+# TAG v1.1.66 - Test
+
+- fix import of class in PluginController.kt
+
 # TAG v1.1.65 - Test
 
 - print device id on error for isDeviceConnected function
