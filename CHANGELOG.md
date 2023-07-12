@@ -1,3 +1,7 @@
+# TAG v1.1.65 - Test
+
+- print device id on error for isDeviceConnected function
+
 # TAG v1.1.64 - Test
 
 - add classes to bledata.proto
