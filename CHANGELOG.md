@@ -1,3 +1,8 @@
+# TAG v1.1.64 - Test
+
+- add classes to bledata.proto
+- generate protobuf code
+
 # TAG v1.1.63 - Test
 
 - change string to bool in protobuf model

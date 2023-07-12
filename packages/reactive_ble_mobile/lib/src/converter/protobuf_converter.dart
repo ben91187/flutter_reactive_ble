@@ -221,10 +221,7 @@ class ProtobufConverterImpl implements ProtobufConverter {
 
 
   @override
-  bool getConnectionInfoFrom(List<int> data) {
-    final message = pb.GetConnectionInfo.fromBuffer(data);
-    return message.state;
-  }
+  bool getConnectionInfoFrom(List<int> data) => pb.GetConnectionInfo.fromBuffer(data).state;
 
   @visibleForTesting
   Result<Value, Failure> resultFrom<Value, Failure>(

@@ -149,3 +149,10 @@ message GenericFailure {
     int32 code = 1;
     string message = 2;
 }
+
+message GetConnectionRequest {
+    string deviceId = 1;
+}
+message GetConnectionInfo {
+    bool state = 1;
+}
