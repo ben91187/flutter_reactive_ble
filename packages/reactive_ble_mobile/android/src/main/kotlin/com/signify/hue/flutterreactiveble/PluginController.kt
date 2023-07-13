@@ -1,14 +1,9 @@
 package com.signify.hue.flutterreactiveble
 
 import android.content.Context
-import com.signify.hue.flutterreactiveble.ble.RequestConnectionPriorityFailed
 import com.signify.hue.flutterreactiveble.ble.EstablishConnectionResult
-import com.signify.hue.flutterreactiveble.channelhandlers.BleStatusHandler
-import com.signify.hue.flutterreactiveble.channelhandlers.CharNotificationHandler
-import com.signify.hue.flutterreactiveble.channelhandlers.DeviceConnectionHandler
-import com.signify.hue.flutterreactiveble.channelhandlers.CentralConnectionHandler
-import com.signify.hue.flutterreactiveble.channelhandlers.ScanDevicesHandler
-import com.signify.hue.flutterreactiveble.channelhandlers.CharCentralNotificationHandler
+import com.signify.hue.flutterreactiveble.ble.RequestConnectionPriorityFailed
+import com.signify.hue.flutterreactiveble.channelhandlers.*
 import com.signify.hue.flutterreactiveble.converters.ProtobufMessageConverter
 import com.signify.hue.flutterreactiveble.converters.UuidConverter
 import com.signify.hue.flutterreactiveble.model.ClearGattCacheErrorType
@@ -18,13 +13,12 @@ import io.flutter.plugin.common.BinaryMessenger
 import io.flutter.plugin.common.EventChannel
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel.Result
+import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
-import java.util.UUID
+import java.util.*
+import java.util.concurrent.*
 import com.signify.hue.flutterreactiveble.ProtobufModel as pb
-import java.util.concurrent.TimeUnit
-import android.util.Log
-import io.reactivex.Observable
 
 @Suppress("TooManyFunctions")
 class PluginController {
@@ -400,11 +394,42 @@ class PluginController {
     }
 
     private fun isDeviceConnected(call: MethodCall, result: Result) {
-        val request: pb.GetConnectionRequest = pb.GetConnectionRequest.parseFrom(call.arguments as ByteArray)
-        val connection: Observable<EstablishConnectionResult> = bleClient.isDeviceConnected(request.deviceId)
-        val hasConnection = !connection.isEmpty.blockingGet()
-        result.success(protoConverter.convertGetConnectionInfo(
-            hasConnection,
-        ).toByteArray())
+        try {
+            val request: pb.GetConnectionRequest =
+                pb.GetConnectionRequest.parseFrom(call.arguments as ByteArray)
+            val deviceId: String = request.deviceId
+            if (deviceId.isBlank()) {
+                result.success(
+                    protoConverter.convertGetConnectionInfo(
+                        false,
+                    ).toByteArray()
+                )
+                return
+            }
+            print("device id: $deviceId")
+            val connection: Observable<EstablishConnectionResult> =
+                bleClient.isDeviceConnected(deviceId)
+            val observable: Single<Boolean> = connection.isEmpty
+            val connectionFuture: Future<Boolean> = observable.toFuture()
+            val hasConnection: Boolean = !connectionFuture.get(1L, TimeUnit.SECONDS)
+            print("isDeviceConnected: $hasConnection")
+            result.success(
+                protoConverter.convertGetConnectionInfo(
+                    hasConnection,
+                ).toByteArray()
+            )
+        } catch (e: InterruptedException) {
+            print("InterruptedException")
+            e.printStackTrace()
+        } catch (timeOutException: TimeoutException) {
+            print("timeout exception")
+        } catch (exception: Exception) {
+            print("Exception")
+            result.error("connection_failure", exception.message, "Unexpected error")
+        }
+        result.success(
+            protoConverter.convertGetConnectionInfo(
+                false,
+            ).toByteArray())
     }
 }

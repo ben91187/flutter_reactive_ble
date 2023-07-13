@@ -1,3 +1,7 @@
+# TAG v1.1.73 - Test
+
+- refactor isDeviceConnected code to a more stable version
+
 # TAG v1.1.72 - Test
 
 - fix missing "not"
