@@ -1,3 +1,7 @@
+# TAG v1.1.75 - Test
+
+- add checkConnectionFunction to evaluate if device id is part of an active connection
+
 # TAG v1.1.74 - Test
 
 - add logging for isDeviceConnected method

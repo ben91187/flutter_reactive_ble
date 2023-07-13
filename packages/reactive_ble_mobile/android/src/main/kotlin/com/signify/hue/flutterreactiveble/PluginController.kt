@@ -396,43 +396,18 @@ class PluginController {
     }
 
     private fun isDeviceConnected(call: MethodCall, result: Result) {
-        val tag: String = "IsDeviceConnected"
+        val tag = "IsDeviceConnected"
         try {
             val request: pb.GetConnectionRequest =
                 pb.GetConnectionRequest.parseFrom(call.arguments as ByteArray)
-            val deviceId: String = request.deviceId
-            if (deviceId.isBlank()) {
-                result.success(
-                    protoConverter.convertGetConnectionInfo(
-                        false,
-                    ).toByteArray()
-                )
-                return
-            }
-            Log.d(tag, "device id: $deviceId")
-            val connection: Observable<EstablishConnectionResult> =
-                bleClient.isDeviceConnected(deviceId)
-            val observable: Single<Boolean> = connection.isEmpty
-            val connectionFuture: Future<Boolean> = observable.toFuture()
-            val hasConnection: Boolean = !connectionFuture.get(1L, TimeUnit.SECONDS)
-            Log.d(tag, "isDeviceConnected: $hasConnection")
             result.success(
                 protoConverter.convertGetConnectionInfo(
-                    hasConnection,
+                    bleClient.isDeviceConnected(request.deviceId),
                 ).toByteArray()
             )
-        } catch (e: InterruptedException) {
-            Log.d(tag, "InterruptedException")
-            e.printStackTrace()
-        } catch (timeOutException: TimeoutException) {
-            Log.d(tag, "timeout exception")
         } catch (exception: Exception) {
             Log.d(tag, "Exception")
             result.error("connection_failure", exception.message, "Unexpected error")
         }
-        result.success(
-            protoConverter.convertGetConnectionInfo(
-                false,
-            ).toByteArray())
     }
 }

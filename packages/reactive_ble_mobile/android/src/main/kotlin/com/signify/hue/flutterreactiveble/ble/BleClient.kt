@@ -75,5 +75,5 @@ interface BleClient {
         value: ByteArray
     )
 
-    fun isDeviceConnected(deviceId: String): Observable<EstablishConnectionResult>
+    fun isDeviceConnected(deviceId: String): Boolean
 }

@@ -811,12 +811,18 @@ open class ReactiveBleClient(private val context: Context) : BleClient {
         var btChar: BluetoothGattCharacteristic? = null
         btChar = service.getCharacteristic(characteristic.uuid)
         if (btChar == null) {
-            while (!service.addCharacteristic(characteristic)){
-                Log.d(tag, "could not add characteristic: ${characteristic.uuid} to service: ${service.uuid}")
+            while (!service.addCharacteristic(characteristic)) {
+                Log.d(
+                    tag,
+                    "could not add characteristic: ${characteristic.uuid} to service: ${service.uuid}"
+                )
             }
             Log.d(tag, "characteristic ${characteristic.uuid} added to service ${service.uuid}")
         } else {
-            Log.d(tag, "characteristic: ${characteristic.uuid} already exists in service ${service.uuid}")
+            Log.d(
+                tag,
+                "characteristic: ${characteristic.uuid} already exists in service ${service.uuid}"
+            )
         }
     }
 
@@ -842,7 +848,7 @@ open class ReactiveBleClient(private val context: Context) : BleClient {
         Log.d(tag, "stop gatt server!")
         try {
 
-            if (mBluetoothGattServer == null){
+            if (mBluetoothGattServer == null) {
                 Log.d(tag, "gatt server is null!!!!")
                 return
             }
@@ -853,10 +859,10 @@ open class ReactiveBleClient(private val context: Context) : BleClient {
             serviceUUIDsList.remove(UartSrvUUID)
 
             // remove service from the service map and use it's values
-            val service1:BluetoothGattService? = gattServices.remove(SrvUUID1)
-            val service2:BluetoothGattService? = gattServices.remove(SrvUUID2)
-            val service3:BluetoothGattService? = gattServices.remove(SrvUUID3)
-            val serviceUart:BluetoothGattService? = gattServices.remove(UartSrvUUID)
+            val service1: BluetoothGattService? = gattServices.remove(SrvUUID1)
+            val service2: BluetoothGattService? = gattServices.remove(SrvUUID2)
+            val service3: BluetoothGattService? = gattServices.remove(SrvUUID3)
+            val serviceUart: BluetoothGattService? = gattServices.remove(UartSrvUUID)
 
             removeService(service1)
             removeService(service2)
@@ -873,11 +879,11 @@ open class ReactiveBleClient(private val context: Context) : BleClient {
     }
 
     private fun removeService(service: BluetoothGattService?) {
-        if (mBluetoothGattServer == null ||service == null) {
+        if (mBluetoothGattServer == null || service == null) {
             Log.d(tag, "can not remove gatt service ${service}, gatt server is null")
             return
         }
-        while (!mBluetoothGattServer!!.removeService(service)){
+        while (!mBluetoothGattServer!!.removeService(service)) {
             Log.d(tag, "gatt service ${service} not removed")
         }
         Log.d(tag, "gatt service ${service} removed")
@@ -1000,6 +1006,12 @@ open class ReactiveBleClient(private val context: Context) : BleClient {
             activeConnections.getOrPut(deviceId) { createDeviceConnector(device, timeout) }
 
         return connector.connection
+    }
+
+    private fun checkForActiveConnection(
+        deviceId: String,
+    ): Boolean {
+        return activeConnections.contains(deviceId)
     }
 
     private fun executeReadOperation(
@@ -1128,7 +1140,7 @@ open class ReactiveBleClient(private val context: Context) : BleClient {
                 .build()
         )
 
-    override fun isDeviceConnected(deviceId: String): Observable<EstablishConnectionResult> {
-      return getConnection(deviceId)
+    override fun isDeviceConnected(deviceId: String): Boolean {
+        return checkForActiveConnection(deviceId)
     }
 }
