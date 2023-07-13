@@ -1,3 +1,7 @@
+# TAG v1.1.74 - Test
+
+- add logging for isDeviceConnected method
+
 # TAG v1.1.73 - Test
 
 - refactor isDeviceConnected code to a more stable version

@@ -19,6 +19,8 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import java.util.*
 import java.util.concurrent.*
 import com.signify.hue.flutterreactiveble.ProtobufModel as pb
+import android.util.Log
+
 
 @Suppress("TooManyFunctions")
 class PluginController {
@@ -394,6 +396,7 @@ class PluginController {
     }
 
     private fun isDeviceConnected(call: MethodCall, result: Result) {
+        val tag: String = "IsDeviceConnected"
         try {
             val request: pb.GetConnectionRequest =
                 pb.GetConnectionRequest.parseFrom(call.arguments as ByteArray)
@@ -406,25 +409,25 @@ class PluginController {
                 )
                 return
             }
-            print("device id: $deviceId")
+            Log.d(tag, "device id: $deviceId")
             val connection: Observable<EstablishConnectionResult> =
                 bleClient.isDeviceConnected(deviceId)
             val observable: Single<Boolean> = connection.isEmpty
             val connectionFuture: Future<Boolean> = observable.toFuture()
             val hasConnection: Boolean = !connectionFuture.get(1L, TimeUnit.SECONDS)
-            print("isDeviceConnected: $hasConnection")
+            Log.d(tag, "isDeviceConnected: $hasConnection")
             result.success(
                 protoConverter.convertGetConnectionInfo(
                     hasConnection,
                 ).toByteArray()
             )
         } catch (e: InterruptedException) {
-            print("InterruptedException")
+            Log.d(tag, "InterruptedException")
             e.printStackTrace()
         } catch (timeOutException: TimeoutException) {
-            print("timeout exception")
+            Log.d(tag, "timeout exception")
         } catch (exception: Exception) {
-            print("Exception")
+            Log.d(tag, "Exception")
             result.error("connection_failure", exception.message, "Unexpected error")
         }
         result.success(
