@@ -1,3 +1,7 @@
+# TAG v1.1.76 - Test
+
+- revert disconnecting through task instead of directly disconnect
+
 # TAG v1.1.75 - Test
 
 - add checkConnectionFunction to evaluate if device id is part of an active connection

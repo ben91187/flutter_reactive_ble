@@ -43,6 +43,28 @@ final class Central {
     private let characteristicNotifyRegistry = PeripheralTaskRegistry<CharacteristicNotifyTaskController>()
     private let characteristicWriteRegistry = PeripheralTaskRegistry<CharacteristicWriteTaskController>()
 
+    //let CccdUID: String = "00002902-0000-1000-8000-00805f9b34fb"
+
+    let SrvUUID1: String
+    let SrvUUID2: String
+    let SrvUUID3: String
+
+    let CharUUID1: String
+    let CharUUID2: String
+    let CharUUID3: String
+
+    let UartSrvUUID    : String
+    let UartCharRxUUID : String
+    let UartCharTxUUID : String
+
+    let service1: CBMutableService
+
+    let service2: CBMutableService
+
+    let service3: CBMutableService
+
+    let uartService : CBMutableService
+
     init(
         onSubChange: @escaping SubChangeHandler,
         onStateChange: @escaping StateChangeHandler,
@@ -53,6 +75,35 @@ final class Central {
         onCharacteristicSubscribedByCentral: @escaping CharacteristicSubscribedByCentralHandler,
         onCharRequest: @escaping CharRequestHandler
     ) {
+        SrvUUID1 = "d0611e78-bbb4-4591-a5f8-487910ae4366"
+        SrvUUID2 = "ad0badb1-5b99-43cd-917a-a77bc549e3cc"
+        SrvUUID3 = "73a58d00-c5a1-4f8e-8f55-1def871ddc81"
+
+        CharUUID1 = "8667556c-9a37-4c91-84ed-54ee27d90049"
+        CharUUID2 = "af0badb1-5b99-43cd-917a-a77bc549e3cc"
+        CharUUID3 = "73a58d01-c5a1-4f8e-8f55-1def871ddc81"
+
+        UartSrvUUID = "6E400001-B5A3-F393-E0A9-E50E24DCCA9E"
+        UartCharRxUUID = "6E400002-B5A3-F393-E0A9-E50E24DCCA9E"
+        UartCharTxUUID = "6E400003-B5A3-F393-E0A9-E50E24DCCA9E"
+
+        service1 = CBMutableService(
+            type: CBUUID(string: SrvUUID1),
+            primary: true)
+
+        service2 = CBMutableService(
+            type: CBUUID(string: SrvUUID2),
+            primary: true)
+
+        service3 = CBMutableService(
+            type: CBUUID(string: SrvUUID3),
+            primary: true)
+
+        uartService = CBMutableService(
+            type: CBUUID(string: UartSrvUUID),
+            primary: true)
+
+
         self.onServicesWithCharacteristicsInitialDiscovery = onServicesWithCharacteristicsInitialDiscovery
         self.peripheralManagerDelegate = PeripheralManagerDelegate(
             onSubChange: papply(weak: self) { central, connectedCentral, characteristic in
@@ -151,7 +202,8 @@ final class Central {
         print("startAdvertising")
         //addExampleGattService()
         
-        let SERVICE_UUID: String = "61808880-B7B3-11E4-B3A4-0002A5D5C51B"//: UUID = UUID.parse("61808880-B7B3-11E4-B3A4-0002A5D5C51B")
+        let SERVICE_UUID: String = "61808880-B7B3-11E4-B3A4-0002A5D5C51B"
+        //: UUID = UUID.parse("61808880-B7B3-11E4-B3A4-0002A5D5C51B")
         //CBAdvertisementDataServiceUUIDsKey: SERVICE_UUID,
         
         peripheralManager.startAdvertising([CBAdvertisementDataLocalNameKey: "Truma App",
@@ -163,23 +215,10 @@ final class Central {
         print("stopAdvertising")
         peripheralManager.stopAdvertising()
         peripheralManager.removeAllServices()
+        print("is advertising: \(peripheralManager.isAdvertising)")
     }
 
     func addExampleGattService() {
-        //let CccdUID: String = "00002902-0000-1000-8000-00805f9b34fb"
-
-        let SrvUUID1: String = "d0611e78-bbb4-4591-a5f8-487910ae4366"
-        let SrvUUID2: String = "ad0badb1-5b99-43cd-917a-a77bc549e3cc"
-        let SrvUUID3: String = "73a58d00-c5a1-4f8e-8f55-1def871ddc81"
-
-        let CharUUID1: String = "8667556c-9a37-4c91-84ed-54ee27d90049"
-        let CharUUID2: String = "af0badb1-5b99-43cd-917a-a77bc549e3cc"
-        let CharUUID3: String = "73a58d01-c5a1-4f8e-8f55-1def871ddc81"
-
-        let UartSrvUUID    : String = "6E400001-B5A3-F393-E0A9-E50E24DCCA9E"
-        let UartCharRxUUID : String = "6E400002-B5A3-F393-E0A9-E50E24DCCA9E"
-        let UartCharTxUUID : String = "6E400003-B5A3-F393-E0A9-E50E24DCCA9E"
-
         //let uartproperties: CBCharacteristicProperties = [.notify, .read, .write]
         let uartpermissions: CBAttributePermissions = [.readable, .writeable]
 
@@ -248,21 +287,7 @@ final class Central {
         //Characteristic2.descriptors = [CCCD2];
         //Characteristic3.descriptors = [CCCD3];
         
-        let service1 = CBMutableService(
-            type: CBUUID(string: SrvUUID1),
-             primary: true)
 
-        let service2 = CBMutableService(
-            type: CBUUID(string: SrvUUID2),
-            primary: true)
-
-        let service3 = CBMutableService(
-            type: CBUUID(string: SrvUUID3),
-            primary: true)
-        
-        let uartService = CBMutableService(
-            type: CBUUID(string: UartSrvUUID),
-            primary: true)
         
         sampleChar = UartCharRx;
         
@@ -272,7 +297,7 @@ final class Central {
         uartService.characteristics = [UartCharRx, UartCharTx]
 
         
-        peripheralManager.add(service1)
+        //peripheralManager.add(service1)
         peripheralManager.add(service2)
         peripheralManager.add(service3)
         peripheralManager.add(uartService)
@@ -285,6 +310,15 @@ final class Central {
 
     func stopGattServer() {
         // clear and close gatt server after advertising stopped
+//         print("remove service 1")
+//         peripheralManager.remove(service1)
+        print("remove service 2")
+        peripheralManager.remove(service2)
+        print("remove service 3")
+        peripheralManager.remove(service3)
+        print("remove service uart")
+        peripheralManager.remove(uartService)
+        print("remove all")
         peripheralManager.removeAllServices()
     }
 
@@ -347,6 +381,8 @@ final class Central {
         }
         */
 
+        print("connect to peripheral: \(peripheralID)")
+
         connectRegistry.registerTask(
             key: peripheralID,
             params: .init(),
@@ -382,15 +418,19 @@ final class Central {
     func disconnect(from peripheralID: PeripheralID) {
         print("disconnect")
         guard let peripheral = try? resolve(known: peripheralID)
-        else { return }
+        else { 
+            print("return as peripheral could not been resolved")
+            return 
+        }
 
-        //centralManager.cancelPeripheralConnection(peripheral)
+        // revert fix from pull request: 2022-11-21 (BA) - added fix from pullrequest
+        centralManager.cancelPeripheralConnection(peripheral)
         // 2022-11-21 (BA) - added fix from pullrequest
         // https://github.com/PhilipsHue/flutter_reactive_ble/pull/593/files
-        connectRegistry.updateTask(
+        /* connectRegistry.updateTask(
             key: peripheralID,
             action: { $0.cancel(centralManager: centralManager, peripheral: peripheral, error: nil) }
-        )
+        ) */
     }
 
     func disconnectAll() {
