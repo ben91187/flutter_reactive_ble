@@ -1,3 +1,7 @@
+# TAG v1.1.77 - Test
+
+- try not to remove all services after stopAdvertising
+
 # TAG v1.1.76 - Test
 
 - revert disconnecting through task instead of directly disconnect
