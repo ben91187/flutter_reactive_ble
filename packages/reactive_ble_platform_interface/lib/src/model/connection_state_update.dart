@@ -47,7 +47,10 @@ enum DeviceConnectionState {
   bonding,
 
   /// Bonding finished
-  bonded
+  bonded,
+
+  /// Service Changed indication triggered from os
+  update
 }
 
 /// Type of connection error.

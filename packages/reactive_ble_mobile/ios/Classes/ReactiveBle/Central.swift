@@ -207,7 +207,6 @@ final class Central {
         //CBAdvertisementDataServiceUUIDsKey: SERVICE_UUID,
         
         peripheralManager.startAdvertising([CBAdvertisementDataLocalNameKey: "Truma App",
-                                            //CBAdvertisementDataIsConnectable: true])
                                             CBAdvertisementDataServiceUUIDsKey: [CBUUID(string: SERVICE_UUID)]])
     }
     

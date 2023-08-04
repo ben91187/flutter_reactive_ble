@@ -63,6 +63,7 @@ open class ReactiveBleClient(private val context: Context) : BleClient {
     private val allConnections = CompositeDisposable()
     private var serviceUUIDsList = ArrayList<String>()
     private var bondedStateActiveBefore = false;
+    private var deviceId:String = "";
 
     companion object {
         // this needs to be in companion update since backgroundisolates respawn the eventchannels
@@ -142,6 +143,7 @@ open class ReactiveBleClient(private val context: Context) : BleClient {
     }
 
     override fun connectToDevice(deviceId: String, timeout: Duration) {
+        this.deviceId = deviceId
         allConnections.add(
             getConnection(deviceId, timeout)
                 .subscribe({ result ->
@@ -422,7 +424,6 @@ open class ReactiveBleClient(private val context: Context) : BleClient {
             @Override
             override fun onServicesDiscovered(gatt: BluetoothGatt?, status: Int) {
                 super.onServicesDiscovered(gatt, status)
-                Log.i(tag, "onServicesDiscovered")
             }
 
             @Override
@@ -494,8 +495,14 @@ open class ReactiveBleClient(private val context: Context) : BleClient {
 
             @Override
             override fun onServiceChanged(gatt: BluetoothGatt) {
-                super.onServiceChanged(gatt)
                 Log.i(tag, "onServiceChanged")
+                connectionUpdateBehaviorSubject.onNext(
+                    ConnectionUpdateSuccess(
+                        deviceId,
+                        8
+                    )
+                )
+                super.onServiceChanged(gatt)
             }
         }
 

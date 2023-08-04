@@ -1,4 +1,8 @@
-# TAG v1.1.77 - Test
+# TAG v1.1.78 - Test
+
+- Send service change update via stream to the flutter application
+
+# TAG v1.1.77 - Stable
 
 - try not to remove all services after stopAdvertising
 
