@@ -100,9 +100,7 @@ class ConnectedDeviceOperationImpl implements ConnectedDeviceOperation {
   }
 
   @override
-  Stream<void> didModifyServices() {
-    return _blePlatform.didModifyServices;
-  }
+  Stream<void> didModifyServices() => _blePlatform.didModifyServices();
 
   @override
   Future<int> requestMtu(String deviceId, int mtu) async =>

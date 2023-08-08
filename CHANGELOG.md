@@ -1,3 +1,7 @@
+# TAG v1.1.83 - Test
+
+- fix connected device connection
+
 # TAG v1.1.82 - Test
 
 - fix wrong function definition
