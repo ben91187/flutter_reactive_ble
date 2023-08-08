@@ -1,3 +1,7 @@
+# TAG v1.1.80 - Test
+
+- remove suppressing lint
+
 # TAG v1.1.79 - Test
 
 - connect to device to get BluetoothGatt and to set the gatt callbacks

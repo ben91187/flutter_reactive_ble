@@ -493,7 +493,6 @@ open class ReactiveBleClient(private val context: Context) : BleClient {
                 Log.i(tag, "onMtuChanged")
             }
 
-            @SuppressLint("MissingPermission")
             @Override
             override fun onServiceChanged(gatt: BluetoothGatt) {
                 Log.i(tag, "onServiceChanged")
