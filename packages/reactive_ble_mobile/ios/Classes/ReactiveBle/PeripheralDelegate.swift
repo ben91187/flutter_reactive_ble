@@ -7,25 +7,29 @@ final class PeripheralDelegate: NSObject, CBPeripheralDelegate {
     typealias CharacteristicNotificationStateUpdateHandler = (CBCharacteristic, Error?) -> Void
     typealias CharacteristicValueUpdateHandler = (CBCharacteristic, Error?) -> Void
     typealias CharacteristicValueWriteHandler = (CBCharacteristic, Error?) -> Void
+    typealias ModifyServicesHandler = (CBPeripheral, [CBService]) -> Void
 
     private let onServicesDiscovery: ServicesDiscoveryHandler
     private let onCharacteristicsDiscovery: CharacteristicsDiscoverHandler
     private let onCharacteristicNotificationStateUpdate: CharacteristicNotificationStateUpdateHandler
     private let onCharacteristicValueUpdate: CharacteristicValueUpdateHandler
     private let onCharacteristicValueWrite: CharacteristicValueWriteHandler
+    private let onDidModifyServices: ModifyServicesHandler
 
     init(
         onServicesDiscovery: @escaping ServicesDiscoveryHandler,
         onCharacteristicsDiscovery: @escaping CharacteristicsDiscoverHandler,
         onCharacteristicNotificationStateUpdate: @escaping CharacteristicNotificationStateUpdateHandler,
         onCharacteristicValueUpdate: @escaping CharacteristicValueUpdateHandler,
-        onCharacteristicValueWrite: @escaping CharacteristicValueWriteHandler
+        onCharacteristicValueWrite: @escaping CharacteristicValueWriteHandler,
+        onDidModifyServices: @escaping ModifyServicesHandler
     ) {
         self.onServicesDiscovery = onServicesDiscovery
         self.onCharacteristicsDiscovery = onCharacteristicsDiscovery
         self.onCharacteristicNotificationStateUpdate = onCharacteristicNotificationStateUpdate
         self.onCharacteristicValueUpdate = onCharacteristicValueUpdate
         self.onCharacteristicValueWrite = onCharacteristicValueWrite
+        self.onDidModifyServices = onDidModifyServices
     }
 
     func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: Error?) {
@@ -52,5 +56,10 @@ final class PeripheralDelegate: NSObject, CBPeripheralDelegate {
     func peripheral(_ peripheral: CBPeripheral, didWriteValueFor characteristic: CBCharacteristic, error: Error?) {
         print("peripheral didWriteValueFor")
         onCharacteristicValueWrite(characteristic, error)
+    }
+
+    func peripheral(_ peripheral: CBPeripheral, didModifyServices invalidatedServices: [CBService]) {
+        print("peripheral didModifyServices")
+        onDidModifyServices(peripheral, invalidatedServices)
     }
 }

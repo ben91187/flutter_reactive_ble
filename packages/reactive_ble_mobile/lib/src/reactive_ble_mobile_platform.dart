@@ -14,6 +14,7 @@ class ReactiveBleMobilePlatform extends ReactiveBlePlatform {
     required Stream<List<int>> bleStatusChannel,
     required Stream<List<int>> connectedCentralChannel,
     required Stream<List<int>> charCentralUpdateChannel,
+    required Stream<void> didModifyServices,
   })  : _argsToProtobufConverter = argsToProtobufConverter,
         _protobufConverter = protobufConverter,
         _bleMethodChannel = bleMethodChannel,
@@ -22,7 +23,8 @@ class ReactiveBleMobilePlatform extends ReactiveBlePlatform {
         _bleStatusRawChannel = bleStatusChannel,
         _bleDeviceScanRawStream = bleDeviceScanChannel,
         _connectedCentralRawStream = connectedCentralChannel,
-        _charCentralUpdateRawStream = charCentralUpdateChannel;
+        _charCentralUpdateRawStream = charCentralUpdateChannel,
+        _didModifyServices = didModifyServices;
 
   final ArgsToProtobufConverter _argsToProtobufConverter;
   final ProtobufConverter _protobufConverter;
@@ -33,6 +35,7 @@ class ReactiveBleMobilePlatform extends ReactiveBlePlatform {
   final Stream<List<int>> _bleStatusRawChannel;
   final Stream<List<int>> _connectedCentralRawStream;
   final Stream<List<int>> _charCentralUpdateRawStream;
+  final Stream<void> _didModifyServices;
 
   Stream<ConnectionStateUpdate>? _connectionUpdateStream;
   Stream<CharacteristicValue>? _charValueStream;
@@ -82,6 +85,8 @@ class ReactiveBleMobilePlatform extends ReactiveBlePlatform {
           .map(
             (update) => update,
           );
+
+  Stream<void> get didModifyServicesStream => _didModifyServices;
 
   @override
   Future<void> initialize() => _bleMethodChannel.invokeMethod("initialize");
@@ -355,15 +360,14 @@ class ReactiveBleMobilePlatform extends ReactiveBlePlatform {
       _bleMethodChannel.invokeMethod<void>("removeInetBoxBonding");
 
   @override
-  Future<bool> isDeviceConnected(String deviceId) async =>
-      _bleMethodChannel
-          .invokeMethod<List<int>>(
+  Future<bool> isDeviceConnected(String deviceId) async => _bleMethodChannel
+      .invokeMethod<List<int>>(
         'isDeviceConnected',
         _argsToProtobufConverter
             .createGetConnectionRequest(deviceId)
             .writeToBuffer(),
       )
-          .then((data) => _protobufConverter.getConnectionInfoFrom(data!));
+      .then((data) => _protobufConverter.getConnectionInfoFrom(data!));
 }
 
 class ReactiveBleMobilePlatformFactory {
@@ -381,6 +385,8 @@ class ReactiveBleMobilePlatformFactory {
         EventChannel("flutter_reactive_ble_connected_central");
     const charCentralUpdateChannel =
         EventChannel("flutter_reactive_ble_char_update_central");
+    const didModifyServices =
+        EventChannel("flutter_reactive_ble_did_modify_services");
 
     return ReactiveBleMobilePlatform(
       protobufConverter: const ProtobufConverterImpl(),
@@ -398,6 +404,7 @@ class ReactiveBleMobilePlatformFactory {
           connectedCentralChannel.receiveBroadcastStream().cast<List<int>>(),
       charCentralUpdateChannel:
           charCentralUpdateChannel.receiveBroadcastStream().cast<List<int>>(),
+      didModifyServices: didModifyServices.receiveBroadcastStream(),
     );
   }
 }

@@ -23,4 +23,8 @@ class CentralConnectorImpl implements CentralConnector {
   @override
   Stream<CharacteristicValue> get centralDataChangedStream =>
       _blePlatform.charCentralValueUpdateStream;
+
+  @override
+  Stream<void> get didModifyServices =>
+      _blePlatform.didModifyServices;
 }

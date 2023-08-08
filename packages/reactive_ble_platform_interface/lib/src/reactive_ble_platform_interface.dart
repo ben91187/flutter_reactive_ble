@@ -174,6 +174,15 @@ abstract class ReactiveBlePlatform extends PlatformInterface {
         'subscribeToNotifications has not been implemented.');
   }
 
+  /// Tells the app that an service indication was triggered on iOS. So one
+  /// can rediscover services.
+  Stream<void> didModifyServices(
+    QualifiedCharacteristic characteristic,
+  ) {
+    throw UnimplementedError(
+        'subscribeToNotifications has not been implemented.');
+  }
+
   /// Stops subscribing to notifications for a specificied characteristic.
   Future<void> stopSubscribingToNotifications(
     QualifiedCharacteristic characteristic,
@@ -228,8 +237,10 @@ abstract class ReactiveBlePlatform extends PlatformInterface {
   }
 
   Future<bool> checkIfOldInetBoxBondingExists() {
-    throw UnimplementedError('checkIfOldInetBoxBondingExists has not been implemented.');
+    throw UnimplementedError(
+        'checkIfOldInetBoxBondingExists has not been implemented.');
   }
+
   Future<void> removeInetBoxBonding() {
     throw UnimplementedError('RemoveInetBoxBonding has not been implemented.');
   }

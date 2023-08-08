@@ -21,6 +21,8 @@ abstract class ConnectedDeviceOperation {
     Future<void> isDisconnected,
   );
 
+  Stream<void> didModifyServices();
+
   Future<int> requestMtu(String deviceId, int mtu);
 
   Future<List<DiscoveredService>> discoverServices(String deviceId);
@@ -95,6 +97,11 @@ class ConnectedDeviceOperationImpl implements ConnectedDeviceOperation {
     isDisconnected.then<void>((_) => autosubscribingRepeater.dispose());
 
     return autosubscribingRepeater.stream;
+  }
+
+  @override
+  Stream<void> didModifyServices() {
+    return _blePlatform.didModifyServices;
   }
 
   @override

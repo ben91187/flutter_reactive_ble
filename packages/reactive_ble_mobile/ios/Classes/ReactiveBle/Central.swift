@@ -22,6 +22,7 @@ final class Central {
     typealias SubChangeHandler = (Central, CBCentral, CBCharacteristic) -> Void
     typealias CharRequestHandler = (Central, CBPeripheralManager, QualifiedCharacteristic, Data?) -> Void
     typealias ConnectionStateCallback = (Central, Bool) -> Void
+    typealias ReportSeviceChangedHandler = () -> Void
 
     private var mConnectedCentral : CBCentral!
     
@@ -73,7 +74,8 @@ final class Central {
         onServicesWithCharacteristicsInitialDiscovery: @escaping ServicesWithCharacteristicsDiscoveryHandler,
         onCharacteristicValueUpdate: @escaping CharacteristicValueUpdateHandler,
         onCharacteristicSubscribedByCentral: @escaping CharacteristicSubscribedByCentralHandler,
-        onCharRequest: @escaping CharRequestHandler
+        onCharRequest: @escaping CharRequestHandler,
+        onDidModifyServices: @escaping ReportSeviceChangedHandler
     ) {
         SrvUUID1 = "d0611e78-bbb4-4591-a5f8-487910ae4366"
         SrvUUID2 = "ad0badb1-5b99-43cd-917a-a77bc549e3cc"
@@ -172,6 +174,9 @@ final class Central {
                     key: QualifiedCharacteristic(characteristic),
                     action: { $0.handleWrite(error: error) }
                 )
+            },
+            onDidModifyServices: papply(weak: self) {
+                central.onDidModifyServices()
             }
         )
         self.peripheralManager = CBPeripheralManager(

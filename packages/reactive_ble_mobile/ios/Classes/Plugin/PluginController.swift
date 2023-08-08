@@ -28,6 +28,7 @@ final class PluginController {
     var characteristicValueUpdateSink: EventSink?
     var connectedCentralSink: EventSink?
     var characteristicCentralValueUpdateSink: EventSink?
+    var servicesChangedCentralUpateSink: EventSink?
 
     func initialize(name: String, completion: @escaping PlatformMethodCompletionHandler) {
         if let central = central {
@@ -188,6 +189,9 @@ final class PluginController {
                     // In case message arrives before sink is created
                     context.messageQueue.append(message);
                 }
+            },
+            onDidModifyServices: { 
+                didModifyServices()
             }
         )
         print("completion!")
@@ -418,9 +422,6 @@ final class PluginController {
                     $0.message = "\(error)"
                 }
             }
-
-            //print("328 =>", message)
-
             sink.add(.success(message))
         }
     }
@@ -740,6 +741,14 @@ final class PluginController {
             completion(.failure(PluginError.notInitialized.asFlutterError))
         }
         completion(.failure(PluginError.notInitialized.asFlutterError))
+    }
+
+    private func didModifyServices() {
+        print("services changed!")
         
+        guard let sink = servicesChangedCentralUpateSink
+        else { return }
+
+        sink.add(.success(nil))
     }
 }
