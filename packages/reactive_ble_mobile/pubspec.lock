@@ -407,8 +407,8 @@ packages:
     dependency: "direct main"
     description:
       path: "packages/reactive_ble_platform_interface"
-      ref: "v1.1.80"
-      resolved-ref: eb2a88722866fd51501d6e100fd50a18ecfb37bf
+      ref: "v1.1.81"
+      resolved-ref: c14cd1985388221fe5a451798b5dcb1217c1b325
       url: "https://github.com/ben91187/flutter_reactive_ble.git"
     source: git
     version: "5.0.2"

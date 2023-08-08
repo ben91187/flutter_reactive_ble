@@ -1,3 +1,7 @@
+# TAG v1.1.82 - Test
+
+- fix wrong function definition
+
 # TAG v1.1.81 - Test
 
 - add did modify services stream

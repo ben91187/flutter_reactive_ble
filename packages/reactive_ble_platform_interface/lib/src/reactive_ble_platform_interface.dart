@@ -176,9 +176,7 @@ abstract class ReactiveBlePlatform extends PlatformInterface {
 
   /// Tells the app that an service indication was triggered on iOS. So one
   /// can rediscover services.
-  Stream<void> didModifyServices(
-    QualifiedCharacteristic characteristic,
-  ) {
+  Stream<void> didModifyServices() {
     throw UnimplementedError(
         'subscribeToNotifications has not been implemented.');
   }
