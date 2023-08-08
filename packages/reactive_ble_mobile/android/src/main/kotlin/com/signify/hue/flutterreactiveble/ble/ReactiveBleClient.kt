@@ -493,15 +493,22 @@ open class ReactiveBleClient(private val context: Context) : BleClient {
                 Log.i(tag, "onMtuChanged")
             }
 
+            @SuppressLint("MissingPermission")
             @Override
             override fun onServiceChanged(gatt: BluetoothGatt) {
                 Log.i(tag, "onServiceChanged")
+                Log.i(tag, "device id: $deviceId")
+                // Fixme: check if necessary
+                discoverServices(deviceId)
+                val didDiscoverServices:Boolean = gatt.discoverServices()
+                Log.i(tag, "didDiscoverServices: $didDiscoverServices")
                 connectionUpdateBehaviorSubject.onNext(
                     ConnectionUpdateSuccess(
                         deviceId,
                         8
                     )
                 )
+                Log.i(tag, "send update via stream")
                 super.onServiceChanged(gatt)
             }
         }
@@ -695,6 +702,8 @@ open class ReactiveBleClient(private val context: Context) : BleClient {
 
                 descriptor?.setValue(value);
 
+
+
                 var descriptorUuid: String = descriptor?.getUuid().toString()
 
                 if (descriptorUuid.equals(CccdUUID)) {
@@ -705,6 +714,13 @@ open class ReactiveBleClient(private val context: Context) : BleClient {
                         0,
                         null
                     );
+
+                    device?.connectGatt(
+                        context,
+                        false,
+                        gattCallback,
+                        BluetoothDevice.TRANSPORT_LE
+                    )
 
                     // TODO sent event to flutter with central connetion changed
                     var deviceID: String = device?.getAddress().toString()

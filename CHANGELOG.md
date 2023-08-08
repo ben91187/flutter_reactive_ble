@@ -1,3 +1,8 @@
+# TAG v1.1.79 - Test
+
+- connect to device to get BluetoothGatt and to set the gatt callbacks
+- send service discoveryr request to flutter app
+
 # TAG v1.1.78 - Test
 
 - Send service change update via stream to the flutter application
