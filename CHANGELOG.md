@@ -1,3 +1,7 @@
+# TAG v1.1.84 - Test
+
+- implementation of method channels
+
 # TAG v1.1.83 - Test
 
 - fix connected device connection
@@ -10,7 +14,7 @@
 
 - add did modify services stream
 
-# TAG v1.1.80 - Test
+# TAG v1.1.80 - Stable
 
 - remove suppressing lint
 

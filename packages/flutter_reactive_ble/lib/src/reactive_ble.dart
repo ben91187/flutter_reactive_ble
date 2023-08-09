@@ -92,6 +92,13 @@ class FlutterReactiveBle {
         yield* _centralDataChangedStream;
       }).stream;
 
+  /// Stream, that changes if services were modified by an indication.
+  Stream<void> get didModifyServicesStream =>
+      Repeater(onListenEmitFrom: () async* {
+        await initialize();
+        yield* _didModifyServicesStream;
+      }).stream;
+
   /// A stream providing value updates for all the connected BLE devices.
   ///
   /// The updates include read responses as well as notifications.
@@ -130,6 +137,9 @@ class FlutterReactiveBle {
 
   Stream<CharacteristicValue> get _centralDataChangedStream =>
       _centralConnector.centralDataChangedStream;
+
+  Stream<void> get _didModifyServicesStream =>
+      _centralConnector.didModifyServicesValueStream;
 
   Future<void> _trackCentralConnected() async {
     await initialize();

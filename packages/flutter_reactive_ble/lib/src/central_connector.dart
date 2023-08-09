@@ -8,7 +8,7 @@ abstract class CentralConnector {
 
   Stream<CharacteristicValue> get centralDataChangedStream;
 
-  Stream<void> get didModifyServices;
+  Stream<void> get didModifyServicesValueStream;
 }
 
 class CentralConnectorImpl implements CentralConnector {
@@ -27,5 +27,5 @@ class CentralConnectorImpl implements CentralConnector {
       _blePlatform.charCentralValueUpdateStream;
 
   @override
-  Stream<void> get didModifyServices => _blePlatform.didModifyServices();
+  Stream<void> get didModifyServicesValueStream => _blePlatform.didModifyServices;
 }

@@ -24,7 +24,7 @@ class ReactiveBleMobilePlatform extends ReactiveBlePlatform {
         _bleDeviceScanRawStream = bleDeviceScanChannel,
         _connectedCentralRawStream = connectedCentralChannel,
         _charCentralUpdateRawStream = charCentralUpdateChannel,
-        _didModifyServices = didModifyServices;
+        _didModifyServicesRawStream = didModifyServices;
 
   final ArgsToProtobufConverter _argsToProtobufConverter;
   final ProtobufConverter _protobufConverter;
@@ -35,7 +35,7 @@ class ReactiveBleMobilePlatform extends ReactiveBlePlatform {
   final Stream<List<int>> _bleStatusRawChannel;
   final Stream<List<int>> _connectedCentralRawStream;
   final Stream<List<int>> _charCentralUpdateRawStream;
-  final Stream<void> _didModifyServices;
+  final Stream<void> _didModifyServicesRawStream;
 
   Stream<ConnectionStateUpdate>? _connectionUpdateStream;
   Stream<CharacteristicValue>? _charValueStream;
@@ -43,6 +43,7 @@ class ReactiveBleMobilePlatform extends ReactiveBlePlatform {
   Stream<BleStatus>? _bleStatusStream;
   Stream<ConnectionStateUpdate>? _connectionCentralStream;
   Stream<CharacteristicValue>? _charCentralValueStream;
+  Stream<void>? _didModifyServicesValueStream;
 
   @override
   Stream<ConnectionStateUpdate> get connectionCentralStream =>
@@ -86,7 +87,8 @@ class ReactiveBleMobilePlatform extends ReactiveBlePlatform {
             (update) => update,
           );
 
-  Stream<void> get didModifyServicesStream => _didModifyServices;
+  @override
+  Stream<void> get didModifyServicesStream => _didModifyServicesRawStream;
 
   @override
   Future<void> initialize() => _bleMethodChannel.invokeMethod("initialize");

@@ -70,6 +70,13 @@ abstract class ReactiveBlePlatform extends PlatformInterface {
         'charCentralValueUpdateStream has not been implemented.');
   }
 
+  /// Tells the app that an service indication was triggered on iOS. So one
+  /// can rediscover services.
+  Stream<void> get didModifyServices {
+    throw UnimplementedError(
+        'didModifyServices has not been implemented.');
+  }
+
   /// Initializes the ble plugin platform specific counter parts.
   ///
   /// The initialization is performed automatically the first time any BLE
@@ -170,13 +177,6 @@ abstract class ReactiveBlePlatform extends PlatformInterface {
   Stream<void> subscribeToNotifications(
     QualifiedCharacteristic characteristic,
   ) {
-    throw UnimplementedError(
-        'subscribeToNotifications has not been implemented.');
-  }
-
-  /// Tells the app that an service indication was triggered on iOS. So one
-  /// can rediscover services.
-  Stream<void> didModifyServices() {
     throw UnimplementedError(
         'subscribeToNotifications has not been implemented.');
   }

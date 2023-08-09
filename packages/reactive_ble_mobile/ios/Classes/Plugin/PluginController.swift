@@ -190,7 +190,7 @@ final class PluginController {
                     context.messageQueue.append(message);
                 }
             },
-            onDidModifyServices: { 
+            onDidModifyServices: papply(weak: self) { central in
                 didModifyServices()
             }
         )

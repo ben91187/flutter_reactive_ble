@@ -175,8 +175,8 @@ final class Central {
                     action: { $0.handleWrite(error: error) }
                 )
             },
-            onDidModifyServices: papply(weak: self) {
-                central.onDidModifyServices()
+            onDidModifyServices: papply(weak: self) { central, peripheral, invalidatedServices in
+                onDidModifyServices()
             }
         )
         self.peripheralManager = CBPeripheralManager(
