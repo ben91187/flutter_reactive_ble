@@ -1,3 +1,7 @@
+# TAG v1.1.85 - Test
+
+- refactor kotlin code to match swift implementation
+
 # TAG v1.1.84 - Test
 
 - implementation of method channels

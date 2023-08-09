@@ -43,7 +43,6 @@ class ReactiveBleMobilePlatform extends ReactiveBlePlatform {
   Stream<BleStatus>? _bleStatusStream;
   Stream<ConnectionStateUpdate>? _connectionCentralStream;
   Stream<CharacteristicValue>? _charCentralValueStream;
-  Stream<void>? _didModifyServicesValueStream;
 
   @override
   Stream<ConnectionStateUpdate> get connectionCentralStream =>
@@ -88,7 +87,7 @@ class ReactiveBleMobilePlatform extends ReactiveBlePlatform {
           );
 
   @override
-  Stream<void> get didModifyServicesStream => _didModifyServicesRawStream;
+  Stream<void> get didModifyServices => _didModifyServicesRawStream;
 
   @override
   Future<void> initialize() => _bleMethodChannel.invokeMethod("initialize");

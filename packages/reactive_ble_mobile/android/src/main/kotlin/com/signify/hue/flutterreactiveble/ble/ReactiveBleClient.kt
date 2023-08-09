@@ -39,6 +39,7 @@ import android.bluetooth.BluetoothManager
 import android.bluetooth.le.*
 import android.bluetooth.*
 import android.util.Log
+import kotlin.random.Random
 
 private const val tag: String = "ReactiveBleClient"
 
@@ -63,7 +64,7 @@ open class ReactiveBleClient(private val context: Context) : BleClient {
     private val allConnections = CompositeDisposable()
     private var serviceUUIDsList = ArrayList<String>()
     private var bondedStateActiveBefore = false;
-    private var deviceId:String = "";
+    private var deviceId: String = "";
 
     companion object {
         // this needs to be in companion update since backgroundisolates respawn the eventchannels
@@ -74,6 +75,10 @@ open class ReactiveBleClient(private val context: Context) : BleClient {
             PublishSubject.create()
         private val charRequestBehaviorSubject: BehaviorSubject<CharOperationResult> =
             BehaviorSubject.create()
+
+        // Changes, if a new device connects with the iNetBox
+        private val didModifyServicesBehaviourSubject: PublishSubject<int> =
+            PublishSubject.create()
         lateinit var rxBleClient: RxBleClient
             internal set
         internal var activeConnections = mutableMapOf<String, DeviceConnector>()
@@ -90,6 +95,9 @@ open class ReactiveBleClient(private val context: Context) : BleClient {
 
     override val charRequestSubject: BehaviorSubject<CharOperationResult>
         get() = charRequestBehaviorSubject
+
+    override val didModifyServicesSubject: BehaviorSubject<int>
+        get() = didModifyServicesBehaviourSubject
 
     var CccdUUID: String = "00002902-0000-1000-8000-00805f9b34fb"
 
@@ -499,14 +507,9 @@ open class ReactiveBleClient(private val context: Context) : BleClient {
                 Log.i(tag, "device id: $deviceId")
                 // Fixme: check if necessary
                 discoverServices(deviceId)
-                val didDiscoverServices:Boolean = gatt.discoverServices()
+                val didDiscoverServices: Boolean = gatt.discoverServices()
                 Log.i(tag, "didDiscoverServices: $didDiscoverServices")
-                connectionUpdateBehaviorSubject.onNext(
-                    ConnectionUpdateSuccess(
-                        deviceId,
-                        8
-                    )
-                )
+                didModifyServicesBehaviourSubject.onNext(Random.nextInt(0, 100))
                 Log.i(tag, "send update via stream")
                 super.onServiceChanged(gatt)
             }
@@ -700,7 +703,6 @@ open class ReactiveBleClient(private val context: Context) : BleClient {
                 Log.i(tag, "onDescriptorWriteRequest")
 
                 descriptor?.setValue(value);
-
 
 
                 var descriptorUuid: String = descriptor?.getUuid().toString()

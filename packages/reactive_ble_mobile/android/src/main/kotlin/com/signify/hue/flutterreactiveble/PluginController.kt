@@ -64,6 +64,7 @@ class PluginController {
     lateinit var charNotificationHandler: CharNotificationHandler
     lateinit var centralConnectionHandler: CentralConnectionHandler
     lateinit var charCentralNotificationHandler: CharCentralNotificationHandler
+    lateinit var didModifyServicesHandler: DidModifyServicesHandler
 
     private val uuidConverter = UuidConverter()
     private val protoConverter = ProtobufMessageConverter()
@@ -80,6 +81,8 @@ class PluginController {
         centralConnectionChannel = EventChannel(messenger, "flutter_reactive_ble_connected_central")
         charCentralNotifcationChannel =
             EventChannel(messenger, "flutter_reactive_ble_char_update_central")
+        didModifyServicesChannel =
+            EventChannel(messenger, "flutter_reactive_ble_did_modify_services")
 
         scandevicesHandler = ScanDevicesHandler(bleClient)
         deviceConnectionHandler = DeviceConnectionHandler(bleClient)
@@ -87,6 +90,7 @@ class PluginController {
         val bleStatusHandler = BleStatusHandler(bleClient)
         centralConnectionHandler = CentralConnectionHandler(bleClient)
         charCentralNotificationHandler = CharCentralNotificationHandler(bleClient)
+        didModifyServicesHandler = DidModifyServicesHandler(bleClient)
 
         scanchannel.setStreamHandler(scandevicesHandler)
         deviceConnectionChannel.setStreamHandler(deviceConnectionHandler)
@@ -94,6 +98,7 @@ class PluginController {
         bleStatusChannel.setStreamHandler(bleStatusHandler)
         centralConnectionChannel.setStreamHandler(centralConnectionHandler)
         charCentralNotifcationChannel.setStreamHandler(charCentralNotificationHandler)
+        didModifyServicesChannel.setStreamHandler(didModifyServicesHandler)
     }
 
     internal fun deinitialize() {

@@ -191,7 +191,7 @@ final class PluginController {
                 }
             },
             onDidModifyServices: papply(weak: self) { central in
-                didModifyServices()
+                self.didModifyServices()
             }
         )
         print("completion!")
