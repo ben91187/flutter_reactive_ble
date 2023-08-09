@@ -1,4 +1,4 @@
-# TAG v1.1.89 - Test
+# TAG v1.1.89 - Stable
 
 - change behaviour subject to publish subject
 
