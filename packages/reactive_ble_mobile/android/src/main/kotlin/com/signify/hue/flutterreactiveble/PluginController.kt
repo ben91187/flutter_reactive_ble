@@ -58,6 +58,7 @@ class PluginController {
     lateinit var charNotificationChannel: EventChannel
     lateinit var centralConnectionChannel: EventChannel
     lateinit var charCentralNotifcationChannel: EventChannel
+    lateinit var didModifyServicesChannel: EventChannel
 
     lateinit var scandevicesHandler: ScanDevicesHandler
     lateinit var deviceConnectionHandler: DeviceConnectionHandler

@@ -1,3 +1,7 @@
+# TAG v1.1.86 - Test
+
+- fix event channel
+
 # TAG v1.1.85 - Test
 
 - refactor kotlin code to match swift implementation
