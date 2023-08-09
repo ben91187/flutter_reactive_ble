@@ -96,7 +96,7 @@ open class ReactiveBleClient(private val context: Context) : BleClient {
     override val charRequestSubject: BehaviorSubject<CharOperationResult>
         get() = charRequestBehaviorSubject
 
-    override val didModifyServicesSubject: BehaviorSubject<Int>
+    override val didModifyServicesSubject: PublishSubject<Int>
         get() = didModifyServicesBehaviourSubject
 
     var CccdUUID: String = "00002902-0000-1000-8000-00805f9b34fb"

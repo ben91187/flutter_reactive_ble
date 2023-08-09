@@ -1,3 +1,7 @@
+# TAG v1.1.88 - Test
+
+- fix disposer in did modify services handler
+
 # TAG v1.1.87 - Test
 
 - add overwrite value to ble client

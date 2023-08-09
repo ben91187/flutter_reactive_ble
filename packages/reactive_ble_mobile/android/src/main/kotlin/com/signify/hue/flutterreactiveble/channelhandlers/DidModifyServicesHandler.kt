@@ -8,7 +8,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import android.util.Log
 
-private const val tag: String = "DidModifyServicesHandler"
+private const val tag: String = "DidModifyServices"
 
 
 class DidModifyServicesHandler(private val bleClient: com.signify.hue.flutterreactiveble.ble.BleClient) :
@@ -33,6 +33,6 @@ class DidModifyServicesHandler(private val bleClient: com.signify.hue.flutterrea
         }
 
     override fun onCancel(arg: Any?) {
-        didModifyServicesDisposable.set(null)
+        didModifyServicesDisposable.dispose()
     }
 }
