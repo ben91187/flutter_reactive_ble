@@ -1,3 +1,7 @@
+# TAG v1.1.89 - Test
+
+- change behaviour subject to publish subject
+
 # TAG v1.1.88 - Test
 
 - fix disposer in did modify services handler
