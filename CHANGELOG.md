@@ -1,3 +1,7 @@
+# TAG v1.1.87 - Test
+
+- add overwrite value to ble client
+
 # TAG v1.1.86 - Test
 
 - fix event channel

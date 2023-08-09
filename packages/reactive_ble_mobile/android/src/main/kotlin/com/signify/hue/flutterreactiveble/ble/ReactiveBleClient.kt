@@ -77,7 +77,7 @@ open class ReactiveBleClient(private val context: Context) : BleClient {
             BehaviorSubject.create()
 
         // Changes, if a new device connects with the iNetBox
-        private val didModifyServicesBehaviourSubject: PublishSubject<int> =
+        private val didModifyServicesBehaviourSubject: PublishSubject<Int> =
             PublishSubject.create()
         lateinit var rxBleClient: RxBleClient
             internal set
@@ -96,7 +96,7 @@ open class ReactiveBleClient(private val context: Context) : BleClient {
     override val charRequestSubject: BehaviorSubject<CharOperationResult>
         get() = charRequestBehaviorSubject
 
-    override val didModifyServicesSubject: BehaviorSubject<int>
+    override val didModifyServicesSubject: BehaviorSubject<Int>
         get() = didModifyServicesBehaviourSubject
 
     var CccdUUID: String = "00002902-0000-1000-8000-00805f9b34fb"
