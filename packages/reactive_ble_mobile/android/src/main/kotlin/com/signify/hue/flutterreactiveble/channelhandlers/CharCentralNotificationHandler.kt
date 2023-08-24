@@ -47,6 +47,8 @@ class CharCentralNotificationHandler(private val bleClient: com.signify.hue.flut
                 is com.signify.hue.flutterreactiveble.ble.CharOperationSuccessful -> {
                     Log.i(tag, "Write request forworded")
                     handleValue(charResult.deviceId, charResult.value.toByteArray())
+                } else -> {
+                    Log.i(tag, "Write request forworded")
                 }
             }
         }
