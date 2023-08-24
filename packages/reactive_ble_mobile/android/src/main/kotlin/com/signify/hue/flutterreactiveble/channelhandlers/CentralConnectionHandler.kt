@@ -35,7 +35,7 @@ class CentralConnectionHandler(private val bleClient: com.signify.hue.flutterrea
                 is com.signify.hue.flutterreactiveble.ble.ConnectionUpdateSuccess -> {
                     Log.i(tag, "subscribe")
                     handleCentralConnectionUpdateResult(converter.convertToDeviceInfo(update))
-                } else {
+                } else -> {
                     Log.i(tag, "listenToConnectionCentralChanges failed")
                 }
             }
