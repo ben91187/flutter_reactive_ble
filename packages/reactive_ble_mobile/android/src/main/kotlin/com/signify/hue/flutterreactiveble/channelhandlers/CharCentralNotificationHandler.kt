@@ -9,7 +9,7 @@ import io.reactivex.disposables.Disposable
 import android.util.Log
 import java.util.UUID
 
-private const val tag : String = "CharCentralNotificationHandler"
+private const val tag: String = "CharCentralNotificationHandler"
 
 class CharCentralNotificationHandler(private val bleClient: com.signify.hue.flutterreactiveble.ble.BleClient) :
     EventChannel.StreamHandler {
@@ -32,14 +32,6 @@ class CharCentralNotificationHandler(private val bleClient: com.signify.hue.flut
         charRequestDisposable.dispose()
     }
 
-    /*
-    fun connectionCentralChanged(update : com.signify.hue.flutterreactiveble.ble.ConnectionUpdateSuccess)
-    {
-        handleCentralConnectionUpdateResult(converter.convertToDeviceInfo(update))
-    }
-    */
-
-
     private fun listenToCharRequest() = bleClient.charRequestSubject
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe { charResult ->
@@ -47,8 +39,9 @@ class CharCentralNotificationHandler(private val bleClient: com.signify.hue.flut
                 is com.signify.hue.flutterreactiveble.ble.CharOperationSuccessful -> {
                     Log.i(tag, "Write request forworded")
                     handleValue(charResult.deviceId, charResult.value.toByteArray())
-                } else -> {
-                    Log.i(tag, "Write request forworded")
+                }
+                else -> {
+                    Log.i(tag, "Write request forworded failed")
                 }
             }
         }
@@ -59,52 +52,12 @@ class CharCentralNotificationHandler(private val bleClient: com.signify.hue.flut
     ) {
         Log.i(tag, "handleValue")
 
-        // var characteristic: QualifiedCharacteristic;
-        // var request = pb.ReadCharacteristicRequest();
-
-        /*
-        characteristic = QualifiedCharacteristic(
-                characteristicId: ParcelUuid.fromString(String),
-                serviceId: Uuid.parse(''),
-                deviceId: '',
-        );
-        */
-        //request = protobufConverter.createReadCharacteristicRequest(characteristic)
-        /*
-        val characteristicAddress = pb.CharacteristicAddress.newBuilder()
-            .setDeviceId("")
-            .setServiceUuid(uuidConverter.byteArrayFromUuid(UUID.fromString(UuidString)))
-            .setCharacteristicUuid(uuidConverter.byteArrayFromUuid(UUID.fromString(UuidString)))
-        */
-        val characteristicAddress = protobufConverter.convertToCharacteristicAddress("", UUID.fromString(UuidString), UUID.fromString(UuidString))
+        val characteristicAddress = protobufConverter.convertToCharacteristicAddress(
+            "",
+            UUID.fromString(UuidString),
+            UUID.fromString(UuidString)
+        )
         val convertedMsg = protobufConverter.convertCharacteristicInfo(characteristicAddress, value)
         charCentralNotificationSink?.success(convertedMsg.toByteArray())
     }
-    /*
-    companion object {
-        private var charCentralNotificationSink: EventChannel.EventSink? = null
-    }
-
-    override fun onListen(objectSink: Any?, eventSink: EventChannel.EventSink?) {
-        eventSink?.let {
-            charCentralNotificationSink = eventSink
-        }
-    }
-
-    override fun onCancel(objectSink: Any?) {
-        charCentralNotificationSink = null
-    }
-
-    fun addReceivedWriteToStream(charInfo: pb.CharacteristicValueInfo) {
-        handleNotificationValue(charInfo.characteristic, charInfo.value.toByteArray())
-    }
-
-    private fun handleNotificationValue(
-        subscriptionRequest: pb.CharacteristicAddress,
-        value: ByteArray
-    ) {
-        val convertedMsg = protobufConverter.convertCharacteristicInfo(subscriptionRequest, value)
-        charCentralNotificationSink?.success(convertedMsg.toByteArray())
-    }
-    */
 }

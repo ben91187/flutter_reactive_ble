@@ -28,14 +28,6 @@ class CentralConnectionHandler(private val bleClient: com.signify.hue.flutterrea
         connectionCentralDisposable.dispose()
     }
 
-    /*
-    fun connectionCentralChanged(update : com.signify.hue.flutterreactiveble.ble.ConnectionUpdateSuccess)
-    {
-        handleCentralConnectionUpdateResult(converter.convertToDeviceInfo(update))
-    }
-    */
-
-
     private fun listenToConnectionCentralChanges() = bleClient.centralConnectionUpdateSubject
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe { update ->
@@ -43,6 +35,8 @@ class CentralConnectionHandler(private val bleClient: com.signify.hue.flutterrea
                 is com.signify.hue.flutterreactiveble.ble.ConnectionUpdateSuccess -> {
                     Log.i(tag, "subscribe")
                     handleCentralConnectionUpdateResult(converter.convertToDeviceInfo(update))
+                } else {
+                    Log.i(tag, "listenToConnectionCentralChanges failed")
                 }
             }
         }
