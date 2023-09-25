@@ -44,6 +44,7 @@ import kotlin.random.Random
 private const val tag: String = "ReactiveBleClient"
 
 private var mBluetoothGattServer: BluetoothGattServer? = null
+private var mBluetoothGatt: BluetoothGatt? = null
 private lateinit var mCentralBluetoothDevice: BluetoothDevice
 
 private var advertiseCallback: AdvertiseCallback = object : AdvertiseCallback() {
@@ -59,6 +60,7 @@ private var advertiseCallback: AdvertiseCallback = object : AdvertiseCallback() 
 }
 
 @Suppress("TooManyFunctions")
+@SuppressLint("MissingPermission")
 open class ReactiveBleClient(private val context: Context) : BleClient {
     private val connectionQueue = ConnectionQueue()
     private val allConnections = CompositeDisposable()
@@ -151,7 +153,9 @@ open class ReactiveBleClient(private val context: Context) : BleClient {
     }
 
     override fun connectToDevice(deviceId: String, timeout: Duration) {
+        Log.i(tag, "connectToDevice")
         this.deviceId = deviceId
+        Log.i(tag, "for id: $deviceId")
         allConnections.add(
             getConnection(deviceId, timeout)
                 .subscribe({ result ->
@@ -176,9 +180,11 @@ open class ReactiveBleClient(private val context: Context) : BleClient {
                     )
                 })
         )
+        Log.i(tag, "connect finished")
     }
 
     override fun disconnectDevice(deviceId: String) {
+        mBluetoothGatt?.disconnect()
         activeConnections[deviceId]?.disconnectDevice(deviceId)
         activeConnections.remove(deviceId)
     }
@@ -716,12 +722,14 @@ open class ReactiveBleClient(private val context: Context) : BleClient {
                         null
                     );
 
-                    device?.connectGatt(
-                        context,
-                        false,
-                        gattCallback,
-                        BluetoothDevice.TRANSPORT_LE
-                    )
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                        mBluetoothGatt = device?.connectGatt(
+                            context,
+                            false,
+                            gattCallback,
+                            BluetoothDevice.TRANSPORT_LE
+                        )
+                    }
 
                     // TODO sent event to flutter with central connetion changed
                     var deviceID: String = device?.getAddress().toString()

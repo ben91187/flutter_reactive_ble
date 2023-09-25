@@ -1,3 +1,7 @@
+# TAG v1.1.96 - Test
+
+- disconnect gatt
+
 # TAG v1.1.92 - Test
 
 - fix missing arrow
