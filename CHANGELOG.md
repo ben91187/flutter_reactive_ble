@@ -1,3 +1,7 @@
+# Tag v1.1.94 - Test
+
+- add jitpack for inserting java rx ble fork
+
 # Tag v1.1.93 - Test
 
 - add rx android ble fork

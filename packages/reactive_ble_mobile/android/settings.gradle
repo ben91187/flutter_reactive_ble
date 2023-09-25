@@ -1,6 +1,1 @@
 rootProject.name = 'flutter_reactive_ble'
-sourceControl {
-    gitRepository("https://github.com/MaxWebfactor/RxAndroidBle.git") {
-        producesModule("webfactor.rxandroidble:rxandroidble")
-    }
-}
