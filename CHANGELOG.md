@@ -1,3 +1,7 @@
+# Tag v1.1.95 - Test
+
+- test using git implementation in gradle
+
 # Tag v1.1.94 - Test
 
 - add jitpack for inserting java rx ble fork
