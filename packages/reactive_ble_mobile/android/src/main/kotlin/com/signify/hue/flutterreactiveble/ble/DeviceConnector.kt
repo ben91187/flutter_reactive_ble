@@ -15,6 +15,7 @@ import io.reactivex.functions.Function
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.PublishSubject
 import java.util.concurrent.TimeUnit
+import android.util.Log
 
 internal class DeviceConnector(
         private val device: RxBleDevice,
@@ -58,6 +59,8 @@ internal class DeviceConnector(
                 }
     }
 
+    private val TAG = "DeviceConnector"
+
     internal fun disconnectDevice(deviceId: String) {
         val diff = System.currentTimeMillis() - timestampEstablishConnection
 
@@ -97,6 +100,7 @@ internal class DeviceConnector(
         return waitUntilFirstOfQueue(deviceId)
                 .switchMap { queue ->
                     if (!queue.contains(deviceId)) {
+                        Log.i(TAG, "Device is not in queue")
                         Observable.just(EstablishConnectionFailure(deviceId,
                                 "Device is not in queue"))
                     } else {
@@ -105,8 +109,13 @@ internal class DeviceConnector(
                     }
                 }
                 .onErrorReturn { error ->
-                    EstablishConnectionFailure(rxBleDevice.macAddress,
-                            error.message ?: "Unknown error")
+
+                        Log.i(TAG, "Failure while connecting to device: ${error.message}")
+                        EstablishConnectionFailure(
+                            rxBleDevice.macAddress,
+                            error.message ?: "Unknown error"
+                        )
+
                 }
                 .doOnNext {
                     // Trigger side effect by calling the lazy initialization of this property so
