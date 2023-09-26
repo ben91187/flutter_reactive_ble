@@ -1,3 +1,7 @@
+# TAG v1.1.104 - Test
+
+- add valid config
+
 # TAG v1.1.102 - Test
 
 - add jitpack as replacement for polidea
