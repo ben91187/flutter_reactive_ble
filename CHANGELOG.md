@@ -1,3 +1,7 @@
+# TAG v1.1.101 - Test
+
+- try another variant of dependency implementation
+
 # TAG v1.1.100 - Test
 
 - change source test
