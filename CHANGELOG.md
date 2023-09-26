@@ -1,3 +1,7 @@
+# TAG v1.1.97 - Test
+
+- add git repo to build.gradle
+
 # TAG v1.1.96 - Test
 
 - disconnect gatt
