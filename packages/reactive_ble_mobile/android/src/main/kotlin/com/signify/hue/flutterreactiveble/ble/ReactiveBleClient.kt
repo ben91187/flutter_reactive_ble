@@ -60,7 +60,6 @@ private var advertiseCallback: AdvertiseCallback = object : AdvertiseCallback() 
 }
 
 @Suppress("TooManyFunctions")
-@SuppressLint("MissingPermission")
 open class ReactiveBleClient(private val context: Context) : BleClient {
     private val connectionQueue = ConnectionQueue()
     private val allConnections = CompositeDisposable()

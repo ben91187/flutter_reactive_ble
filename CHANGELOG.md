@@ -1,3 +1,7 @@
+# TAG v1.1.105 - Stable
+
+- remove supressing linter
+
 # TAG v1.1.104 - Test
 
 - add valid config
