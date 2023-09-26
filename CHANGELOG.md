@@ -1,3 +1,7 @@
+# TAG v1.1.99 - Test
+
+- use tag instead of branch
+
 # TAG v1.1.98 - Test
 
 - add source control to settings.gradle
