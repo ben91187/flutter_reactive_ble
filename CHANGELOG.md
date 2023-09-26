@@ -1,3 +1,7 @@
+# TAG v1.1.102 - Test
+
+- add jitpack as replacement for polidea
+
 # TAG v1.1.101 - Test
 
 - try another variant of dependency implementation
