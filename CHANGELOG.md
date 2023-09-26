@@ -1,3 +1,8 @@
+# TAG v1.1.98 - Test
+
+- add source control to settings.gradle
+- add dependency
+
 # TAG v1.1.97 - Test
 
 - add git repo to build.gradle
