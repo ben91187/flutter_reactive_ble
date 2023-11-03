@@ -184,7 +184,13 @@ open class ReactiveBleClient(private val context: Context) : BleClient {
 
     override fun disconnectDevice(deviceId: String) {
         Log.i(tag, "disconnect")
+        if (mBluetoothGatt == null){
+            Log.i(tag, "mBluetoothGatt is null, won't disconnect")
+        }
         mBluetoothGatt?.disconnect()
+        if (activeConnections[deviceId] == null){
+            Log.i(tag, "No active connections found")
+        }
         activeConnections[deviceId]?.disconnectDevice(deviceId)
         activeConnections.remove(deviceId)
     }
