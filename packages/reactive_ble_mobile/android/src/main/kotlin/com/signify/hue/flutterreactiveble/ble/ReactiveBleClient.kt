@@ -183,6 +183,7 @@ open class ReactiveBleClient(private val context: Context) : BleClient {
     }
 
     override fun disconnectDevice(deviceId: String) {
+        Log.i(tag, "disconnect")
         mBluetoothGatt?.disconnect()
         activeConnections[deviceId]?.disconnectDevice(deviceId)
         activeConnections.remove(deviceId)
@@ -205,7 +206,7 @@ open class ReactiveBleClient(private val context: Context) : BleClient {
                     if (rxBleClient.getBleDevice(connectionResult.deviceId).bluetoothDevice.bondState == BOND_BONDING) {
                         Single.error(Exception("Bonding is in progress wait for bonding to be finished before executing more operations on the device"))
                     } else {
-                        connectionResult.rxConnection.discoverServices()
+                        connectionResult.rxConnection.discoverServices(60L, TimeUnit.SECONDS)
                     }
                 is EstablishConnectionFailure -> Single.error(Exception(connectionResult.errorMessage))
             }
@@ -512,7 +513,7 @@ open class ReactiveBleClient(private val context: Context) : BleClient {
                 Log.i(tag, "device id: $deviceId")
                 // Fixme: check if necessary
                 discoverServices(deviceId)
-                val didDiscoverServices: Boolean = gatt.discoverServices()
+//                val didDiscoverServices: Boolean = gatt.discoverServices()
                 Log.i(tag, "didDiscoverServices: $didDiscoverServices")
                 didModifyServicesBehaviourSubject.onNext(Random.nextInt(0, 100))
                 Log.i(tag, "send update via stream")
