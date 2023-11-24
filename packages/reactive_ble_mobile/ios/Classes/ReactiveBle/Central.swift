@@ -427,6 +427,11 @@ final class Central {
             return 
         }
 
+        if(peripheral.state == CBPeripheralState.disconnected){
+            print("peripheral already disconnected")
+            return
+        }
+
         // revert fix from pull request: 2022-11-21 (BA) - added fix from pullrequest
         centralManager.cancelPeripheralConnection(peripheral)
         // 2022-11-21 (BA) - added fix from pullrequest
