@@ -161,6 +161,7 @@ open class ReactiveBleClient(private val context: Context) : BleClient {
                     when (result) {
                         is EstablishedConnection -> {
                         }
+
                         is EstablishConnectionFailure -> {
                             connectionUpdateBehaviorSubject.onNext(
                                 ConnectionUpdateError(
@@ -184,11 +185,11 @@ open class ReactiveBleClient(private val context: Context) : BleClient {
 
     override fun disconnectDevice(deviceId: String) {
         Log.i(tag, "disconnect")
-        if (mBluetoothGatt == null){
+        if (mBluetoothGatt == null) {
             Log.i(tag, "mBluetoothGatt is null, won't disconnect")
         }
         mBluetoothGatt?.disconnect()
-        if (activeConnections[deviceId] == null){
+        if (activeConnections[deviceId] == null) {
             Log.i(tag, "No active connections found")
         }
         activeConnections[deviceId]?.disconnectDevice(deviceId)
@@ -214,6 +215,7 @@ open class ReactiveBleClient(private val context: Context) : BleClient {
                     } else {
                         connectionResult.rxConnection.discoverServices(60L, TimeUnit.SECONDS)
                     }
+
                 is EstablishConnectionFailure -> Single.error(Exception(connectionResult.errorMessage))
             }
         }.firstOrError()
@@ -556,6 +558,7 @@ open class ReactiveBleClient(private val context: Context) : BleClient {
                             )
                         )
                     }
+
                     12 -> {
                         Log.i(tag, "BOND_BONDED")
                         bondedStateActiveBefore = true
@@ -566,6 +569,7 @@ open class ReactiveBleClient(private val context: Context) : BleClient {
                             )
                         )
                     }
+
                     10 -> {
                         Log.i(tag, "BOND_NONE")
                         if (bondedStateActiveBefore) {
@@ -580,6 +584,7 @@ open class ReactiveBleClient(private val context: Context) : BleClient {
 
                         //createBond()
                     }
+
                     else -> {
                         Log.i(tag, "BOND_UNKNOWN")
                         bondedStateActiveBefore = false;
@@ -941,28 +946,33 @@ open class ReactiveBleClient(private val context: Context) : BleClient {
      * Checks if old bonding exists, and if, allows showing the delete iNetBox Bondings pop up.
      * */
     override fun checkIfOldInetBoxBondingExists(): Boolean {
-        val bluetoothManager: BluetoothManager =
-            ctx.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
-        val bluetoothAdapter: BluetoothAdapter = bluetoothManager.adapter
+        try {
+            val bluetoothManager: BluetoothManager =
+                ctx.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
+            val bluetoothAdapter: BluetoothAdapter = bluetoothManager.adapter
 
-        Log.d(tag, "check bonding");
+            Log.d(tag, "check bonding");
 
-        val bondedDevices: Set<BluetoothDevice> = bluetoothAdapter.getBondedDevices()
+            val bondedDevices: Set<BluetoothDevice> = bluetoothAdapter.getBondedDevices()
 
-        for (device in bondedDevices) {
-            var deviceName: String? = device.getName()
-            if (deviceName == null) {
-                return false;
+            for (device in bondedDevices) {
+                var deviceName: String? = device.getName()
+                if (deviceName == null) {
+                    return false;
+                }
+                Log.d(tag, "found device");
+                Log.d(tag, deviceName.toString());
+                Log.d(tag, device.getType().toString());
+                Log.d(tag, device.toString());
+                if (deviceName!!.contains("iNet Box") && ((device.getType() == 0x00000001) || (device.getType() == 0x00000003))) {
+                    return true;
+                }
             }
-            Log.d(tag, "found device");
-            Log.d(tag, deviceName!!.toString());
-            Log.d(tag, device.getType().toString());
-            Log.d(tag, device.toString());
-            if (deviceName!!.contains("iNet Box") && ((device.getType() == 0x00000001) || (device.getType() == 0x00000003))) {
-                return true;
-            }
+            return false;
+        } catch (e: Exception){
+            Log.d(tag, "An error occured while checking if iNet System bonding exists")
+            Log.d(tag, e)
         }
-        return false;
     }
 
     /**
@@ -973,28 +983,31 @@ open class ReactiveBleClient(private val context: Context) : BleClient {
      * https://developer.android.com/reference/android/bluetooth/BluetoothDevice#DEVICE_TYPE_DUAL
      * */
     override fun removeInetBoxBonding() {
-        val bluetoothManager: BluetoothManager =
-            ctx.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
-        val bluetoothAdapter: BluetoothAdapter = bluetoothManager.adapter
+        try {
+            val bluetoothManager: BluetoothManager =
+                ctx.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
+            val bluetoothAdapter: BluetoothAdapter = bluetoothManager.adapter
 
-        val bondedDevices: Set<BluetoothDevice> = bluetoothAdapter.getBondedDevices()
+            val bondedDevices: Set<BluetoothDevice> = bluetoothAdapter.getBondedDevices()
 
-        Log.d(tag, "start remove bonding");
+            Log.d(tag, "start remove bonding");
 
-        for (device in bondedDevices) {
-            var deviceName: String = device.getName()
-            Log.d(tag, "found device");
-            Log.d(tag, deviceName.toString());
-            Log.d(tag, device.getType().toString());
-            Log.d(tag, device.toString());
-            if (deviceName.contains("iNet Box") && ((device.getType() == 0x00000001) || (device.getType() == 0x00000003))) {
-                try {
+            for (device in bondedDevices) {
+                var deviceName: String? = device.getName()
+                if (deviceName == null) {
+                    return false;
+                }
+                Log.d(tag, "found device");
+                Log.d(tag, deviceName.toString());
+                Log.d(tag, device.getType().toString());
+                Log.d(tag, device.toString());
+                if (deviceName.contains("iNet Box") && ((device.getType() == 0x00000001) || (device.getType() == 0x00000003))) {
                     val pair = device.javaClass.getMethod("removeBond")
                     pair.invoke(device)
-                } catch (e: Exception) {
-                    Log.d(tag, "Error removing bonding: " + e);
                 }
             }
+        } catch (e: Exception) {
+            Log.d(tag, "Error removing bonding: " + e);
         }
     }
 
@@ -1072,6 +1085,7 @@ open class ReactiveBleClient(private val context: Context) : BleClient {
                         .map { value ->
                             CharOperationSuccessful(deviceId, value.asList())
                         }
+
                 is EstablishConnectionFailure ->
                     Single.just(
                         CharOperationFailed(
@@ -1097,6 +1111,7 @@ open class ReactiveBleClient(private val context: Context) : BleClient {
                         connectionResult.rxConnection.bleOperation(service, characteristic, value)
                             .map { value -> CharOperationSuccessful(deviceId, value.asList()) }
                     }
+
                     is EstablishConnectionFailure -> {
                         Single.just(
                             CharOperationFailed(
@@ -1142,6 +1157,7 @@ open class ReactiveBleClient(private val context: Context) : BleClient {
                         }
                 }
             }
+
             is EstablishConnectionFailure -> {
                 Observable.just(Observable.empty())
             }
@@ -1162,6 +1178,7 @@ open class ReactiveBleClient(private val context: Context) : BleClient {
                         .toSingle {
                             RequestConnectionPrioritySuccess(deviceId)
                         }
+
                 is EstablishConnectionFailure -> Single.fromCallable {
                     RequestConnectionPriorityFailed(deviceId, connectionResult.errorMessage)
                 }
