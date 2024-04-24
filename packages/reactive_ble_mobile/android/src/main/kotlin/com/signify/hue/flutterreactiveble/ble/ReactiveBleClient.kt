@@ -521,8 +521,6 @@ open class ReactiveBleClient(private val context: Context) : BleClient {
                 Log.i(tag, "device id: $deviceId")
                 // Fixme: check if necessary
                 discoverServices(deviceId)
-//                val didDiscoverServices: Boolean = gatt.discoverServices()
-                Log.i(tag, "didDiscoverServices: $didDiscoverServices")
                 didModifyServicesBehaviourSubject.onNext(Random.nextInt(0, 100))
                 Log.i(tag, "send update via stream")
                 super.onServiceChanged(gatt)
