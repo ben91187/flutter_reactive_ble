@@ -970,6 +970,7 @@ open class ReactiveBleClient(private val context: Context) : BleClient {
         } catch (e: Exception){
             Log.d(tag, "An error occured while checking if iNet System bonding exists")
             Log.d(tag, e.toString())
+            return false;
         }
     }
 
@@ -993,7 +994,7 @@ open class ReactiveBleClient(private val context: Context) : BleClient {
             for (device in bondedDevices) {
                 var deviceName: String? = device.getName()
                 if (deviceName == null) {
-                    return false;
+                    return;
                 }
                 Log.d(tag, "found device");
                 Log.d(tag, deviceName.toString());

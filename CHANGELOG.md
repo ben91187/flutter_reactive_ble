@@ -1,3 +1,8 @@
+# TAG v1.1.113 - Test
+
+- fix wrong return value
+- add return value in catch block
+
 # TAG v1.1.112 - Test
 
 - add toString() method
