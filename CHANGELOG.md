@@ -1,3 +1,7 @@
+# TAG v1.1.112 - Test
+
+- add toString() method
+
 # TAG v1.1.111 - Test
 
 - remove unnecessary check

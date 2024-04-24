@@ -969,7 +969,7 @@ open class ReactiveBleClient(private val context: Context) : BleClient {
             return false;
         } catch (e: Exception){
             Log.d(tag, "An error occured while checking if iNet System bonding exists")
-            Log.d(tag, e)
+            Log.d(tag, e.toString())
         }
     }
 
