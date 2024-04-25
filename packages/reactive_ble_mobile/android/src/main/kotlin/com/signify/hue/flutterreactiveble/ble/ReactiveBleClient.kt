@@ -192,7 +192,7 @@ open class ReactiveBleClient(private val context: Context) : BleClient {
         if (activeConnections[deviceId] == null) {
             Log.i(tag, "No active connections found")
         }
-        Log.i(tag, "connect: ${device.getAddress().toString()}"));
+        Log.i(tag, "connect: ${device.getAddress().toString()}");
         activeConnections[deviceId]?.disconnectDevice(deviceId)
         activeConnections.remove(deviceId)
     }
