@@ -1,3 +1,7 @@
+# TAG v1.1.125- Test
+
+- check mac address equals to passed device id
+
 # TAG v1.1.124- Test
 
 - remove unnecessary convert function

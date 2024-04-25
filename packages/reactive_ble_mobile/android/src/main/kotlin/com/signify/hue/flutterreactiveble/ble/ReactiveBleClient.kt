@@ -949,7 +949,7 @@ open class ReactiveBleClient(private val context: Context) : BleClient {
                 ctx.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
             val bluetoothAdapter: BluetoothAdapter = bluetoothManager.adapter
 
-            Log.i(tag, "check bonding");
+            Log.i(tag, "check bonding for device id: ${deviceId}");
 
             val bondedDevices: Set<BluetoothDevice> = bluetoothAdapter.getBondedDevices()
 
@@ -981,7 +981,7 @@ open class ReactiveBleClient(private val context: Context) : BleClient {
 
             val bondedDevices: Set<BluetoothDevice> = bluetoothAdapter.getBondedDevices()
 
-            Log.i(tag, "start remove bonding");
+            Log.i(tag, "start remove bonding for device id: ${deviceId}");
 
             val foundDevice: BluetoothDevice? = searchForBondedDevice(deviceId, bondedDevices)
             if (foundDevice != null) {
@@ -1000,7 +1000,7 @@ open class ReactiveBleClient(private val context: Context) : BleClient {
     }
 
     private fun searchForBondedDevice(
-        macAddress: String,
+        deviceId: String,
         bondedDevices: Set<BluetoothDevice>
     ): BluetoothDevice? {
         try {
@@ -1015,7 +1015,7 @@ open class ReactiveBleClient(private val context: Context) : BleClient {
                     Log.i(tag, "device name is null");
                     return null;
                 }
-                if (deviceName.contains("iNet Box") && ((device.getType() == 0x00000001) || (device.getType() == 0x00000003))) {
+                if (device.getAddress() == deviceId && ((device.getType() == 0x00000001) || (device.getType() == 0x00000003))) {
                     Log.i(tag, "found bonded iNet Box");
                     return device;
                 }
