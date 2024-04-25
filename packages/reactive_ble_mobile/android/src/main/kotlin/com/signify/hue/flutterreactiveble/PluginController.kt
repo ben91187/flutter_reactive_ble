@@ -315,13 +315,13 @@ class PluginController {
     }
 
     private fun checkIfOldInetBoxBondingExists(call: MethodCall, result: Result) {
-        val deviceId = pb.BtMacAddressInfo.parseFrom(call.arguments as ByteArray)
-        result.success(bleClient.checkIfOldInetBoxBondingExists(protoConverter.convertDeviceMacAddress(deviceId)))
+        val macAddressInfo = pb.BtMacAddressInfo.parseFrom(call.arguments as ByteArray)
+        result.success(bleClient.checkIfOldInetBoxBondingExists(macAddressInfo.deviceId))
     }
 
     private fun removeInetBoxBonding(call: MethodCall, result: Result) {
-        val deviceId = pb.BtMacAddressInfo.parseFrom(call.arguments as ByteArray)
-        result.success(bleClient.removeInetBoxBonding(protoConverter.convertDeviceMacAddress(deviceId)))
+        val macAddressInfo = pb.BtMacAddressInfo.parseFrom(call.arguments as ByteArray)
+        result.success(bleClient.removeInetBoxBonding(macAddressInfo.deviceId))
     }
 
     private fun addGattCharacteristic(call: MethodCall, result: Result) {

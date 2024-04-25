@@ -274,11 +274,4 @@ class ProtobufMessageConverter {
             .setState(state)
             .build()
     }
-
-    fun convertDeviceMacAddress(
-        macAddressInfo: BtMacAddressInfo
-    ): String {
-        return pb.BtMacAddressInfo.newBuilder().setDeviceId(macAddressInfo.deviceId)
-            .build().deviceId
-    }
 }
