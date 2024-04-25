@@ -183,6 +183,7 @@ class PluginController {
                             )
                             charNotificationHandler.addSingleReadToStream(charInfo)
                         }
+
                         is com.signify.hue.flutterreactiveble.ble.CharOperationFailed -> {
                             protoConverter.convertCharacteristicError(
                                 readCharMessage.characteristic,
@@ -253,6 +254,7 @@ class PluginController {
                             ).toByteArray()
                         )
                     }
+
                     is com.signify.hue.flutterreactiveble.ble.CharOperationFailed -> {
                         result.success(
                             protoConverter.convertWriteCharacteristicInfo(
@@ -313,12 +315,13 @@ class PluginController {
     }
 
     private fun checkIfOldInetBoxBondingExists(call: MethodCall, result: Result) {
-        result.success(bleClient.checkIfOldInetBoxBondingExists())
+        val deviceId = pb.convertDeviceMacAddress.parseFrom(call.arguments as ByteArray)
+        result.success(bleClient.checkIfOldInetBoxBondingExists(deviceId))
     }
 
     private fun removeInetBoxBonding(call: MethodCall, result: Result) {
-        bleClient.removeInetBoxBonding()
-        result.success(null)
+        val deviceId = pb.convertDeviceMacAddress.parseFrom(call.arguments as ByteArray)
+        result.success(bleClient.removeInetBoxBonding(deviceId))
     }
 
     private fun addGattCharacteristic(call: MethodCall, result: Result) {

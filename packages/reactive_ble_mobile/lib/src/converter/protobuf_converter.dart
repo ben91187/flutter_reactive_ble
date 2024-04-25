@@ -28,6 +28,8 @@ abstract class ProtobufConverter {
   List<DiscoveredService> discoveredServicesFrom(List<int> data);
 
   bool getConnectionInfoFrom(List<int> data);
+
+  String getBtMacAddress(List<int> data);
 }
 
 class ProtobufConverterImpl implements ProtobufConverter {
@@ -219,9 +221,13 @@ class ProtobufConverterImpl implements ProtobufConverter {
             .toList(growable: false),
       );
 
+  @override
+  bool getConnectionInfoFrom(List<int> data) =>
+      pb.GetConnectionInfo.fromBuffer(data).state;
 
   @override
-  bool getConnectionInfoFrom(List<int> data) => pb.GetConnectionInfo.fromBuffer(data).state;
+  String getBtMacAddress(List<int> data) =>
+      pb.BtMacAddressInfo.fromBuffer(data).deviceId;
 
   @visibleForTesting
   Result<Value, Failure> resultFrom<Value, Failure>(

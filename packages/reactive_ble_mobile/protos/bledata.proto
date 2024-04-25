@@ -156,3 +156,7 @@ message GetConnectionRequest {
 message GetConnectionInfo {
     bool state = 1;
 }
+
+message BtMacAddressInfo {
+    string deviceId = 1;
+}

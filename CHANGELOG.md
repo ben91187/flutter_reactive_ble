@@ -1,4 +1,8 @@
-# TAG v1.1.118 - Test
+# TAG v1.1.119 - Test
+
+- pass device id (mac address) of connected device to the functions that either checks the bondings or removes it
+
+# TAG v1.1.118 - Stable
 
 - resolve compile errors
 

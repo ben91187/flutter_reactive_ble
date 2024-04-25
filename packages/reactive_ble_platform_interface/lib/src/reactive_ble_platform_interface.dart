@@ -239,7 +239,7 @@ abstract class ReactiveBlePlatform extends PlatformInterface {
         'checkIfOldInetBoxBondingExists has not been implemented.');
   }
 
-  Future<void> removeInetBoxBonding() {
+  Future<bool> removeInetBoxBonding() {
     throw UnimplementedError('RemoveInetBoxBonding has not been implemented.');
   }
 

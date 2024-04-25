@@ -231,12 +231,11 @@ class FlutterReactiveBle {
     await _blePlatform.addGattCharacteristic();
   }
 
-  Future<bool> checkIfOldInetBoxBondingExists() async =>
-      _blePlatform.checkIfOldInetBoxBondingExists();
+  Future<bool> checkIfOldInetBoxBondingExists(String address) async =>
+      await _blePlatform.checkIfOldInetBoxBondingExists(address);
 
-  Future<void> removeInetBoxBonding() async {
-    await _blePlatform.removeInetBoxBonding();
-  }
+  Future<bool> removeInetBoxBonding(String address) async =>
+      await _blePlatform.removeInetBoxBonding(address);
 
   Future<void> writeLocalCharacteristic(
       QualifiedCharacteristic characteristic, List<int> value) async {

@@ -1911,3 +1911,50 @@ class GetConnectionInfo extends $pb.GeneratedMessage {
   void clearState() => clearField(1);
 }
 
+class BtMacAddressInfo extends $pb.GeneratedMessage {
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'BtMacAddressInfo', createEmptyInstance: create)
+    ..aOS(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'deviceId', protoName: 'deviceId')
+    ..hasRequiredFields = false
+  ;
+
+  BtMacAddressInfo._() : super();
+  factory BtMacAddressInfo({
+    $core.String? deviceId,
+  }) {
+    final _result = create();
+    if (deviceId != null) {
+      _result.deviceId = deviceId;
+    }
+    return _result;
+  }
+  factory BtMacAddressInfo.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
+  factory BtMacAddressInfo.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
+  'Will be removed in next major version')
+  BtMacAddressInfo clone() => BtMacAddressInfo()..mergeFromMessage(this);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
+  'Will be removed in next major version')
+  BtMacAddressInfo copyWith(void Function(BtMacAddressInfo) updates) => super.copyWith((message) => updates(message as BtMacAddressInfo)) as BtMacAddressInfo; // ignore: deprecated_member_use
+  $pb.BuilderInfo get info_ => _i;
+  @$core.pragma('dart2js:noInline')
+  static BtMacAddressInfo create() => BtMacAddressInfo._();
+  BtMacAddressInfo createEmptyInstance() => create();
+  static $pb.PbList<BtMacAddressInfo> createRepeated() => $pb.PbList<BtMacAddressInfo>();
+  @$core.pragma('dart2js:noInline')
+  static BtMacAddressInfo getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<BtMacAddressInfo>(create);
+  static BtMacAddressInfo? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get deviceId => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set deviceId($core.String v) { $_setString(0, v); }
+  @$pb.TagNumber(1)
+  $core.bool hasDeviceId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearDeviceId() => clearField(1);
+}
+
