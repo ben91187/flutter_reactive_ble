@@ -407,8 +407,8 @@ packages:
     dependency: "direct main"
     description:
       path: "packages/reactive_ble_mobile"
-      ref: "v1.1.118"
-      resolved-ref: "1e5e303bf157932de250adb2c8701485216c462c"
+      ref: "v1.1.120"
+      resolved-ref: "0e15b243ac0963afe278359c02dbb774f4396bfe"
       url: "https://github.com/ben91187/flutter_reactive_ble.git"
     source: git
     version: "5.0.2"
@@ -416,8 +416,8 @@ packages:
     dependency: "direct main"
     description:
       path: "packages/reactive_ble_platform_interface"
-      ref: "v1.1.118"
-      resolved-ref: "1e5e303bf157932de250adb2c8701485216c462c"
+      ref: "v1.1.120"
+      resolved-ref: "0e15b243ac0963afe278359c02dbb774f4396bfe"
       url: "https://github.com/ben91187/flutter_reactive_ble.git"
     source: git
     version: "5.0.2"
