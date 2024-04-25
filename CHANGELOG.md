@@ -1,12 +1,16 @@
-# TAG v1.1.125- Test
+# TAG v1.1.126 - Test
+
+- remove string null check
+
+# TAG v1.1.125 - Test
 
 - check mac address equals to passed device id
 
-# TAG v1.1.124- Test
+# TAG v1.1.124 - Test
 
 - remove unnecessary convert function
 
-# TAG v1.1.123- Test
+# TAG v1.1.123 - Test
 
 - rename variable
 

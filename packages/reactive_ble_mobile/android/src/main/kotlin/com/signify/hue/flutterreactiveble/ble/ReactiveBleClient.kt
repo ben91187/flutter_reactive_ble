@@ -1011,10 +1011,6 @@ open class ReactiveBleClient(private val context: Context) : BleClient {
                 Log.i(tag, device.getType().toString());
                 Log.i(tag, device.toString());
                 Log.i(tag, device.getAddress().toString());
-                if (deviceName == null) {
-                    Log.i(tag, "device name is null");
-                    return null;
-                }
                 if (device.getAddress() == deviceId && ((device.getType() == 0x00000001) || (device.getType() == 0x00000003))) {
                     Log.i(tag, "found bonded iNet Box");
                     return device;
