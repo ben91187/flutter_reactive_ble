@@ -943,7 +943,7 @@ open class ReactiveBleClient(private val context: Context) : BleClient {
     /**
      * Checks if old bonding exists, and if, allows showing the delete iNetBox Bondings pop up.
      * */
-    override fun checkIfOldInetBoxBondingExists(macAddress: String): Boolean {
+    override fun checkIfOldInetBoxBondingExists(deviceId: String): Boolean {
         try {
             val bluetoothManager: BluetoothManager =
                 ctx.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
@@ -953,7 +953,7 @@ open class ReactiveBleClient(private val context: Context) : BleClient {
 
             val bondedDevices: Set<BluetoothDevice> = bluetoothAdapter.getBondedDevices()
 
-            if (searchForBondedDevice(macAddress, bondedDevices) != null) {
+            if (searchForBondedDevice(deviceId, bondedDevices) != null) {
                 Log.i(tag, "found iNet Box bonding")
                 return true;
             }
@@ -973,7 +973,7 @@ open class ReactiveBleClient(private val context: Context) : BleClient {
      * bonded via the new flutter app.
      * https://developer.android.com/reference/android/bluetooth/BluetoothDevice#DEVICE_TYPE_DUAL
      * */
-    override fun removeInetBoxBonding(macAddress: String): Boolean {
+    override fun removeInetBoxBonding(deviceId: String): Boolean {
         try {
             val bluetoothManager: BluetoothManager =
                 ctx.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
@@ -983,7 +983,7 @@ open class ReactiveBleClient(private val context: Context) : BleClient {
 
             Log.i(tag, "start remove bonding");
 
-            val foundDevice: BluetoothDevice? = searchForBondedDevice(macAddress, bondedDevices)
+            val foundDevice: BluetoothDevice? = searchForBondedDevice(deviceId, bondedDevices)
             if (foundDevice != null) {
                 Log.i(tag, "found iNet Box bonding - remove bond")
                 val pair = foundDevice.javaClass.getMethod("removeBond")
