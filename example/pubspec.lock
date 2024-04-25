@@ -469,8 +469,8 @@ packages:
     dependency: transitive
     description:
       path: "packages/reactive_ble_platform_interface"
-      ref: "v1.1.118"
-      resolved-ref: "1e5e303bf157932de250adb2c8701485216c462c"
+      ref: "v1.1.119"
+      resolved-ref: c5d8fd343e3da55b6351e5db45ac07b36eb3b188
       url: "https://github.com/ben91187/flutter_reactive_ble.git"
     source: git
     version: "5.0.2"

@@ -1,3 +1,7 @@
+# TAG v1.1.120 - Test
+
+- fix errors
+
 # TAG v1.1.119 - Test
 
 - pass device id (mac address) of connected device to the functions that either checks the bondings or removes it

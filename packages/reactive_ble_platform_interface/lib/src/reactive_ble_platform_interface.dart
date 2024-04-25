@@ -234,12 +234,12 @@ abstract class ReactiveBlePlatform extends PlatformInterface {
         'writeCharacteristicWithoutResponse has not been implemented.');
   }
 
-  Future<bool> checkIfOldInetBoxBondingExists() {
+  Future<bool> checkIfOldInetBoxBondingExists(String deviceId) {
     throw UnimplementedError(
         'checkIfOldInetBoxBondingExists has not been implemented.');
   }
 
-  Future<bool> removeInetBoxBonding() {
+  Future<bool> removeInetBoxBonding(String deviceId) {
     throw UnimplementedError('RemoveInetBoxBonding has not been implemented.');
   }
 
