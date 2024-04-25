@@ -983,13 +983,13 @@ open class ReactiveBleClient(private val context: Context) : BleClient {
 
             Log.i(tag, "start remove bonding");
 
-            foundDevice: BluetoothDevice? = searchForBondedDevice(bondedDevices)
+            val foundDevice: BluetoothDevice? = searchForBondedDevice(bondedDevices)
             if (foundDevice != null) {
                 Log.i(tag, "found iNet Box bonding - remove bond")
                 val pair = device.javaClass.getMethod("removeBond")
                 pair.invoke(foundDevice)
                 Log.i(tag, "remove iNet Box bonding - success")
-                return;
+                return
             }
             Log.i(tag, "remove iNet Box bonding - failure")
         } catch (e: Exception) {
