@@ -192,7 +192,6 @@ open class ReactiveBleClient(private val context: Context) : BleClient {
         if (activeConnections[deviceId] == null) {
             Log.i(tag, "No active connections found")
         }
-        Log.i(tag, "connect: ${device.getAddress().toString()}");
         activeConnections[deviceId]?.disconnectDevice(deviceId)
         activeConnections.remove(deviceId)
     }
@@ -954,7 +953,7 @@ open class ReactiveBleClient(private val context: Context) : BleClient {
 
             val bondedDevices: Set<BluetoothDevice> = bluetoothAdapter.getBondedDevices()
 
-            if (searchForBondedDevice(bondedDevices)) {
+            if (searchForBondedDevice(bondedDevices) != null) {
                 Log.i(tag, "found iNet Box bonding")
                 return true;
             }
@@ -984,18 +983,21 @@ open class ReactiveBleClient(private val context: Context) : BleClient {
 
             Log.i(tag, "start remove bonding");
 
-            if (searchForBondedDevice(bondedDevices)) {
+            foundDevice: BluetoothDevice? = searchForBondedDevice(bondedDevices)
+            if (foundDevice != null) {
                 Log.i(tag, "found iNet Box bonding - remove bond")
                 val pair = device.javaClass.getMethod("removeBond")
-                pair.invoke(device)
+                pair.invoke(foundDevice)
                 Log.i(tag, "remove iNet Box bonding - success")
+                return;
             }
+            Log.i(tag, "remove iNet Box bonding - failure")
         } catch (e: Exception) {
             Log.i(tag, "Error removing bonding: " + e);
         }
-    }
+    }?
 
-    private fun searchForBondedDevice(bondedDevices: Boolean): Boolean {
+    private fun searchForBondedDevice(bondedDevices: Set<BluetoothDevice>): BluetoothDevice? {
         try {
             for (device in bondedDevices) {
                 var deviceName: String? = device.getName()
@@ -1006,18 +1008,19 @@ open class ReactiveBleClient(private val context: Context) : BleClient {
                 Log.i(tag, device.getAddress().toString());
                 if (deviceName == null) {
                     Log.i(tag, "device name is null");
-                    return false;
+                    return null;
                 }
                 if (deviceName.contains("iNet Box") && ((device.getType() == 0x00000001) || (device.getType() == 0x00000003))) {
                     Log.i(tag, "found bonded iNet Box");
-                    return true;
+                    return device;
                 }
+                Log.i(tag, "no bonded iNet Box found");
             }
-            return false
+            return null;
         } catch (e: Exception) {
             Log.e(tag, "Exception while iterating over bondings");
             Log.e(tag, "Exception: ${e.toString()}");
-            return false;
+            return null;
         }
     }
 
