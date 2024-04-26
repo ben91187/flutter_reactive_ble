@@ -1,4 +1,8 @@
-# TAG v1.1.126 - Test
+# TAG v1.1.127 - Test
+
+- check if either the connected device address matches to the bonding mac address or the device name contains "iNet Box" to remove the bonding
+
+# TAG v1.1.126 - Stable
 
 - remove string null check
 

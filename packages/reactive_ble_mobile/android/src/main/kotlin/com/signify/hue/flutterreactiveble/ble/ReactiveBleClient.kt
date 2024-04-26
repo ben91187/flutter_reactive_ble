@@ -999,6 +999,18 @@ open class ReactiveBleClient(private val context: Context) : BleClient {
         }
     }
 
+    /**
+     * [deviceId] is empty, in case of an existing bonding with the iNet Box, paired through the
+     * Truma app. Thus, one have to check if the deviceName contains the string "iNet Box" as the
+     * iNet System app has no information about the current device address.
+     *
+     * After the first connection, set up with the iNet System app, the mac address of the
+     * connected iNet Box is stored locally on the device.
+     *
+     * The deletion of the bonded device is necessary for the change from bluetooth classic on
+     * Android onto bluetooth low energy. This action helps to clean up the cached bluetooth
+     * services after a firmware migration.
+     * */
     private fun searchForBondedDevice(
         deviceId: String,
         bondedDevices: Set<BluetoothDevice>
@@ -1011,7 +1023,9 @@ open class ReactiveBleClient(private val context: Context) : BleClient {
                 Log.i(tag, device.getType().toString());
                 Log.i(tag, device.toString());
                 Log.i(tag, device.getAddress().toString());
-                if (device.getAddress() == deviceId && ((device.getType() == 0x00000001) || (device.getType() == 0x00000003))) {
+                val isSearchedDevice: Boolean =
+                    (device.getAddress() == deviceId) || (deviceName ?: "").contains("iNet Box")
+                if ( isSearchedDevice && ((device.getType() == 0x00000001) || (device.getType() == 0x00000003))) {
                     Log.i(tag, "found bonded iNet Box");
                     return device;
                 }
