@@ -440,11 +440,16 @@ open class ReactiveBleClient(private val context: Context) : BleClient {
             @Override
             override fun onConnectionStateChange(gatt: BluetoothGatt, status: Int, newState: Int) {
                 super.onConnectionStateChange(gatt, status, newState)
-                Log.i(tag, "onConnectionStateChange")
+                Log.i(
+                    tag,
+                    "GATT: onConnectionStateChange" + " status:" + status + " newState:" + newState
+                )
+                logProfileState(newState)
             }
 
             @Override
             override fun onServicesDiscovered(gatt: BluetoothGatt?, status: Int) {
+                Log.i(tag, "onServicesDiscovered" + " status:" + status)
                 super.onServicesDiscovered(gatt, status)
             }
 
@@ -536,7 +541,10 @@ open class ReactiveBleClient(private val context: Context) : BleClient {
                 newState: Int
             ) {
                 super.onConnectionStateChange(device, status, newState)
-                Log.i(tag, "onConnectionStateChange")
+                Log.i(
+                    tag,
+                    "onConnectionStateChange" + " status:" + status + " newState:" + newState
+                )
 
                 Log.i(
                     tag,
@@ -715,14 +723,23 @@ open class ReactiveBleClient(private val context: Context) : BleClient {
                     offset,
                     value
                 )
-                Log.i(tag, "onDescriptorWriteRequest")
-
-                descriptor?.setValue(value);
+                Log.i(
+                    tag,
+                    "onDescriptorWriteRequest" + "device: " + device?.getAddress()
+                        .toString() + "\n" + "descriptor: " + descriptor?.getUuid().toString()
+                )
+                Log.i(
+                    tag,
+                    "descriptor permission: " + descriptor?.getPermissions() + "\ndescriptor value:" + value?.toString(
+                        Charsets.UTF_8
+                    )
+                )
 
 
                 var descriptorUuid: String = descriptor?.getUuid().toString()
 
                 if (descriptorUuid.equals(CccdUUID)) {
+                    Log.i(tag, "descriptor equals CccdUUID")
                     mBluetoothGattServer?.sendResponse(
                         device,
                         requestId,
@@ -738,6 +755,19 @@ open class ReactiveBleClient(private val context: Context) : BleClient {
                             gattCallback,
                             BluetoothDevice.TRANSPORT_LE
                         )
+
+                        if (Build.VERSION.SDK_INT >= 33) {
+                            Log.i(tag, "write descriptor in api 33 style")
+                            if (descriptor == null || value == null || mBluetoothGatt == null) {
+                                Log.i(tag, "descriptor or value is null")
+                                return
+                            }
+                            mBluetoothGatt?.writeDescriptor(descriptor!!, value!!)
+                        } else {
+                            Log.i(tag, "write descriptor in api 32 and lower style")
+                            descriptor?.setValue(value);
+                        }
+
                     }
 
                     // TODO sent event to flutter with central connetion changed
@@ -842,6 +872,18 @@ open class ReactiveBleClient(private val context: Context) : BleClient {
         // add first service to the gattserver
         if (mBluetoothGattServer != null) {
             while (!mBluetoothGattServer!!.addService(service1));
+        }
+    }
+
+    private fun logProfileState(newState: Int) {
+        if (newState == BluetoothProfile.STATE_CONNECTED) {
+            Log.i(tag, "PROFILE: STATE_CONNECTED")
+        } else if (newState == BluetoothProfile.STATE_CONNECTING) {
+            Log.i(tag, "PROFILE: STATE_CONNECTING")
+        } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
+            Log.i(tag, "PROFILE: STATE_DISCONNECTED")
+        } else if (newState == BluetoothProfile.STATE_DISCONNECTING) {
+            Log.i(tag, "PROFILE: STATE_DISCONNECTING")
         }
     }
 
