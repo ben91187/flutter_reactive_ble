@@ -1,4 +1,9 @@
-# TAG v1.1.127 - Test
+# TAG v1.1.128 - Test
+
+- Add SDK check for writing gatt descriptor, as currently used function were deprecated in sdk 33.
+- Add logs
+
+# TAG v1.1.127 - Stable
 
 - check if either the connected device address matches to the bonding mac address or the device name contains "iNet Box" to remove the bonding
 
