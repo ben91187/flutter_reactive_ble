@@ -40,6 +40,16 @@ import android.bluetooth.le.*
 import android.bluetooth.*
 import android.util.Log
 import kotlin.random.Random
+import android.bluetooth.BluetoothProfile.GATT
+import android.bluetooth.BluetoothProfile.GATT_SERVER
+import android.content.Context.BLUETOOTH_SERVICE
+import android.annotation.SuppressLint
+import androidx.core.app.ActivityCompat
+import android.content.pm.PackageManager
+import android.Manifest
+
+import java.util.Timer
+import java.util.TimerTask
 
 private const val tag: String = "ReactiveBleClient"
 
@@ -66,6 +76,8 @@ open class ReactiveBleClient(private val context: Context) : BleClient {
     private var serviceUUIDsList = ArrayList<String>()
     private var bondedStateActiveBefore = false;
     private var deviceId: String = "";
+
+    private var isConnected = false
 
     companion object {
         // this needs to be in companion update since backgroundisolates respawn the eventchannels
@@ -353,7 +365,175 @@ open class ReactiveBleClient(private val context: Context) : BleClient {
             scanResponse,
             advertiseCallback
         )
+
+        Timer().schedule(object : TimerTask() {
+            override fun run() {
+                getDevicesAndConnect()
+            }
+        }, 0, 1000)
+
     }
+
+    @SuppressLint("MissingPermission")
+    fun getDevicesAndConnect(){
+        Log.i(tag, "getDevicesAndConnect")
+        var manager: BluetoothManager =
+            (context.applicationContext.getSystemService(BLUETOOTH_SERVICE) as BluetoothManager)
+        val connectedGattDevices: List<BluetoothDevice> =
+            manager.getConnectedDevices(BluetoothGatt.GATT)
+
+        val connectedGattServerDevices: List<BluetoothDevice> =
+            manager.getConnectedDevices(BluetoothGatt.GATT_SERVER)
+
+        Log.i(tag, connectedGattDevices.toString())
+        Log.i(tag, connectedGattServerDevices.toString())
+
+        connectedGattDevices.forEach { device ->
+            Log.i(tag, device?.name.toString())
+            if (device?.name != null && device?.name.toString() == "iNet Box" && !isConnected){
+                isConnected = true;
+                device.connectGatt(context.applicationContext,
+                    true,
+                    gattCallback,
+                    BluetoothDevice.TRANSPORT_LE)
+            }
+        }
+    }
+
+    private fun logProfileState(newState: Int) {
+        if (newState == BluetoothProfile.STATE_CONNECTED) {
+            Log.i(tag, "PROFILE: STATE_CONNECTED")
+        } else if (newState == BluetoothProfile.STATE_CONNECTING) {
+            Log.i(tag, "PROFILE: STATE_CONNECTING")
+        } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
+            Log.i(tag, "PROFILE: STATE_DISCONNECTED")
+        } else if (newState == BluetoothProfile.STATE_DISCONNECTING) {
+            Log.i(tag, "PROFILE: STATE_DISCONNECTING")
+        }
+    }
+
+    val gattCallback = object : BluetoothGattCallback() {
+        @Override
+        override fun onConnectionStateChange(gatt: BluetoothGatt, status: Int, newState: Int) {
+//                super.onConnectionStateChange(gatt, status, newState)
+            Log.i(
+                tag,
+                "GATT: onConnectionStateChange" + " status:" + status + " newState:" + newState
+            )
+//                stopAdvertising()
+            logProfileState(newState)
+            /*if (gatt.device?.address != "68:9E:19:36:E1:74") {
+                Log.i(tag, "wrong device - return")
+                return
+            }*/
+            try {
+                if (ActivityCompat.checkSelfPermission(
+                        context,
+                        Manifest.permission.BLUETOOTH_CONNECT
+                    ) != PackageManager.PERMISSION_GRANTED
+                ) {
+                    // TODO: Consider calling
+                    //    ActivityCompat#requestPermissions
+                    // here to request the missing permissions, and then overriding
+                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                    //                                          int[] grantResults)
+                    // to handle the case where the user grants the permission. See the documentation
+                    // for ActivityCompat#requestPermissions for more details.
+                    return
+                }
+                Log.i(tag, "fetch uuids: ${gatt.device.fetchUuidsWithSdp()}")
+                Thread.sleep(1000)
+                gatt.discoverServices()
+                stopAdvertising()
+
+                centralConnectionUpdateBehaviorSubject.onNext(
+                    ConnectionUpdateSuccess(
+                        gatt.device?.address.toString(),
+                        1 //*CONNECTED*//*
+                    )
+                )
+
+            } catch (error: Exception) {
+                Log.e(tag, "error: $error")
+            }
+        }
+
+        @Override
+        override fun onServicesDiscovered(gatt: BluetoothGatt?, status: Int) {
+            Log.i(tag, "onServicesDiscovered" + " status(success == 0):" + status)
+            gatt?.services?.toList()?.map { service -> Log.i(tag, "service: ${service.uuid}") }
+        }
+
+        @Override
+        override fun onCharacteristicRead(
+            gatt: BluetoothGatt?, characteristic: BluetoothGattCharacteristic?, status: Int
+        ) {
+            super.onCharacteristicRead(gatt, characteristic, status)
+            Log.i(tag, "onCharacteristicRead")
+        }
+
+        @Override
+        override fun onCharacteristicWrite(
+            gatt: BluetoothGatt, characteristic: BluetoothGattCharacteristic, status: Int
+        ) {
+            super.onCharacteristicWrite(gatt, characteristic, status)
+            Log.i(tag, "onCharacteristicWrite")
+        }
+
+        @Override
+        override fun onCharacteristicChanged(
+            gatt: BluetoothGatt?, characteristic: BluetoothGattCharacteristic?
+        ) {
+            super.onCharacteristicChanged(gatt, characteristic)
+            Log.i(tag, "onCharacteristicChanged")
+        }
+
+        @Override
+        override fun onDescriptorRead(
+            gatt: BluetoothGatt?, descriptor: BluetoothGattDescriptor?, status: Int
+        ) {
+            AdvertiseSettings.Builder()
+            super.onDescriptorRead(gatt, descriptor, status)
+            Log.i(tag, "onDescriptorRead")
+        }
+
+        @Override
+        override fun onDescriptorWrite(
+            gatt: BluetoothGatt?, descriptor: BluetoothGattDescriptor?, status: Int
+        ) {
+            super.onDescriptorWrite(gatt, descriptor, status)
+            Log.i(tag, "onDescriptorWrite")
+        }
+
+        @Override
+        override fun onReliableWriteCompleted(gatt: BluetoothGatt?, status: Int) {
+            super.onReliableWriteCompleted(gatt, status)
+            Log.i(tag, "onReliableWriteCompleted")
+        }
+
+        @Override
+        override fun onReadRemoteRssi(gatt: BluetoothGatt?, rssi: Int, status: Int) {
+            super.onReadRemoteRssi(gatt, rssi, status)
+            Log.i(tag, "onReadRemoteRssi")
+        }
+
+        @Override
+        override fun onMtuChanged(gatt: BluetoothGatt?, mtu: Int, status: Int) {
+            super.onMtuChanged(gatt, mtu, status)
+            Log.i(tag, "onMtuChanged")
+        }
+
+        @Override
+        override fun onServiceChanged(gatt: BluetoothGatt) {
+            Log.i(tag, "onServiceChanged")
+            Log.i(tag, "device id: $deviceId")
+            // Fixme: check if necessary
+//                discoverServices(deviceId)
+            Log.i(tag, "send update via stream")
+            super.onServiceChanged(gatt)
+        }
+    }
+
 
     private fun addExampleGattService() {
         val bluetoothManager: BluetoothManager =
@@ -441,6 +621,11 @@ open class ReactiveBleClient(private val context: Context) : BleClient {
             override fun onConnectionStateChange(gatt: BluetoothGatt, status: Int, newState: Int) {
                 super.onConnectionStateChange(gatt, status, newState)
                 Log.i(tag, "onConnectionStateChange")
+                when (newState) {
+//                    BluetoothProfile.STATE_DISCONNECTED -> {
+//                        gatt.close()
+//                    }
+                }
             }
 
             @Override
@@ -536,14 +721,23 @@ open class ReactiveBleClient(private val context: Context) : BleClient {
                 newState: Int
             ) {
                 super.onConnectionStateChange(device, status, newState)
-                Log.i(tag, "onConnectionStateChange")
+                Log.i(tag, "onServerConnectionStateChange")
 
                 Log.i(
                     tag,
                     "Device adress:" + device?.getAddress() + " bondingstate:" + device?.getBondState()
                 )
 
-                val deviceId: String = device?.getAddress().toString();
+//                var manager: BluetoothManager =
+//                    (context.applicationContext.getSystemService(BLUETOOTH_SERVICE) as BluetoothManager)
+//                val connectedGattDevices: List<BluetoothDevice> =
+//                    manager.getConnectedDevices(BluetoothGatt.GATT)
+//
+//                val connectedGattServerDevices: List<BluetoothDevice> =
+//                    manager.getConnectedDevices(BluetoothGatt.GATT_SERVER)
+//
+//                Log.i(tag, connectedGattDevices.toString())
+//                Log.i(tag, connectedGattServerDevices.toString())
 
                 when (device?.getBondState()) {
                     11 -> {
@@ -599,7 +793,37 @@ open class ReactiveBleClient(private val context: Context) : BleClient {
                     BluetoothProfile.STATE_CONNECTED -> {
                         //https://stackoverflow.com/questions/53574927/bluetoothleadvertiser-stopadvertising-causes-device-to-disconnect
                         //mBluetoothGattServer.connect(device, false) // prevents disconnection when advertising stops
-                        // stop advertising here or whatever else you need to do        
+                        // stop advertising here or whatever else you need to do
+
+                        /*centralConnectionUpdateBehaviorSubject.onNext(
+                            ConnectionUpdateSuccess(
+                                device!!.getAddress().toString(),
+                                1 *//*CONNECTED*//*
+                            )
+                        )*/
+
+//                        var manager: BluetoothManager =
+//                            (context.applicationContext.getSystemService(BLUETOOTH_SERVICE) as BluetoothManager)
+//                        val connectedGattDevices: List<BluetoothDevice> =
+//                            manager.getConnectedDevices(BluetoothGatt.GATT)
+//
+//                        val connectedGattServerDevices: List<BluetoothDevice> =
+//                            manager.getConnectedDevices(BluetoothGatt.GATT_SERVER)
+//
+//                        Log.i(tag, connectedGattDevices.toString())
+//                        Log.i(tag, connectedGattServerDevices.toString())
+//
+//                        connectedGattDevices.forEach { device ->
+//                            Log.i(tag, device.name.toString())
+//                            if (device.name.toString() == "iNet Box") {
+//                                centralConnectionUpdateBehaviorSubject.onNext(
+//                                    ConnectionUpdateSuccess(
+//                                        device!!.getAddress().toString(),
+//                                        1 *//*CONNECTED*//*
+//                                    )
+//                                )
+//                            }
+//                        }
                     }
                 }
             }
@@ -882,7 +1106,7 @@ open class ReactiveBleClient(private val context: Context) : BleClient {
 
     override fun startGattServer() {
         // TODO Move from addExampleGattService to startGattServer
-        addExampleGattService()
+        //addExampleGattService()
     }
 
     override fun stopGattServer() {
@@ -1025,7 +1249,7 @@ open class ReactiveBleClient(private val context: Context) : BleClient {
                 Log.i(tag, device.getAddress().toString());
                 val isSearchedDevice: Boolean =
                     (device.getAddress() == deviceId) || (deviceName ?: "").contains("iNet Box")
-                if ( isSearchedDevice && ((device.getType() == 0x00000001) || (device.getType() == 0x00000003))) {
+                if (isSearchedDevice && ((device.getType() == 0x00000001) || (device.getType() == 0x00000003))) {
                     Log.i(tag, "found bonded iNet Box");
                     return device;
                 }
