@@ -578,15 +578,16 @@ open class ReactiveBleClient(private val context: Context) : BleClient {
 
                     10 -> {
                         Log.i(tag, "BOND_NONE")
-                        if (bondedStateActiveBefore) {
+                        Log.i(tag, "BOND_NONE_CHECK")
+                        /*if (bondedStateActiveBefore) {
                             connectionUpdateBehaviorSubject.onNext(
                                 ConnectionUpdateSuccess(
                                     deviceId,
-                                    5 /*FORCEDISCONNECTED*/
+                                    5 *//*FORCEDISCONNECTED*//*
                                 )
                             )
                         }
-                        bondedStateActiveBefore = false;
+                        bondedStateActiveBefore = false;*/
 
                         //createBond()
                     }
@@ -607,7 +608,13 @@ open class ReactiveBleClient(private val context: Context) : BleClient {
                     BluetoothProfile.STATE_CONNECTED -> {
                         //https://stackoverflow.com/questions/53574927/bluetoothleadvertiser-stopadvertising-causes-device-to-disconnect
                         //mBluetoothGattServer.connect(device, false) // prevents disconnection when advertising stops
-                        // stop advertising here or whatever else you need to do        
+                        // stop advertising here or whatever else you need to do
+                        /*centralConnectionUpdateBehaviorSubject.onNext(
+                            ConnectionUpdateSuccess(
+                                device?.getAddress().toString(),
+                                1 *//*CONNECTED*//*
+                            )
+                        )*/
                     }
                 }
             }
@@ -757,12 +764,17 @@ open class ReactiveBleClient(private val context: Context) : BleClient {
                         )
 
                         if (Build.VERSION.SDK_INT >= 33) {
+                            Log.i(tag, "device: ${device?.getAddress().toString()}")
                             Log.i(tag, "write descriptor in api 33 style")
                             if (descriptor == null || value == null || mBluetoothGatt == null) {
                                 Log.i(tag, "descriptor or value is null")
                                 return
                             }
-                            mBluetoothGatt?.writeDescriptor(descriptor!!, value!!)
+                            try {
+                                mBluetoothGatt?.writeDescriptor(descriptor!!, value!!)
+                            } catch (e: Exception){
+                                descriptor?.setValue(value);
+                            }
                         } else {
                             Log.i(tag, "write descriptor in api 32 and lower style")
                             descriptor?.setValue(value);
