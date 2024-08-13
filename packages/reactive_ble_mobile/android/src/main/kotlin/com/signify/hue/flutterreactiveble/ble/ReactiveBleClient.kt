@@ -375,27 +375,78 @@ open class ReactiveBleClient(private val context: Context) : BleClient {
     }
 
     @SuppressLint("MissingPermission")
-    fun getDevicesAndConnect(){
+    fun getDevicesAndConnect() {
         Log.i(tag, "getDevicesAndConnect")
         var manager: BluetoothManager =
             (context.applicationContext.getSystemService(BLUETOOTH_SERVICE) as BluetoothManager)
+        /*val connectedGattDevices: List<BluetoothDevice> =
+            manager.getConnectedDevices(BluetoothGatt.GATT)*/
+
+
+        /*val connectedGattServerDevices: List<BluetoothDevice> =
+            manager.getConnectedDevices(BluetoothGatt.GATT_SERVER)*/
+
+
+        Log.i(
+            tag, manager.getDevicesMatchingConnectionStates(
+                BluetoothGatt.GATT,
+                intArrayOf(BluetoothProfile.STATE_CONNECTED)
+            ).toString()
+        )
+        Log.i(
+            tag, manager.getDevicesMatchingConnectionStates(
+                BluetoothGatt.GATT,
+                intArrayOf(BluetoothProfile.STATE_CONNECTING)
+            ).toString()
+        )
+        Log.i(
+            tag, manager.getDevicesMatchingConnectionStates(
+                BluetoothGatt.GATT,
+                intArrayOf(BluetoothProfile.STATE_DISCONNECTED)
+            ).toString()
+        )
+        Log.i(
+            tag, manager.getDevicesMatchingConnectionStates(
+                BluetoothGatt.GATT,
+                intArrayOf(BluetoothProfile.STATE_DISCONNECTING)
+            ).toString()
+        )
+
         val connectedGattDevices: List<BluetoothDevice> =
-            manager.getConnectedDevices(BluetoothGatt.GATT)
+            manager.getDevicesMatchingConnectionStates(
+                BluetoothGatt.GATT,
+                intArrayOf(
+                    BluetoothProfile.STATE_CONNECTED,
+                    BluetoothProfile.STATE_CONNECTING,
+                    BluetoothProfile.STATE_DISCONNECTED,
+                    BluetoothProfile.STATE_DISCONNECTING
+                )
+            )
 
         val connectedGattServerDevices: List<BluetoothDevice> =
-            manager.getConnectedDevices(BluetoothGatt.GATT_SERVER)
+            manager.getDevicesMatchingConnectionStates(
+                BluetoothGatt.GATT_SERVER,
+                intArrayOf(
+                    BluetoothProfile.STATE_CONNECTED,
+                    BluetoothProfile.STATE_CONNECTING,
+                    BluetoothProfile.STATE_DISCONNECTED,
+                    BluetoothProfile.STATE_DISCONNECTING
+                )
+            )
 
         Log.i(tag, connectedGattDevices.toString())
         Log.i(tag, connectedGattServerDevices.toString())
 
         connectedGattDevices.forEach { device ->
             Log.i(tag, device?.name.toString())
-            if (device?.name != null && device?.name.toString() == "iNet Box" && !isConnected){
+            if (device?.name != null && device?.name.toString() == "iNet Box" && !isConnected) {
                 isConnected = true;
-                device.connectGatt(context.applicationContext,
+                device.connectGatt(
+                    context.applicationContext,
                     true,
                     gattCallback,
-                    BluetoothDevice.TRANSPORT_LE)
+                    BluetoothDevice.TRANSPORT_LE
+                )
             }
         }
     }
