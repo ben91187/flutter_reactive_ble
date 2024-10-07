@@ -55,6 +55,7 @@ android {
         minSdkVersion 21
         targetSdkVersion 31
         consumerProguardFiles 'proguard-rules.txt'
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
     lintOptions {
@@ -69,6 +70,7 @@ android {
     kotlinOptions {
         jvmTarget = JavaVersion.VERSION_1_8.toString()
     }
+    buildToolsVersion '34.0.0'
 }
 
 detekt {
@@ -107,4 +109,5 @@ dependencies {
     testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:5.7.0"
     testImplementation "io.mockk:mockk:1.11.0"
     testImplementation "com.google.truth:truth:1.0"
+//    implementation files('~/Developer/flutter/bin/cache/artifacts/engine/android-arm64-release/flutter.jar')
 }

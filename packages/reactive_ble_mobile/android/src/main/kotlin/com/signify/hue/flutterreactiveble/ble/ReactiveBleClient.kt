@@ -1,5 +1,8 @@
 package com.signify.hue.flutterreactiveble.ble
 
+import android.Manifest
+import android.annotation.SuppressLint
+import android.app.ActivityManager
 import android.bluetooth.BluetoothDevice.BOND_BONDING
 import android.bluetooth.BluetoothGattCharacteristic
 import android.content.Context
@@ -38,7 +41,9 @@ import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothManager
 import android.bluetooth.le.*
 import android.bluetooth.*
+import android.content.pm.PackageManager
 import android.util.Log
+import androidx.core.app.ActivityCompat
 import kotlin.random.Random
 
 private const val tag: String = "ReactiveBleClient"
@@ -973,28 +978,56 @@ open class ReactiveBleClient(private val context: Context) : BleClient {
      * bonded via the new flutter app.
      * https://developer.android.com/reference/android/bluetooth/BluetoothDevice#DEVICE_TYPE_DUAL
      * */
-    override fun removeInetBoxBonding(deviceId: String): Boolean {
+
+    override fun removeInetBoxBonding(
+        deviceId: String,
+        forceDelete: Boolean,
+    ): Boolean {
         try {
             val bluetoothManager: BluetoothManager =
-                ctx.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
+                context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
             val bluetoothAdapter: BluetoothAdapter = bluetoothManager.adapter
+
+
+            if (ActivityCompat.checkSelfPermission(
+                    context,
+                    Manifest.permission.BLUETOOTH_CONNECT
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                Log.i(tag, "Bluetooth permission not granted!")
+                Log.e(tag, "Bluetooth permission not granted!")
+                return false
+            }
+
 
             val bondedDevices: Set<BluetoothDevice> = bluetoothAdapter.getBondedDevices()
 
             Log.i(tag, "start remove bonding for device id: ${deviceId}");
 
             val foundDevice: BluetoothDevice? = searchForBondedDevice(deviceId, bondedDevices)
-            if (foundDevice != null) {
+
+            if (foundDevice == null) {
+                Log.i(tag, "Found no related device to remove bonding")
+                return false;
+            }
+
+            val isBtClassicBonding: Boolean =
+                (foundDevice.getType() == 0x00000001) || (foundDevice.getType() == 0x00000003);
+
+            Log.i(tag, "is classic bonding: $isBtClassicBonding")
+            Log.i(tag, "forceDelete: $forceDelete")
+
+            if (isBtClassicBonding || forceDelete) {
                 Log.i(tag, "found iNet Box bonding - remove bond")
                 val pair = foundDevice.javaClass.getMethod("removeBond")
                 pair.invoke(foundDevice)
                 Log.i(tag, "remove iNet Box bonding - success")
                 return true;
             }
-            Log.i(tag, "remove iNet Box bonding - failure")
+            Log.i(tag, "No classic bonding found, neither forcing deletion.")
             return false;
         } catch (e: Exception) {
-            Log.i(tag, "Error removing bonding: " + e);
+            Log.i(tag, "Error removing bonding: $e");
             return false;
         }
     }
@@ -1011,25 +1044,28 @@ open class ReactiveBleClient(private val context: Context) : BleClient {
      * Android onto bluetooth low energy. This action helps to clean up the cached bluetooth
      * services after a firmware migration.
      * */
-    private fun searchForBondedDevice(
+    @SuppressLint("MissingPermission")
+    public fun searchForBondedDevice(
         deviceId: String,
         bondedDevices: Set<BluetoothDevice>
     ): BluetoothDevice? {
         try {
             for (device in bondedDevices) {
-                var deviceName: String? = device.getName()
+
+                val deviceName: String? = device.name
                 Log.i(tag, "found device");
                 Log.i(tag, deviceName.toString());
-                Log.i(tag, device.getType().toString());
+                Log.i(tag, device.type.toString());
                 Log.i(tag, device.toString());
-                Log.i(tag, device.getAddress().toString());
+                Log.i(tag, device.address.toString());
                 val isSearchedDevice: Boolean =
                     (device.getAddress() == deviceId) || (deviceName ?: "").contains("iNet Box")
-                if ( isSearchedDevice && ((device.getType() == 0x00000001) || (device.getType() == 0x00000003))) {
+
+                if (isSearchedDevice) {
                     Log.i(tag, "found bonded iNet Box");
                     return device;
                 }
-                Log.i(tag, "no bonded iNet Box found");
+                Log.i(tag, "No existing bonding found!");
             }
             return null;
         } catch (e: Exception) {
