@@ -947,6 +947,10 @@ open class ReactiveBleClient(private val context: Context) : BleClient {
         // TODO Move from addExampleGattService to addGattCharacteristic
     }
 
+    /**
+     * Checks if a bonded device is of type classic bonding. This can be determined by the device type.
+     * The device types value can be [BluetoothDevice.DEVICE_TYPE_CLASSIC] or [BluetoothDevice.DEVICE_TYPE_DUAL]
+    */
     @TargetApi(34)
     fun isClassicBonding(device: BluetoothDevice, ctx: Context?, buildCnfg: BuildConfig?): Boolean {
         try {
@@ -1027,8 +1031,8 @@ open class ReactiveBleClient(private val context: Context) : BleClient {
      * If the bonded iNetBox is from type 0x00000002 - DEVICE_TYPE_LE this iNetBox was
      * bonded via the new flutter app.
      * https://developer.android.com/reference/android/bluetooth/BluetoothDevice#DEVICE_TYPE_DUAL
+     * If [forceDelete] is set, the bonded device will be removed regardless of the device type.
      * */
-
     override fun removeInetBoxBonding(
         deviceId: String,
         forceDelete: Boolean,
