@@ -19,11 +19,11 @@ import com.polidea.rxandroidble2.RxBleClient
 import com.polidea.rxandroidble2.RxBleConnection
 import com.polidea.rxandroidble2.RxBleDevice
 import com.polidea.rxandroidble2.RxBleDeviceServices
-import com.signify.hue.flutterreactiveble.BuildConfig
+import com.signify.hue.flutterreactiveble.BuildConfig as FBuildConfig
+import com.signify.hue.flutterreactiveble.utils.Duration as FDuration
 import com.signify.hue.flutterreactiveble.ble.extensions.writeCharWithResponse
 import com.signify.hue.flutterreactiveble.ble.extensions.writeCharWithoutResponse
 import com.signify.hue.flutterreactiveble.utils.BuildConfig
-import com.signify.hue.flutterreactiveble.utils.Duration
 import io.mockk.MockKAnnotations
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
@@ -58,7 +58,7 @@ private class BleClientForTesting(
         activeConnections = mutableMapOf()
     }
 
-    override fun createDeviceConnector(device: RxBleDevice, timeout: Duration): DeviceConnector =
+    override fun createDeviceConnector(device: RxBleDevice, timeout: FDuration): DeviceConnector =
         deviceConnector
 }
 
@@ -87,7 +87,7 @@ class ReactiveBleClientTest {
 
     private lateinit var sut: BleClientForTesting
 
-    private val testTimeout = Duration(100L, TimeUnit.MILLISECONDS)
+    private val testTimeout = FDuration(100L, TimeUnit.MILLISECONDS)
 
     private var testScheduler: TestScheduler? = null
 
