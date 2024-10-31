@@ -2,7 +2,7 @@ package com.signify.hue.flutterreactiveble.ble
 
 import android.Manifest
 import android.annotation.SuppressLint
-import android.app.ActivityManager
+import android.annotation.TargetApi
 import android.bluetooth.BluetoothDevice.BOND_BONDING
 import android.bluetooth.BluetoothGattCharacteristic
 import android.content.Context
@@ -41,9 +41,11 @@ import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothManager
 import android.bluetooth.le.*
 import android.bluetooth.*
+import android.bluetooth.BluetoothDevice
 import android.content.pm.PackageManager
 import android.util.Log
 import androidx.core.app.ActivityCompat
+import com.signify.hue.flutterreactiveble.utils.BuildConfig
 import kotlin.random.Random
 
 private const val tag: String = "ReactiveBleClient"
@@ -253,7 +255,7 @@ open class ReactiveBleClient(private val context: Context) : BleClient {
                             the bonding with the peripheral. By retrying the operation once we
                             deviate between this flaky one time error and real auth failed cases
                             */
-                            .retry(1) { Build.VERSION.SDK_INT < Build.VERSION_CODES.O }
+                            .retry(1) { BuildConfig().getVersionSDKInt() < Build.VERSION_CODES.O }
                             .map { value ->
                                 CharOperationSuccessful(deviceId, value.asList())
                             }
@@ -736,7 +738,7 @@ open class ReactiveBleClient(private val context: Context) : BleClient {
                         null
                     );
 
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    if (BuildConfig().getVersionSDKInt() >= Build.VERSION_CODES.M) {
                         mBluetoothGatt = device?.connectGatt(
                             context,
                             false,
@@ -930,9 +932,9 @@ open class ReactiveBleClient(private val context: Context) : BleClient {
             return
         }
         while (!mBluetoothGattServer!!.removeService(service)) {
-            Log.d(tag, "gatt service ${service} not removed")
+            Log.d(tag, "gatt service $service not removed")
         }
-        Log.d(tag, "gatt service ${service} removed")
+        Log.d(tag, "gatt service $service removed")
     }
 
     override fun addGattService() {
@@ -946,20 +948,72 @@ open class ReactiveBleClient(private val context: Context) : BleClient {
     }
 
     /**
+     * Checks if a bonded device is of type classic bonding. This can be determined by the device type.
+     * The device types value can be [BluetoothDevice.DEVICE_TYPE_CLASSIC] or [BluetoothDevice.DEVICE_TYPE_DUAL]
+    */
+    @TargetApi(34)
+    fun isClassicBonding(device: BluetoothDevice, ctx: Context?, buildCnfg: BuildConfig?): Boolean {
+        try {
+            val config = buildCnfg ?: BuildConfig()
+            val btPermission = when (config.getVersionSDKInt()) {
+                in 1..Build.VERSION_CODES.R -> Manifest.permission.BLUETOOTH
+                else -> Manifest.permission.BLUETOOTH_CONNECT
+            }
+            if (ActivityCompat.checkSelfPermission(
+                    ctx ?: context,
+                    btPermission
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                Log.i(tag, "Bt permission denied");
+                return false
+            }
+            return (device.getType() == BluetoothDevice.DEVICE_TYPE_CLASSIC) || (device.getType() == BluetoothDevice.DEVICE_TYPE_DUAL)
+        } catch (e: Exception) {
+            Log.i(tag, "An error occured while checking the iNet System bonding type")
+            Log.i(tag, e.toString())
+            return false;
+        }
+    }
+
+    /**
      * Checks if old bonding exists, and if, allows showing the delete iNetBox Bondings pop up.
      * */
+    @TargetApi(34)
     override fun checkIfOldInetBoxBondingExists(deviceId: String): Boolean {
         try {
             val bluetoothManager: BluetoothManager =
                 ctx.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
             val bluetoothAdapter: BluetoothAdapter = bluetoothManager.adapter
 
-            Log.i(tag, "check bonding for device id: ${deviceId}");
+            Log.i(tag, "check bonding for device id: $deviceId");
+
+
+            val btPermission =
+                when (com.signify.hue.flutterreactiveble.utils.BuildConfig().getVersionSDKInt()) {
+                    in 1..Build.VERSION_CODES.R -> Manifest.permission.BLUETOOTH
+                    else -> Manifest.permission.BLUETOOTH_CONNECT
+                }
+            /*if (BuildConfig().checkSelfPermission(
+                    context,
+                    btPermission
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                Log.i(tag, "Bluetooth permission not granted!");
+                return false
+            }*/
+            if (ActivityCompat.checkSelfPermission(
+                    context,
+                    btPermission
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                Log.i(tag, "Bluetooth permission not granted!");
+                return false
+            }
 
             val bondedDevices: Set<BluetoothDevice> = bluetoothAdapter.getBondedDevices()
-
-            if (searchForBondedDevice(deviceId, bondedDevices) != null) {
-                Log.i(tag, "found iNet Box bonding")
+            val bondedDevice = searchForBondedDevice(deviceId, bondedDevices)
+            if (bondedDevice != null && isClassicBonding(bondedDevice, null, null)) {
+                Log.i(tag, "found old iNet Box bonding")
                 return true;
             }
             Log.i(tag, "found no iNet Box bonding")
@@ -977,32 +1031,37 @@ open class ReactiveBleClient(private val context: Context) : BleClient {
      * If the bonded iNetBox is from type 0x00000002 - DEVICE_TYPE_LE this iNetBox was
      * bonded via the new flutter app.
      * https://developer.android.com/reference/android/bluetooth/BluetoothDevice#DEVICE_TYPE_DUAL
+     * If [forceDelete] is set, the bonded device will be removed regardless of the device type.
      * */
-
     override fun removeInetBoxBonding(
         deviceId: String,
         forceDelete: Boolean,
+        context: Context?,
     ): Boolean {
         try {
-            val bluetoothManager: BluetoothManager =
-                context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
-            val bluetoothAdapter: BluetoothAdapter = bluetoothManager.adapter
+            val ctx = context ?: this.context
+            val btManager: BluetoothManager =
+                ctx.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
 
+            val bluetoothAdapter: BluetoothAdapter = btManager.adapter
 
+            val btPermission = when (BuildConfig().getVersionSDKInt()) {
+                in 1..Build.VERSION_CODES.R -> Manifest.permission.BLUETOOTH
+                else -> Manifest.permission.BLUETOOTH_CONNECT
+            }
             if (ActivityCompat.checkSelfPermission(
-                    context,
-                    Manifest.permission.BLUETOOTH_CONNECT
+                    ctx,
+                    btPermission
                 ) != PackageManager.PERMISSION_GRANTED
             ) {
-                Log.i(tag, "Bluetooth permission not granted!")
-                Log.e(tag, "Bluetooth permission not granted!")
+                Log.i(tag, "Bt permission denied");
                 return false
             }
 
-
+            Log.i(tag, "Bluetooth permission not granted!")
             val bondedDevices: Set<BluetoothDevice> = bluetoothAdapter.getBondedDevices()
 
-            Log.i(tag, "start remove bonding for device id: ${deviceId}");
+            Log.i(tag, "start remove bonding for device id: $deviceId");
 
             val foundDevice: BluetoothDevice? = searchForBondedDevice(deviceId, bondedDevices)
 
@@ -1011,8 +1070,7 @@ open class ReactiveBleClient(private val context: Context) : BleClient {
                 return false;
             }
 
-            val isBtClassicBonding: Boolean =
-                (foundDevice.getType() == 0x00000001) || (foundDevice.getType() == 0x00000003);
+            val isBtClassicBonding: Boolean = isClassicBonding(foundDevice, null, null)
 
             Log.i(tag, "is classic bonding: $isBtClassicBonding")
             Log.i(tag, "forceDelete: $forceDelete")
@@ -1032,6 +1090,7 @@ open class ReactiveBleClient(private val context: Context) : BleClient {
         }
     }
 
+
     /**
      * [deviceId] is empty, in case of an existing bonding with the iNet Box, paired through the
      * Truma app. Thus, one have to check if the deviceName contains the string "iNet Box" as the
@@ -1045,7 +1104,7 @@ open class ReactiveBleClient(private val context: Context) : BleClient {
      * services after a firmware migration.
      * */
     @SuppressLint("MissingPermission")
-    public fun searchForBondedDevice(
+    fun searchForBondedDevice(
         deviceId: String,
         bondedDevices: Set<BluetoothDevice>
     ): BluetoothDevice? {
@@ -1065,12 +1124,12 @@ open class ReactiveBleClient(private val context: Context) : BleClient {
                     Log.i(tag, "found bonded iNet Box");
                     return device;
                 }
-                Log.i(tag, "No existing bonding found!");
             }
+            Log.i(tag, "No existing bonding found!");
             return null;
         } catch (e: Exception) {
             Log.e(tag, "Exception while iterating over bondings");
-            Log.e(tag, "Exception: ${e.toString()}");
+            Log.e(tag, "Exception: $e");
             return null;
         }
     }
@@ -1083,8 +1142,8 @@ open class ReactiveBleClient(private val context: Context) : BleClient {
         // TODO write to local characteristic and notify
         val servicesList: List<BluetoothGattService> = mBluetoothGattServer!!.getServices()
 
-        for (i in 0 until servicesList.size) {
-            val bluetoothGattService: BluetoothGattService = servicesList[i]
+        for (element in servicesList) {
+            val bluetoothGattService: BluetoothGattService = element
 
             val bluetoothGattCharacteristicList: List<BluetoothGattCharacteristic> =
                 bluetoothGattService.getCharacteristics()
@@ -1145,7 +1204,7 @@ open class ReactiveBleClient(private val context: Context) : BleClient {
                         the bonding with the peripheral. By retrying the operation once we
                         deviate between this flaky one time error and real auth failed cases
                         */
-                        .retry(1) { Build.VERSION.SDK_INT < Build.VERSION_CODES.O }
+                        .retry(1) { BuildConfig().getVersionSDKInt() < Build.VERSION_CODES.O }
                         .map { value ->
                             CharOperationSuccessful(deviceId, value.asList())
                         }
