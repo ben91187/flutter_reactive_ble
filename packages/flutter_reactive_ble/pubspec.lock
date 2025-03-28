@@ -74,7 +74,7 @@ packages:
     source: hosted
     version: "2.2.0"
   build_runner:
-    dependency: "direct dev"
+    dependency: "direct main"
     description:
       name: build_runner
       sha256: b0a8a7b8a76c493e85f1b84bffa0588859a06197863dba8c9036b15581fd9727
@@ -199,7 +199,7 @@ packages:
     source: sdk
     version: "0.0.0"
   flutter_lints:
-    dependency: "direct dev"
+    dependency: "direct main"
     description:
       name: flutter_lints
       sha256: b543301ad291598523947dc534aaddc5aaad597b709d2426d3a0e0d44c5cb493
@@ -207,7 +207,7 @@ packages:
     source: hosted
     version: "1.0.4"
   flutter_test:
-    dependency: "direct dev"
+    dependency: "direct main"
     description: flutter
     source: sdk
     version: "0.0.0"
@@ -228,7 +228,7 @@ packages:
     source: hosted
     version: "1.0.0"
   functional_data_generator:
-    dependency: "direct dev"
+    dependency: "direct main"
     description:
       name: functional_data_generator
       sha256: dc5df76840dd5951624648b8c56514b4c500dd5ba1cd00cfe5d61972feb3f3b5
@@ -364,7 +364,7 @@ packages:
     source: hosted
     version: "1.0.4"
   mockito:
-    dependency: "direct dev"
+    dependency: "direct main"
     description:
       name: mockito
       sha256: "6841eed20a7befac0ce07df8116c8b8233ed1f4486a7647c7fc5a02ae6163917"
